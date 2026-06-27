@@ -17,19 +17,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;fo
 .tab-btn.active{color:#60a5fa;border-bottom:2px solid #3b82f6}
 .content{padding:16px 24px;max-width:100%}
 .tab-pane{display:none}.tab-pane.active{display:block}
-
+ 
 /* stats */
 .stats{display:flex;gap:24px;margin-bottom:14px;flex-wrap:wrap}
 .stat-val{font-size:20px;font-weight:600;color:#111}
 .stat-lbl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-top:1px}
-
+ 
 /* controls */
 .ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
 .ctrl select,.ctrl input{font-size:12px;padding:5px 10px;border-radius:6px;border:1px solid #d1d5db;background:#fff;color:#222;height:30px}
 .ctrl input{width:190px}
 .sbtn{margin-bottom:14px}
 .sbtn input{font-size:12px;padding:6px 12px;border-radius:8px;border:1px solid #d1d5db;background:#fff;width:280px;height:32px}
-
+ 
 /* legend */
 .legend{display:flex;gap:14px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
 .leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#555}
@@ -38,7 +38,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;fo
 .dp{display:inline-flex;width:10px;height:10px;border-radius:50%;overflow:hidden;flex-shrink:0}
 .dp s:first-child{background:#ca8a04;width:50%;height:100%}
 .dp s:last-child{background:#d1d5db;width:50%;height:100%}
-
+ 
 /* SPAA table */
 .tbl-wrap{overflow-x:auto;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
 table{border-collapse:collapse;width:100%}
@@ -60,7 +60,7 @@ tbody tr.dr td.bd{font-size:10px;color:#aaa}
 .ip{display:inline-flex;width:10px;height:10px;border-radius:50%;overflow:hidden;vertical-align:middle}
 .ip s:first-child{background:#ca8a04;width:50%;height:100%}
 .ip s:last-child{background:#d1d5db;width:50%;height:100%}
-
+ 
 /* missile grid */
 .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
 .mcard{background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;transition:box-shadow .15s}
@@ -92,7 +92,7 @@ tbody tr.dr td.bd{font-size:10px;color:#aaa}
 .note-box{background:#f8f9fa;border-left:3px solid #6366f1;border-radius:0 6px 6px 0;padding:7px 10px;margin-top:9px;font-size:11px;color:#555;line-height:1.5}
 .counter-list{margin:0;padding-left:14px}
 .counter-list li{font-size:11px;color:#374151;margin-bottom:3px;line-height:1.4}
-
+ 
 /* seeker cards */
 .skgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
 .scard{background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}
@@ -116,12 +116,12 @@ tbody tr.dr td.bd{font-size:10px;color:#aaa}
 .irccm-name{font-size:11.5px;font-weight:700;color:#111;margin-bottom:2px}
 .irccm-desc{font-size:11px;color:#555;line-height:1.4}
 .irccm-examples{font-size:10px;color:#92400e;margin-top:2px;font-style:italic}
-
+ 
 /* aircraft editor styles below */
 .pulse-badge{background:#fef3c7;color:#92400e;border:1px solid #fde68a;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:4px}
 .cw-badge{background:#dbeafe;color:#1e40af;border:1px solid #93c5fd;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:4px}
 .loft-badge{background:#ede9fe;color:#5b21b6;border:1px solid #c4b5fd;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:4px}
-
+ 
 /* === AIRCRAFT CARRIER DISPLAY — inline, sem box separada === */
 .aircraft-section{margin-top:8px;border-top:1px solid #f0f0f0;padding-top:8px}
 .aircraft-title{font-size:9.5px;font-weight:700;color:#9ca3af;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center;gap:5px;cursor:default;user-select:none}
@@ -171,8 +171,8 @@ body.edit-mode .aircraft-tag{background:#dbeafe;color:#1e40af}
 .aircraft-index th{padding:7px 8px}
 .aircraft-index button{border:1px solid #d1d5db;background:#fff;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:800;cursor:pointer}
 @media(max-width:1000px){.editor-wrap{grid-template-columns:1fr}}
-
-
+ 
+ 
 /* edit mode: editable sg cells */
 body.edit-mode .sg-v[contenteditable]{outline:1px dashed #3b82f6;border-radius:3px;cursor:text;min-width:20px;display:inline-block}
 body.edit-mode .note-box[contenteditable]{outline:1px dashed #6366f1;cursor:text}
@@ -188,13 +188,77 @@ body.edit-mode .counter-list li[contenteditable]{outline:1px dashed #ca8a04;curs
 .ed-add-btn{font-size:11px;border:1px dashed #94a3b8;background:none;color:#64748b;border-radius:6px;padding:4px 10px;cursor:pointer;margin-top:4px}
 .ed-add-btn:hover{border-color:#3b82f6;color:#3b82f6}
 .ed-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid #f0f0f0}
-
+ 
 /* seeker card edit button — only visible in edit mode */
 .scard-edit-btn{display:none;margin-top:9px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;border:1px solid #c7d2fe;background:#eef2ff;color:#3730a3;cursor:pointer}
 .scard-del-btn{display:none;margin-top:9px;margin-left:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;border:1px solid #fecdd3;background:#fff1f2;color:#9f1239;cursor:pointer}
 body.edit-mode .scard-edit-btn{display:inline-block}
 body.edit-mode .scard-del-btn.is-custom{display:inline-block}
 .scard-custom-badge{background:#fef9c3;border:1px solid #fde047;color:#854d0e;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:6px;vertical-align:middle}
+ 
+/* card image */
+.card-img-wrap{width:100%;background:#f1f5f9;overflow:hidden;border-bottom:1px solid #e5e7eb;max-height:160px;display:flex;align-items:center;justify-content:center}
+.card-img-wrap img{width:100%;max-height:160px;object-fit:cover;display:block}
+.card-img-wrap.no-img{display:none}
+ 
+/* missile card edit/delete buttons — edit mode only */
+.mcard-edit-btn{display:none;margin-top:10px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;border:1px solid #c7d2fe;background:#eef2ff;color:#3730a3;cursor:pointer}
+.mcard-del-btn{display:none;margin-top:10px;margin-left:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;border:1px solid #fecdd3;background:#fff1f2;color:#9f1239;cursor:pointer}
+body.edit-mode .mcard-edit-btn{display:inline-block}
+body.edit-mode .mcard-del-btn.is-custom{display:inline-block}
+.mcard-custom-badge{background:#fef9c3;border:1px solid #fde047;color:#854d0e;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:5px;vertical-align:middle}
+ 
+/* per-tab edit bar */
+.tab-edit-bar{display:none;align-items:center;gap:10px;margin-bottom:14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:10px 14px;flex-wrap:wrap}
+body.edit-mode .tab-edit-bar{display:flex}
+.tab-edit-bar .teb-new-btn{font-size:11px;font-weight:700;padding:5px 12px;border-radius:7px;border:1px solid #bbf7d0;background:#f0fdf4;color:#14532d;cursor:pointer}
+.tab-edit-bar .teb-new-btn:hover{background:#dcfce7}
+.teb-label{font-size:12px;font-weight:700;color:#92400e}
+.teb-hint{font-size:11px;color:#92400e;opacity:.7}
+ 
+/* tab manager in editor */
+.tab-manager{margin-top:18px;border-top:2px solid #e5e7eb;padding-top:16px}
+.tab-manager h3{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:10px}
+.tm-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;margin-bottom:6px}
+.tm-drag{cursor:grab;color:#94a3b8;font-size:14px;flex-shrink:0}
+.tm-name{flex:1;font-size:12px;font-weight:600;color:#111}
+.tm-type-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;background:#e0e7ff;color:#3730a3}
+.tm-type-badge.sk{background:#fef9c3;color:#854d0e}
+.tm-fixed{font-size:10px;color:#94a3b8;font-style:italic}
+.tm-btn{font-size:11px;border:1px solid #d1d5db;background:#fff;border-radius:6px;padding:3px 8px;cursor:pointer;font-weight:700}
+.tm-btn:hover{background:#f3f4f6}
+.tm-btn.danger{border-color:#fecdd3;background:#fff1f2;color:#9f1239}
+.tm-btn.danger:hover{background:#ffe4e6}
+.new-tab-form{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;margin-top:10px}
+.new-tab-form h4{font-size:12px;font-weight:700;color:#374151;margin-bottom:8px}
+.ntf-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.ntf-row label{font-size:11px;font-weight:700;color:#64748b;width:80px;flex-shrink:0}
+.ntf-row input,.ntf-row select{font-size:12px;padding:5px 9px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#111;flex:1;min-width:120px}
+.ntf-create-btn{font-size:12px;font-weight:700;padding:6px 14px;border-radius:8px;border:1px solid #bbf7d0;background:#f0fdf4;color:#14532d;cursor:pointer}
+.ntf-create-btn:hover{background:#dcfce7}
+ 
+/* sliding card editor panel */
+.card-inline-editor{display:none;position:fixed;top:0;right:0;bottom:0;width:420px;max-width:95vw;background:#fff;border-left:2px solid #e2e8f0;box-shadow:-4px 0 24px rgba(0,0,0,.12);z-index:500;overflow-y:auto;padding:16px}
+.card-inline-editor.open{display:block}
+.cie-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #e5e7eb}
+.cie-header h3{font-size:14px;font-weight:700;color:#0f172a}
+.cie-close{background:none;border:none;font-size:18px;cursor:pointer;color:#6b7280;padding:0 4px}
+.cie-close:hover{color:#111}
+.cie-field{margin-bottom:10px}
+.cie-field label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#64748b;margin-bottom:4px}
+.cie-field input,.cie-field textarea,.cie-field select{width:100%;font-size:12px;padding:6px 9px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#111}
+.cie-field textarea{resize:vertical;min-height:65px;font-family:inherit}
+.cie-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid #f0f0f0}
+.cie-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid #e5e7eb;position:sticky;bottom:0;background:#fff;padding-bottom:4px}
+.cie-actions button{font-size:12px;font-weight:700;padding:7px 12px;border-radius:8px;border:1px solid #d1d5db;background:#fff;cursor:pointer}
+.cie-actions button.primary{background:#0f172a;color:#fff;border-color:#0f172a}
+.cie-actions button.danger{background:#fff1f2;border-color:#fecdd3;color:#9f1239}
+.cie-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.15);z-index:499}
+.cie-overlay.open{display:block}
+.img-upload-area{border:2px dashed #cbd5e1;border-radius:8px;padding:10px;text-align:center;cursor:pointer;background:#f8fafc}
+.img-upload-area:hover{border-color:#3b82f6}
+.img-upload-area input[type=file]{display:none}
+.img-preview-small{width:100%;max-height:90px;object-fit:cover;border-radius:6px;margin-top:6px;display:none}
 </style>
 </head>
 <body>
@@ -212,13 +276,28 @@ body.edit-mode .scard-del-btn.is-custom{display:inline-block}
     <button class="tab-btn" onclick="showTab('tIRa',this)">🔶 IR All-Aspect</button>
     <button class="tab-btn" onclick="showTab('tSARH',this)">📡 SARH</button>
     <button class="tab-btn" onclick="showTab('tARH',this)">⚡ ARH</button>
-    <button class="tab-btn" id="btnAircraftEditor" onclick="showTab('tAircraft',this)">✈️ Aviões / Editor</button>
+    <button class="tab-btn" id="btnAircraftEditor" onclick="tryOpenEditor(this)">🔒 Aviões / Editor</button>
     <button class="tab-btn" onclick="showTab('tSeekers',this)">🔬 Seekers & IRCCM</button>
+    <div id="customTabBtns"></div>
   </div>
 </div>
-
+ 
+<!-- PASSWORD MODAL -->
+<div id="pwModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:16px;padding:28px 32px;max-width:340px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.25)">
+    <div style="font-size:18px;font-weight:700;color:#0f172a;margin-bottom:4px">🔒 Área Restrita</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:16px">Insere a password para aceder ao Editor.</div>
+    <input id="pwInput" type="password" placeholder="Password…" style="width:100%;font-size:14px;padding:9px 12px;border:1px solid #cbd5e1;border-radius:9px;margin-bottom:10px" onkeydown="if(event.key==='Enter')checkPw()">
+    <div id="pwErr" style="display:none;font-size:11px;color:#dc2626;margin-bottom:8px">❌ Password incorrecta.</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="checkPw()" style="flex:1;background:#0f172a;color:#fff;border:none;border-radius:8px;padding:9px;font-weight:700;cursor:pointer;font-size:13px">Entrar</button>
+      <button onclick="closePwModal()" style="flex:1;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:9px;font-weight:700;cursor:pointer;font-size:13px;color:#475569">Cancelar</button>
+    </div>
+  </div>
+</div>
+ 
 <div class="content">
-
+ 
 <!-- SPAA -->
 <div id="tSPAA" class="tab-pane active">
   <div class="stats">
@@ -256,40 +335,51 @@ body.edit-mode .scard-del-btn.is-custom{display:inline-block}
     </tr>
   </thead><tbody id="tb1"></tbody></table></div>
 </div>
-
+ 
 <!-- ARM -->
 <div id="tARM" class="tab-pane">
+  <div class="tab-edit-bar"><span class="teb-label">✏️ Modo edição</span><button class="teb-new-btn" onclick="openCardEditor('new','missile','tARM')">➕ Nova card</button><span class="teb-hint">Clica em ✏️ em qualquer card para editar</span></div>
   <div class="sbtn"><input type="text" id="f2s" placeholder="Pesquisar míssil..." oninput="filterGrid('armGrid',armData,'f2s','badge-arm')"></div>
   <div class="mgrid" id="armGrid"></div>
 </div>
-
+ 
 <!-- IR Rear -->
 <div id="tIRr" class="tab-pane">
+  <div class="tab-edit-bar"><span class="teb-label">✏️ Modo edição</span><button class="teb-new-btn" onclick="openCardEditor('new','missile','tIRr')">➕ Nova card</button><span class="teb-hint">Clica em ✏️ em qualquer card para editar</span></div>
   <div class="sbtn"><input type="text" id="f3s" placeholder="Pesquisar míssil..." oninput="filterGrid('irRearGrid',irRearData,'f3s','badge-ir')"></div>
   <div class="mgrid" id="irRearGrid"></div>
 </div>
-
+ 
 <!-- IR All -->
 <div id="tIRa" class="tab-pane">
+  <div class="tab-edit-bar"><span class="teb-label">✏️ Modo edição</span><button class="teb-new-btn" onclick="openCardEditor('new','missile','tIRa')">➕ Nova card</button><span class="teb-hint">Clica em ✏️ em qualquer card para editar</span></div>
   <div class="sbtn"><input type="text" id="f4s" placeholder="Pesquisar míssil..." oninput="filterGrid('irAllGrid',irAllData,'f4s','badge-irall')"></div>
   <div class="mgrid" id="irAllGrid"></div>
 </div>
-
+ 
 <!-- SARH -->
 <div id="tSARH" class="tab-pane">
+  <div class="tab-edit-bar"><span class="teb-label">✏️ Modo edição</span><button class="teb-new-btn" onclick="openCardEditor('new','missile','tSARH')">➕ Nova card</button><span class="teb-hint">Clica em ✏️ em qualquer card para editar</span></div>
   <div class="sbtn"><input type="text" id="f5s" placeholder="Pesquisar míssil..." oninput="filterGrid('sarhGrid',sarhData,'f5s','badge-sarh')"></div>
   <div class="mgrid" id="sarhGrid"></div>
 </div>
-
+ 
 <!-- ARH -->
 <div id="tARH" class="tab-pane">
+  <div class="tab-edit-bar"><span class="teb-label">✏️ Modo edição</span><button class="teb-new-btn" onclick="openCardEditor('new','missile','tARH')">➕ Nova card</button><span class="teb-hint">Clica em ✏️ em qualquer card para editar</span></div>
   <div class="sbtn"><input type="text" id="f6s" placeholder="Pesquisar míssil..." oninput="filterGrid('arhGrid',arhData,'f6s','badge-arh')"></div>
   <div class="mgrid" id="arhGrid"></div>
 </div>
-
-
+ 
+ 
 <!-- FULL CARD + AIRCRAFT EDITOR -->
 <div id="tAircraft" class="tab-pane">
+  <!-- Modo edição toggle — sempre visível aqui -->
+  <div id="editModeToggle" style="display:flex;align-items:center;gap:10px;margin-bottom:14px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px">
+    <span style="font-size:12px;color:#475569;flex:1">Modo de edição: <strong id="editModeLabel" style="color:#dc2626">DESLIGADO</strong></span>
+    <button id="editModeToggleBtn" onclick="toggleEditMode()" style="font-size:12px;font-weight:700;padding:6px 14px;border-radius:8px;border:1px solid #d1d5db;background:#fff;cursor:pointer">✏️ Ativar edição</button>
+  </div>
+ 
   <div class="aircraft-editor-note">
     <strong>Editor completo de cards.</strong> Altera qualquer campo de qualquer míssil (massa, alcance, notas, counters, aviões…) e dos cards de Seekers. Campos vazios ficam ocultos na card. Tudo guardado em <strong>localStorage</strong> e exportável em JSON.
   </div>
@@ -334,20 +424,37 @@ body.edit-mode .scard-del-btn.is-custom{display:inline-block}
     <div class="editor-row"><input id="edSearch" type="search" placeholder="Pesquisar em todos os items…" oninput="edRenderIndex()" style="width:280px;font-size:12px;padding:5px 10px;border-radius:6px;border:1px solid #d1d5db;height:30px"></div>
     <div class="tbl-wrap"><table><thead><tr><th>Nome</th><th>Grupo</th><th>Modificado</th><th>Ação</th></tr></thead><tbody id="edIndexBody"></tbody></table></div>
   </div>
+ 
+  <!-- TAB MANAGER -->
+  <div class="tab-manager" id="tabManagerSection">
+    <h3>🗂️ Gestão de Tabs</h3>
+    <p style="font-size:11px;color:#64748b;margin-bottom:12px">Arrasta para reordenar · Cria novas tabs com template Míssil ou Seeker · As tabs fixas (SPAA, ARM, IRr, IRa, SARH, ARH, Editor, Seekers) não podem ser apagadas mas podem ser reordenadas.</p>
+    <div id="tmList"></div>
+    <!-- New tab form -->
+    <div class="new-tab-form">
+      <h4>➕ Criar nova tab</h4>
+      <div class="ntf-row"><label>Nome</label><input id="ntfName" placeholder="Ex: ATGM, Fox-1…" maxlength="30"></div>
+      <div class="ntf-row"><label>Emoji</label><input id="ntfEmoji" placeholder="🎯" maxlength="4" style="max-width:60px"></div>
+      <div class="ntf-row"><label>Template</label>
+        <select id="ntfTemplate">
+          <option value="missile">🚀 Míssil (stats em grelha)</option>
+          <option value="seeker">🔬 Seeker / IRCCM (tabela + tags)</option>
+        </select>
+      </div>
+      <button class="ntf-create-btn" onclick="tmCreateTab()">Criar Tab</button>
+    </div>
+  </div>
 </div>
 <!-- SEEKERS & IRCCM -->
 <div id="tSeekers" class="tab-pane">
-  <!-- Edit mode bar — hidden by default, shown in edit mode -->
-  <div id="seekerEditBar" style="display:none;align-items:center;gap:10px;margin-bottom:14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:10px 14px;flex-wrap:wrap">
-    <span style="font-size:12px;font-weight:700;color:#92400e">✏️ Modo edição</span>
-    <button id="btnNewSeeker" onclick="skEdOpenNew()" style="font-size:11px;font-weight:700;padding:5px 12px;border-radius:7px;border:1px solid #bbf7d0;background:#f0fdf4;color:#14532d;cursor:pointer">➕ Nova card Seeker/IRCCM</button>
-    <span style="font-size:11px;color:#92400e;opacity:.7">Clica em ✏️ em qualquer card para editar</span>
+  <div class="tab-edit-bar" id="seekerEditBar">
+    <span class="teb-label">✏️ Modo edição</span>
+    <button class="teb-new-btn" onclick="skEdOpenNew()">➕ Nova card Seeker/IRCCM</button>
+    <span class="teb-hint">Clica em ✏️ em qualquer card para editar</span>
   </div>
-
-  <!-- Seeker editor panel — hidden by default -->
+  <!-- Seeker editor panel — hidden by default, shown in edit mode -->
   <div id="seekerEditorPanel" style="display:none;margin-bottom:18px">
     <div style="display:grid;grid-template-columns:300px 1fr;gap:14px">
-      <!-- LEFT -->
       <div class="editor-panel" style="min-width:0">
         <h2 style="font-size:14px;margin-bottom:10px">Seeker / IRCCM card</h2>
         <div class="editor-row"><label>Editar</label>
@@ -369,18 +476,44 @@ body.edit-mode .scard-del-btn.is-custom{display:inline-block}
         </div>
         <div id="skEdStatus" class="editor-status"></div>
       </div>
-      <!-- RIGHT: fields -->
       <div class="editor-panel" style="min-width:0">
         <h2 style="font-size:14px;margin-bottom:10px">Editar: <span id="skEdLabel" class="edit-chip">—</span></h2>
         <div id="skEdFields"></div>
       </div>
     </div>
   </div>
-
   <div class="skgrid" id="seekerGrid"></div>
 </div>
-
+<div id="customTabPanes"></div>
+ 
+</div><!-- /content -->
+ 
+<!-- SLIDING CARD EDITOR -->
+<div class="cie-overlay" id="cieOverlay" onclick="closeCardEditor()"></div>
+<div class="card-inline-editor" id="cardInlineEditor">
+  <div class="cie-header">
+    <h3 id="cieTitle">✏️ Nova Card</h3>
+    <button class="cie-close" onclick="closeCardEditor()">✕</button>
+  </div>
+ 
+  <!-- Template selector -->
+  <div class="cie-field">
+    <label>Template</label>
+    <select id="cieTemplate" onchange="cieRenderFields()">
+      <option value="missile">🚀 Míssil</option>
+      <option value="seeker">🔬 Seeker / IRCCM</option>
+    </select>
+  </div>
+ 
+  <div id="cieFields"></div>
+ 
+  <div class="cie-actions">
+    <button class="primary" onclick="cieSave()">💾 Guardar</button>
+    <button class="danger" id="cieDeleteBtn" onclick="cieDelete()" style="display:none">🗑 Apagar</button>
+    <button onclick="closeCardEditor()">Cancelar</button>
+  </div>
 </div>
+ 
 <script>
 // ============================================================
 // AIRCRAFT CARRIER DATA +  EDITOR STORAGE
@@ -1512,8 +1645,8 @@ let aircraftDB=loadAircraftData();
 function getAircraftList(id){return uniqCleanList(aircraftDB[id]||[]);}
 function setAircraftList(id,list){aircraftDB[id]=uniqCleanList(list);saveAircraftData();}
 function aircraftMetaById(id){return AIRCRAFT_META.find(x=>x.id===id)||{id,name:id,group:'—',source:'—'};}
-
-
+ 
+ 
 // ============================================================
 // SPAA DATA
 // ============================================================
@@ -1595,7 +1728,7 @@ const spaaRows=[
   {name:'ADATS (USA)',nation:'USA',rank:'VIII',br:'11.7',band:'I',c:[F,F,N,F,F,N,N,F,N,N,F,F,F,F,F,F,F,F]},
   {name:'MIM-146 ADATS',nation:'USA',rank:'VIII',br:'12.7',band:'I',c:[F,F,N,F,F,N,N,F,N,N,F,F,F,F,F,F,F,F]},
 ];
-
+ 
 // ============================================================
 // ARM DATA
 // ============================================================
@@ -1615,7 +1748,7 @@ const armData=[
   {name:'LD-10',badge:'ARM',s:{mass:'—',speed:'Mach 3.0',range:'~60 km',wh:'—',overload:'—',gimbal:'Wide',trackRate:'—',fuze:'Prox.',iog:'Sim',dl:'Não',aspect:'Passive radar homing (E–J band)',irccm:'—',burnTime:'—',guideDur:'—',signal:'Passive RF — E to J band',note:'ARM chinês leve. IOG. E–J band.',counters:['IOG: desligar e mover']}},
   {name:'AS-37 Martel',badge:'ARM',s:{mass:'530 kg',speed:'Mach 1.5',range:'~60 km',wh:'149.5 kg',overload:'—',gimbal:'Wide',trackRate:'—',fuze:'Prox.',iog:'Não',dl:'Não',aspect:'Passive radar homing (C–I band)',irccm:'—',burnTime:'—',guideDur:'—',signal:'Passive RF — C to I band',note:'ARM franco-britânico antigo. Sem IOG. Ogiva 149.5kg. Lento (Mach 1.5) mas ogiva devastante.',counters:['Desligar radar — sem IOG o míssil perde guia']}},
 ];
-
+ 
 // ============================================================
 // IR REAR-ASPECT DATA
 // ============================================================
@@ -1637,7 +1770,7 @@ const irRearData=[
   {name:'Rb24',badge:'IR Rear',s:{mass:'75 kg',speed:'Mach 2.5',range:'~5 km',wh:'4.5 kg',overload:'10G',gimbal:'±25°',trackRate:'12°/s',fuze:'Prox. 4 m',iog:'Não',dl:'Não',aspect:'Rear-aspect',irccm:'Nenhum',burnTime:'2.2s',guideDur:'20s',signal:'Uncooled IR (AIM-9B licenciado)',note:'AIM-9B sueco. Performance idêntica.',counters:['Flares eficazes']}},
   {name:'Rb24J',badge:'IR Rear',s:{mass:'75 kg',speed:'Mach 2.5',range:'~8 km',wh:'4.5 kg',overload:'18G',gimbal:'±45°',trackRate:'20°/s',fuze:'Prox. 5 m',iog:'Não',dl:'Não',aspect:'Rear-aspect',irccm:'Nenhum',burnTime:'2.2s',guideDur:'—',signal:'Uncooled IR (AIM-9J licenciado)',note:'AIM-9J sueco. 18G.',counters:['Flares eficazes']}},
 ];
-
+ 
 // ============================================================
 // IR ALL-ASPECT DATA  (R-73M REMOVIDO — não existe no jogo)
 // ============================================================
@@ -1680,7 +1813,7 @@ const irAllData=[
   {name:'9M336 Verba',badge:'IR All',s:{mass:'11.7 kg',speed:'Mach 1.7',range:'~8 km',wh:'0.92 kg',overload:'12G',gimbal:'±40°',trackRate:'12°/s',fuze:'Prox. 1.2 m / delay 1.25s',iog:'Não',dl:'Não',aspect:'All-aspect',irccm:'FOV Gating + Seeker Shutoff',burnTime:'1.9s+6.6s',guideDur:'13s',signal:'Triple waveband IR',note:'MANPADS russo moderno. Triple waveband IR — máxima resistência a flares. Fuze de prox.',counters:['Triple waveband — extremamente difícil de enganar com flares','Guidance 13s: manter distância']}},
   {name:'9M342 Igla-S',badge:'IR All',s:{mass:'11.7 kg',speed:'Mach 1.7',range:'~8 km',wh:'0.92 kg',overload:'12G',gimbal:'±40°',trackRate:'12°/s',fuze:'Prox. 1.2 m / delay 1.25s',iog:'Não',dl:'Não',aspect:'All-aspect',irccm:'FOV Gating + Seeker Shutoff',burnTime:'1.9s+6.6s',guideDur:'13s',signal:'Dual waveband IR',note:'MANPADS russo. Similar ao Verba mas dual waveband (não triple). IRCCM duplo.',counters:['IRCCM duplo — difícil com flares']}},
 ];
-
+ 
 // ============================================================
 // SARH DATA — Pulse/CW separados no tipo de seeker
 // ============================================================
@@ -1706,7 +1839,7 @@ const sarhData=[
   {name:'PL-11',badge:'SARH',s:{mass:'230 kg',speed:'Mach 4.0',range:'50 km',wh:'10.2 kg',overload:'23.3G',gimbal:'±50°',trackRate:'12°/s',fuze:'Prox. 8 m / delay 0.5s',iog:'Não',dl:'Não',seekerType:'CW',aspect:'SARH I-band CW',irccm:'—',burnTime:'3.5s',guideDur:'45s',signal:'I-band CW ang. speed rejection 45°/s',note:'CW. Cópia chinesa do Aspide-1A. Performance idêntica.',counters:['Notch + chaff','Angular speed rejection 45°/s']}},
   {name:'Sedjil',badge:'SARH',s:{mass:'625 kg',speed:'Mach 3.0+',range:'~40 km',wh:'46.4 kg TNTe',overload:'27.7G',gimbal:'±60°',trackRate:'20°/s',fuze:'Prox. 20 m / delay 1.5s',iog:'Não',dl:'Não',seekerType:'CW',aspect:'SARH I-band CW',irccm:'—',burnTime:'5s + 21s sustainer',guideDur:'105s',signal:'I-band CW',note:'CW. Mais pesado dos SARHs (625kg). Ogiva MÁXIMA: 46.4kg TNTe. Fuze 20m. Guidance 105s — o mais longo.',counters:['Notch + chaff','Fuze 20m: raio perigoso mesmo com boa manobra']}},
 ];
-
+ 
 // ============================================================
 // ARH DATA — com ângulo de Loft
 // ============================================================
@@ -1724,7 +1857,7 @@ const arhData=[
   {name:'Derby / I-Derby',badge:'ARH',s:{mass:'118 kg',speed:'Mach 4.0',range:'~50 km',wh:'23 kg',overload:'~35G',gimbal:'±60°',trackRate:'High',fuze:'Prox. 8 m',iog:'Sim',dl:'Sim',loftAngle:'15°',aspect:'ARH X-band PD + IOG + DL',irccm:'ECCM',burnTime:'—',guideDur:'—',signal:'Active X-band PD',note:'ARH israelita. Ogiva grande (23kg). Loft 15°. Sustainer fraco.',counters:['Sustainer fraco: distância é eficaz','Notch + chaff']}},
   {name:'Meteor',badge:'ARH',s:{mass:'190 kg',speed:'Mach 4.0+ sustained',range:'100+ km',wh:'18 kg',overload:'~50G',gimbal:'±60°',trackRate:'Very high',fuze:'Prox. 15 m',iog:'Sim',dl:'Sim',loftAngle:'25°',aspect:'ARH X-band PD + IOG + DL (ramjet)',irccm:'ECCM avançado',burnTime:'Ramjet contínuo',guideDur:'—',signal:'Active X-band PD (ramjet)',note:'ÚNICO ARH com ramjet — Mach 4+ constante. Loft 25°. NEZ massivamente maior que todos os outros.',counters:['Terrain masking IMEDIATO obrigatório','NEZ enorme — sem escape a longa distância']}},
 ];
-
+ 
 // ============================================================
 // SEEKER / IRCCM DATA
 // ============================================================
@@ -1784,14 +1917,14 @@ const seekerData=[
    counters:['Notch + chaff quando seeker ativo ligar (RWR alerta)','Terrain masking ANTES do seeker turn-on','Altitude change + notch','Meteor: terrain masking imediato é a única opção'],
    irccmTypes:[]},
 ];
-
-
+ 
+ 
 // ============================================================
 // FULL CARD EDITOR — missile fields + seeker fields
 // ============================================================
 const ED_KEY = 'wt_card_editor_v1';
 const SEEKER_KEY = 'wt_seeker_editor_v1';
-
+ 
 // Maps category key → {dataArr, gridId, badgeClass, reRender}
 function edCatMap(){return {
   arm:  {arr:armData,   grid:'armGrid',    badge:'badge-arm',  fn:()=>filterGrid('armGrid',armData,'f2s','badge-arm')},
@@ -1801,16 +1934,16 @@ function edCatMap(){return {
   arh:  {arr:arhData,   grid:'arhGrid',    badge:'badge-arh',  fn:()=>filterGrid('arhGrid',arhData,'f6s','badge-arh')},
   seeker:{arr:seekerData,grid:'seekerGrid',badge:'',           fn:()=>renderSeekers()},
 };}
-
+ 
 // load overrides from localStorage
 let _edDB = {};
 let _skDB = {};
 try{ _edDB = JSON.parse(localStorage.getItem(ED_KEY)||'{}'); }catch(e){}
 try{ _skDB = JSON.parse(localStorage.getItem(SEEKER_KEY)||'{}'); }catch(e){}
-
+ 
 function edSaveDB(){ try{localStorage.setItem(ED_KEY,JSON.stringify(_edDB));}catch(e){} }
 function edSaveSK(){ try{localStorage.setItem(SEEKER_KEY,JSON.stringify(_skDB));}catch(e){} }
-
+ 
 // Apply stored overrides to a missile s-object
 function edApplyOverrides(name, s){
   const ov = _edDB[name];
@@ -1827,7 +1960,7 @@ function edApplySeekerOv(seekerType, sk){
   Object.keys(ov).forEach(k=>{ merged[k] = ov[k]; });
   return merged;
 }
-
+ 
 // The missile fields we let users edit
 const MISSILE_FIELDS = [
   {key:'mass',label:'Massa'},
@@ -1856,7 +1989,7 @@ const SEEKER_FIELDS = [
   {key:'missiles',label:'Mísseis (um por linha)',list:true},
   {key:'counters',label:'Como contrariar (um por linha)',list:true},
 ];
-
+ 
 function edStatus(msg,ok=true){
   const el=document.getElementById('edStatus');if(!el)return;
   el.textContent=msg;el.style.display='block';
@@ -1865,10 +1998,10 @@ function edStatus(msg,ok=true){
   el.style.color=ok?'#14532d':'#9f1239';
   clearTimeout(window._edT);window._edT=setTimeout(()=>el.style.display='none',3000);
 }
-
+ 
 function edCurrentCat(){ return document.getElementById('edCat')?.value||'arm'; }
 function edCurrentItem(){ return document.getElementById('edItem')?.value||''; }
-
+ 
 function edLoadCat(){
   const cat=edCurrentCat(), cm=edCatMap(), info=cm[cat];
   if(!info)return;
@@ -1886,7 +2019,7 @@ function edLoadCat(){
   edLoadItem();
   edRenderIndex();
 }
-
+ 
 function edLoadItem(){
   const cat=edCurrentCat(), idx=parseInt(edCurrentItem());
   const cm=edCatMap(),info=cm[cat];
@@ -1895,7 +2028,7 @@ function edLoadItem(){
   const lbl=document.getElementById('edCurrentLabel');
   if(!fields)return;
   fields.innerHTML='';
-
+ 
   if(cat==='seeker'){
     const sk=seekerData[idx];if(!sk)return;
     if(lbl)lbl.textContent=sk.type;
@@ -1954,7 +2087,7 @@ function edLoadItem(){
     fields.appendChild(pRow);
   }
 }
-
+ 
 function edCollectCounters(){
   const wrap=document.getElementById('edCountersWrap');if(!wrap)return null;
   const inputs=wrap.querySelectorAll('input');
@@ -1983,11 +2116,11 @@ function edAddCounter(){
   // focus last
   setTimeout(()=>{const wrap=document.getElementById('edCountersWrap');const inputs=wrap?.querySelectorAll('input');if(inputs&&inputs.length)inputs[inputs.length-1].focus();},50);
 }
-
+ 
 function edSave(){
   const cat=edCurrentCat(), idx=parseInt(edCurrentItem()), cm=edCatMap(), info=cm[cat];
   if(!info||isNaN(idx)){edStatus('Nada selecionado',false);return;}
-
+ 
   if(cat==='seeker'){
     const sk=seekerData[idx];if(!sk)return;
     const ov={};
@@ -2033,7 +2166,7 @@ function edSave(){
     edStatus('Card guardada ✓');
   }
 }
-
+ 
 function edRestore(){
   const cat=edCurrentCat(), idx=parseInt(edCurrentItem()), cm=edCatMap(), info=cm[cat];
   if(!info||isNaN(idx))return;
@@ -2055,7 +2188,7 @@ function edRestore(){
     edStatus('Reposto para dados base ✓');
   }
 }
-
+ 
 function edClearField(){
   // clears current focused input in edFields
   const f=document.activeElement;
@@ -2065,7 +2198,7 @@ function edClearField(){
     edStatus('Clica num campo primeiro',false);
   }
 }
-
+ 
 function edExportAll(){
   const data={missiles:_edDB, seekers:_skDB, aircraft:aircraftDB};
   document.getElementById('edRaw').value=JSON.stringify(data,null,2);
@@ -2096,7 +2229,7 @@ function edResetAll(){
   localStorage.removeItem(AIRCRAFT_KEY);
   location.reload();
 }
-
+ 
 function edRenderIndex(){
   const body=document.getElementById('edIndexBody');if(!body)return;
   const q=(document.getElementById('edSearch')?.value||'').toLowerCase();
@@ -2123,7 +2256,7 @@ function edJumpTo(cat,idx){
   document.getElementById('edItem').value=idx; edLoadItem();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-
+ 
 // Apply saved overrides on page load
 (function applyStoredOverrides(){
   [armData,irRearData,irAllData,sarhData,arhData].forEach(arr=>arr.forEach(m=>{
@@ -2133,15 +2266,15 @@ function edJumpTo(cat,idx){
     const ov=_skDB[sk.type]; if(ov) Object.assign(sk,ov);
   });
 })();
-
+ 
 // init
 function initFullEditor(){
   edLoadCat();
   edRenderIndex();
 }
 initFullEditor();
-
-
+ 
+ 
 // ============================================================
 // RENDER: SPAA TAB
 // ============================================================
@@ -2176,7 +2309,7 @@ document.getElementById('f1c').addEventListener('change',renderSPAA);
 document.getElementById('f1s').addEventListener('input',renderSPAA);
 document.getElementById('s1t').textContent=spaaRows.length;
 renderSPAA();
-
+ 
 // ============================================================
 // RENDER: MISSILE CARDS
 // ============================================================
@@ -2186,7 +2319,7 @@ function irccmPill(txt){
   const cls=t.includes('nenhum')?'irccm-none':t.includes('shutoff')||t.includes('suspended')?'irccm-seeker':t.includes('fov')?'irccm-fov':t.includes('kinematic')||t.includes('angular')?'irccm-kinematic':t.includes('imaging')||t.includes('iir')?'irccm-imaging':t.includes('hmd')?'irccm-hmd':t.includes('eccm')?'irccm-kinematic':'irccm-none';
   return`<span class="irccm-pill ${cls}">${txt}</span>`;
 }
-
+ 
 function buildAircraftSection(missileId){
   const planes=getAircraftList(missileId);
   const tagsHtml=planes.length
@@ -2200,7 +2333,7 @@ function buildAircraftSection(missileId){
     <div class="aircraft-tags" id="tags_${missileId}">${tagsHtml}</div>
   </div>`;
 }
-
+ 
 function refreshAircraftSections(){
   document.querySelectorAll('[id^="tags_"]').forEach(el=>{
     const id=el.id.replace(/^tags_/,'');
@@ -2210,7 +2343,7 @@ function refreshAircraftSections(){
       :'<span class="aircraft-empty">Nenhum avião portador registado</span>';
   });
 }
-
+ 
 function populateAircraftEditor(){
   const sel=document.getElementById('edAircraftItem'); if(!sel)return;
   const old=sel.value; sel.innerHTML='';
@@ -2264,54 +2397,18 @@ function editAircraft(id){
   const btn=document.getElementById('btnAircraftEditor');if(btn)showTab('tAircraft',btn);
   window.scrollTo({top:0,behavior:'smooth'});
 }
-
-// ---- HIDDEN EDIT MODE ----
-let _editMode=false,_clickBuf=[];
-function enterEditMode(){
-  _editMode=true;document.body.classList.add('edit-mode');
-  document.getElementById('editModeBar')?.classList.add('visible');
-  // show seeker edit bar and panel
-  const sBar=document.getElementById('seekerEditBar');
-  if(sBar) sBar.style.display='flex';
-  const sPanel=document.getElementById('seekerEditorPanel');
-  if(sPanel) sPanel.style.display='block';
-  document.querySelectorAll('.aircraft-title[data-mid]').forEach(el=>{
-    el.style.cursor='pointer';
-    el._editHandler=function(){const mid=this.getAttribute('data-mid');if(mid)editAircraft(mid);};
-    el.addEventListener('click',el._editHandler);
-  });
-}
-function exitEditMode(){
-  _editMode=false;document.body.classList.remove('edit-mode');
-  document.getElementById('editModeBar')?.classList.remove('visible');
-  // hide seeker edit bar and panel
-  const sBar=document.getElementById('seekerEditBar');
-  if(sBar) sBar.style.display='none';
-  const sPanel=document.getElementById('seekerEditorPanel');
-  if(sPanel) sPanel.style.display='none';
-  document.querySelectorAll('.aircraft-title[data-mid]').forEach(el=>{
-    el.style.cursor='';
-    if(el._editHandler){el.removeEventListener('click',el._editHandler);el._editHandler=null;}
-  });
-}
-// Activation 1: type "edit" on keyboard (when not in an input)
-document.addEventListener('keydown',function(e){
-  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT')return;
-  _clickBuf.push(e.key.toLowerCase());if(_clickBuf.length>4)_clickBuf.shift();
-  if(_clickBuf.join('')==='edit'){_editMode?exitEditMode():enterEditMode();_clickBuf=[];}
-});
-// Activation 2: triple-click on the subtitle in the topbar
-(function(){const s=document.querySelector('.topbar .sub');if(!s)return;let cc=0,ct;
-  s.addEventListener('click',function(){cc++;clearTimeout(ct);ct=setTimeout(()=>cc=0,600);
-    if(cc>=3){cc=0;_editMode?exitEditMode():enterEditMode();}});
-})();
-
-window.WTEdit={editAircraft,enterEditMode,exitEditMode};
-
+ 
+// Edit mode activation — now handled by toggleEditMode() in the editor tab
+// Hidden keyboard trigger removed — activation is explicit via button in Editor tab
+ 
+// Seekers tab also gets edit bar:
+const _tSeekersEditBar=document.getElementById('seekerEditBar');
+const _tSeekersPanel=document.getElementById('seekerEditorPanel');
+ 
 function buildMCard(m,badgeClass){
   const d=m.s;
   const missileId=m.name.replace(/[^a-zA-Z0-9]/g,'_');
-
+ 
   // Build seeker type badge
   let seekerBadge='';
   if(d.seekerType){
@@ -2323,13 +2420,13 @@ function buildMCard(m,badgeClass){
       seekerBadge=`<span class="cw-badge">CW</span>`;
     }
   }
-
+ 
   // Loft badge
   let loftBadge='';
   if(d.loftAngle&&d.loftAngle!=='—'){
     loftBadge=`<span class="loft-badge">Loft ${d.loftAngle}</span>`;
   }
-
+ 
   const rows=[
     ['Massa',d.mass],['Velocidade',d.speed],['Alcance',d.range],
     ['Ogiva',d.wh],['Overload máx.',d.overload],['Gimbal',d.gimbal],
@@ -2341,13 +2438,13 @@ function buildMCard(m,badgeClass){
     ...(d.guideDur&&d.guideDur!=='—'?[['Guia duration',d.guideDur]]:[]),
     ...(d.signal?[['Signal / Seeker',d.signal]]:[]),
   ].filter(([,v])=>v!==undefined && v!==null && v!=='' && v!=='—');
-
+ 
   const statsHtml=`<div class="sgrid">${rows.map(([k,v])=>`<div class="sg"><div class="sg-k">${k}</div><div class="sg-v">${v}</div></div>`).join('')}</div>`;
   const irccmHtml=`<div class="mlabel">IRCCM / Seeker type</div>${irccmPill(d.irccm||'—')}`;
   const noteHtml=(d.note&&d.note.trim())?`<div class="note-box">${d.note}</div>`:'';
   const counterHtml=d.counters&&d.counters.filter(Boolean).length?`<div class="mlabel">Como contrariar</div><ul class="counter-list">${d.counters.filter(Boolean).map(c=>`<li>${c}</li>`).join('')}</ul>`:'';
   const aircraftHtml=buildAircraftSection(missileId);
-
+ 
   const div=document.createElement('div');div.className='mcard';
   div.innerHTML=`
     <div class="mcard-head">
@@ -2364,7 +2461,7 @@ function buildMCard(m,badgeClass){
     </div>`;
   return div;
 }
-
+ 
 function filterGrid(gridId,data,inputId,badgeClass){
   const s=(document.getElementById(inputId)?.value||'').toLowerCase();
   const g=document.getElementById(gridId);g.innerHTML='';
@@ -2375,33 +2472,33 @@ function filterGrid(gridId,data,inputId,badgeClass){
     return hay.includes(s);
   }).forEach(m=>g.appendChild(buildMCard(m,badgeClass)));
 }
-
+ 
 filterGrid('armGrid',armData,'f2s','badge-arm');
 filterGrid('irRearGrid',irRearData,'f3s','badge-ir');
 filterGrid('irAllGrid',irAllData,'f4s','badge-irall');
 filterGrid('sarhGrid',sarhData,'f5s','badge-sarh');
 filterGrid('arhGrid',arhData,'f6s','badge-arh');
 bindAircraftEditor();
-
+ 
 // ============================================================
 // SEEKERS — storage + custom cards
 // ============================================================
 const SK_STORE_KEY = 'wt_seeker_custom_v1';
 const SK_EDIT_KEY  = 'wt_seeker_edits_v1';
-
+ 
 // Deep clone base data
 function skClone(d){ return JSON.parse(JSON.stringify(d)); }
-
+ 
 // Load custom seeker cards and edits from localStorage
 let _skCustom = [];   // extra cards created by user
 let _skEdits  = {};   // overrides for base seekerData cards, keyed by index
-
+ 
 try{ _skCustom = JSON.parse(localStorage.getItem(SK_STORE_KEY)||'[]'); }catch(e){ _skCustom=[]; }
 try{ _skEdits  = JSON.parse(localStorage.getItem(SK_EDIT_KEY)||'{}');  }catch(e){ _skEdits={}; }
-
+ 
 function skSaveCustom(){ try{localStorage.setItem(SK_STORE_KEY, JSON.stringify(_skCustom));}catch(e){} }
 function skSaveEdits(){  try{localStorage.setItem(SK_EDIT_KEY,  JSON.stringify(_skEdits)); }catch(e){} }
-
+ 
 // Apply stored edits to base seekerData on load
 (function applySkEdits(){
   Object.keys(_skEdits).forEach(i=>{
@@ -2409,7 +2506,7 @@ function skSaveEdits(){  try{localStorage.setItem(SK_EDIT_KEY,  JSON.stringify(_
     Object.assign(seekerData[idx], _skEdits[i]);
   });
 })();
-
+ 
 // ============================================================
 // RENDER: SEEKERS
 // ============================================================
@@ -2425,7 +2522,7 @@ function renderSeekers(){
     g.appendChild(buildSeekerCard(s, true, ci));
   });
 }
-
+ 
 function buildSeekerCard(s, isCustom, idx){
   const div=document.createElement('div');div.className='scard';
   const irccmSection=(s.irccmTypes||[]).length?`
@@ -2438,7 +2535,7 @@ function buildSeekerCard(s, isCustom, idx){
   const counterHtml=(s.counters||[]).map(c=>`<li>${c}</li>`).join('');
   const customBadge=isCustom?`<span class="scard-custom-badge">CUSTOM</span>`:'';
   const editKey=isCustom?`custom_${idx}`:`base_${idx}`;
-
+ 
   div.innerHTML=`
     <div class="scard-head">
       <span class="stype-badge" style="background:${s.color}">${s.type}</span>
@@ -2461,7 +2558,7 @@ function buildSeekerCard(s, isCustom, idx){
     </div>`;
   return div;
 }
-
+ 
 // ============================================================
 // SEEKER EDITOR LOGIC
 // ============================================================
@@ -2473,7 +2570,7 @@ function skEdStatus(msg,ok=true){
   el.style.color=ok?'#14532d':'#9f1239';
   clearTimeout(window._skEdT);window._skEdT=setTimeout(()=>el.style.display='none',3000);
 }
-
+ 
 function skEdPopulateSelect(selectedVal){
   const sel=document.getElementById('skEdItem');if(!sel)return;
   sel.innerHTML='<option value="__new__">— Nova card —</option>';
@@ -2485,7 +2582,7 @@ function skEdPopulateSelect(selectedVal){
   });
   if(selectedVal) sel.value=selectedVal;
 }
-
+ 
 function skEdGetData(val){
   if(!val||val==='__new__') return null;
   if(val.startsWith('base_')){
@@ -2496,7 +2593,7 @@ function skEdGetData(val){
     return _skCustom[idx]?skClone(_skCustom[idx]):null;
   }
 }
-
+ 
 function skEdLoad(){
   const val=document.getElementById('skEdItem')?.value||'__new__';
   const lbl=document.getElementById('skEdLabel');
@@ -2506,7 +2603,7 @@ function skEdLoad(){
   if(lbl) lbl.textContent=data?data.type:'Nova card';
   fields.innerHTML=skEdBuildForm(data||{color:'#374151',type:'',name:'',abbr:'',desc:'',stats:[],missiles:[],counters:[],irccmTypes:[]});
 }
-
+ 
 function skEdBuildForm(s){
   const statsStr=(s.stats||[]).map(([k,v])=>k+'|'+v).join('\n');
   const missStr=(s.missiles||[]).join('\n');
@@ -2527,7 +2624,7 @@ function skEdBuildForm(s){
     <div class="ed-section">Tipos IRCCM <span style="font-weight:400;letter-spacing:0;font-size:9px">(JSON: [{name,desc,ex}])</span></div>
     <div class="ed-field-row"><label>irccmTypes</label><textarea id="skf_irccm" style="min-height:90px;font-family:monospace;font-size:11px;resize:vertical">${escHtml(irccmStr)}</textarea></div>`;
 }
-
+ 
 function skEdCollect(){
   const statsLines=(document.getElementById('skf_stats')?.value||'').split('\n').filter(Boolean);
   const stats=statsLines.map(l=>{const p=l.split('|');return[p[0]?.trim()||'',p.slice(1).join('|').trim()];}).filter(([k])=>k);
@@ -2545,7 +2642,7 @@ function skEdCollect(){
     irccmTypes,
   };
 }
-
+ 
 function skEdSave(){
   const val=document.getElementById('skEdItem')?.value||'__new__';
   const data=skEdCollect();
@@ -2571,7 +2668,7 @@ function skEdSave(){
   renderSeekers();
   skEdStatus('Card guardada ✓');
 }
-
+ 
 function skEdRestore(){
   const val=document.getElementById('skEdItem')?.value;
   if(!val||val==='__new__'){skEdLoad();return;}
@@ -2585,7 +2682,7 @@ function skEdRestore(){
   }
   skEdStatus('Cards custom não têm base para repor — edita ou apaga.',false);
 }
-
+ 
 function skEdDelete(){
   const val=document.getElementById('skEdItem')?.value;
   if(!val||val==='__new__'){skEdStatus('Nada selecionado',false);return;}
@@ -2597,7 +2694,7 @@ function skEdDelete(){
   renderSeekers();
   skEdStatus('Card apagada ✓');
 }
-
+ 
 function skEdDeleteFromCard(editKey){
   if(editKey.startsWith('base_')){alert('Não podes apagar cards base.');return;}
   if(!confirm('Apagar esta card custom?'))return;
@@ -2606,19 +2703,19 @@ function skEdDeleteFromCard(editKey){
   renderSeekers();
   skEdPopulateSelect('__new__'); skEdLoad();
 }
-
+ 
 function skEdOpenNew(){
   document.getElementById('skEdItem').value='__new__';
   skEdLoad();
   document.getElementById('seekerEditorPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
-
+ 
 function skEdOpenExisting(editKey){
   document.getElementById('skEdItem').value=editKey;
   skEdLoad();
   document.getElementById('seekerEditorPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
-
+ 
 function skEdExport(){
   const data={base_edits:_skEdits, custom:_skCustom};
   document.getElementById('skEdRaw').value=JSON.stringify(data,null,2);
@@ -2639,19 +2736,564 @@ function skEdImport(){
     skEdStatus('Importado ✓');
   }catch(e){skEdStatus('JSON inválido: '+(e.message||e),false);}
 }
-
+ 
 // Init seeker editor
 skEdPopulateSelect();
 skEdLoad();
-
-renderSeekers();
-
-// TABS
+ 
+// ============================================================
+// PASSWORD + EDITOR LOCK
+// ============================================================
+const EDITOR_PW = 'wt2025';
+let _editorUnlocked = false;
+ 
+function tryOpenEditor(btn){
+  if(_editorUnlocked){ showTab('tAircraft',btn); return; }
+  document.getElementById('pwInput').value='';
+  document.getElementById('pwErr').style.display='none';
+  document.getElementById('pwModal').style.display='flex';
+  window._pwBtn = btn;
+}
+function checkPw(){
+  const val = document.getElementById('pwInput').value;
+  if(val === EDITOR_PW){
+    _editorUnlocked = true;
+    document.getElementById('pwModal').style.display='none';
+    document.getElementById('btnAircraftEditor').textContent='✏️ Aviões / Editor';
+    showTab('tAircraft', window._pwBtn);
+  } else {
+    document.getElementById('pwErr').style.display='block';
+    document.getElementById('pwInput').value='';
+    document.getElementById('pwInput').focus();
+  }
+}
+function closePwModal(){
+  document.getElementById('pwModal').style.display='none';
+}
+document.getElementById('pwInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkPw();});
+ 
+// ============================================================
+// EDIT MODE TOGGLE (visible in editor tab)
+// ============================================================
+let _editMode = false;
+ 
+function toggleEditMode(){
+  _editMode ? exitEditMode() : enterEditMode();
+}
+ 
+function enterEditMode(){
+  _editMode=true; document.body.classList.add('edit-mode');
+  document.getElementById('editModeBar')?.classList.add('visible');
+  document.getElementById('editModeLabel').textContent='LIGADO';
+  document.getElementById('editModeLabel').style.color='#16a34a';
+  document.getElementById('editModeToggleBtn').textContent='🔴 Desativar edição';
+  document.getElementById('editModeToggleBtn').style.background='#fff1f2';
+  document.getElementById('editModeToggleBtn').style.borderColor='#fecdd3';
+  const sBar=document.getElementById('seekerEditBar');
+  if(sBar) sBar.style.display='flex';
+  const sPanel=document.getElementById('seekerEditorPanel');
+  if(sPanel) sPanel.style.display='block';
+  document.querySelectorAll('.aircraft-title[data-mid]').forEach(el=>{
+    el.style.cursor='pointer';
+    el._editHandler=function(){const mid=this.getAttribute('data-mid');if(mid)editAircraft(mid);};
+    el.addEventListener('click',el._editHandler);
+  });
+  tmRender();
+}
+ 
+function exitEditMode(){
+  _editMode=false; document.body.classList.remove('edit-mode');
+  document.getElementById('editModeBar')?.classList.remove('visible');
+  document.getElementById('editModeLabel').textContent='DESLIGADO';
+  document.getElementById('editModeLabel').style.color='#dc2626';
+  document.getElementById('editModeToggleBtn').textContent='✏️ Ativar edição';
+  document.getElementById('editModeToggleBtn').style.background='#fff';
+  document.getElementById('editModeToggleBtn').style.borderColor='#d1d5db';
+  const sBar=document.getElementById('seekerEditBar');
+  if(sBar) sBar.style.display='none';
+  const sPanel=document.getElementById('seekerEditorPanel');
+  if(sPanel) sPanel.style.display='none';
+  document.querySelectorAll('.aircraft-title[data-mid]').forEach(el=>{
+    el.style.cursor='';
+    if(el._editHandler){el.removeEventListener('click',el._editHandler);el._editHandler=null;}
+  });
+}
+ 
+window.WTEdit={editAircraft:function(id){
+  const allArrs=[['arm',armData],['irr',irRearData],['ira',irAllData],['sarh',sarhData],['arh',arhData]];
+  for(const [cat,arr] of allArrs){
+    const idx=arr.findIndex(m=>m.name.replace(/[^a-zA-Z0-9]/g,'_')===id);
+    if(idx>=0){edJumpTo(cat,idx);return;}
+  }
+  const btn=document.getElementById('btnAircraftEditor');if(btn)showTab('tAircraft',btn);
+  window.scrollTo({top:0,behavior:'smooth'});
+},enterEditMode,exitEditMode};
+ 
+// ============================================================
+// TAB MANAGER
+// ============================================================
+const TM_KEY = 'wt_custom_tabs_v1';
+const FIXED_TABS = [
+  {id:'tSPAA',label:'🛡️ SPAA vs ARM',fixed:true},
+  {id:'tARM',label:'🎯 ARM',fixed:true},
+  {id:'tIRr',label:'🔴 IR Rear-Aspect',fixed:true},
+  {id:'tIRa',label:'🔶 IR All-Aspect',fixed:true},
+  {id:'tSARH',label:'📡 SARH',fixed:true},
+  {id:'tARH',label:'⚡ ARH',fixed:true},
+  {id:'tAircraft',label:'✏️ Aviões / Editor',fixed:true},
+  {id:'tSeekers',label:'🔬 Seekers & IRCCM',fixed:true},
+];
+ 
+let _customTabs = [];
+try{ _customTabs = JSON.parse(localStorage.getItem(TM_KEY)||'[]'); }catch(e){ _customTabs=[]; }
+function saveTabs(){ try{localStorage.setItem(TM_KEY,JSON.stringify(_customTabs));}catch(e){} }
+ 
+function tmRender(){
+  const list=document.getElementById('tmList'); if(!list)return;
+  list.innerHTML='';
+  // fixed tabs
+  FIXED_TABS.forEach(t=>{
+    const row=document.createElement('div'); row.className='tm-row';
+    row.innerHTML=`<span class="tm-drag" title="Tab fixa">☰</span><span class="tm-name">${t.label}</span><span class="tm-fixed">fixa</span>`;
+    list.appendChild(row);
+  });
+  // custom tabs
+  _customTabs.forEach((t,i)=>{
+    const row=document.createElement('div'); row.className='tm-row'; row.dataset.idx=i;
+    row.innerHTML=`
+      <span class="tm-drag" draggable="true">☰</span>
+      <span class="tm-name" contenteditable="true" onblur="tmRename(${i},this.textContent.trim())">${escHtml(t.label)}</span>
+      <span class="tm-type-badge${t.template==='seeker'?' sk':''}">${t.template==='seeker'?'Seeker':'Míssil'}</span>
+      <select style="font-size:11px;border:1px solid #e2e8f0;border-radius:6px;padding:2px 6px" onchange="tmChangeType(${i},this.value)">
+        <option value="missile"${t.template==='missile'?' selected':''}>Míssil</option>
+        <option value="seeker"${t.template==='seeker'?' selected':''}>Seeker</option>
+      </select>
+      <button class="tm-btn" onclick="tmMoveUp(${i})">↑</button>
+      <button class="tm-btn" onclick="tmMoveDown(${i})">↓</button>
+      <button class="tm-btn danger" onclick="tmDelete(${i})">🗑</button>`;
+    list.appendChild(row);
+  });
+}
+ 
+function tmRename(i,val){
+  if(!val||!_customTabs[i])return;
+  _customTabs[i].label=val;
+  saveTabs(); tmRender(); rebuildCustomTabs();
+}
+function tmChangeType(i,val){
+  if(!_customTabs[i])return;
+  _customTabs[i].template=val;
+  saveTabs(); rebuildCustomTabs();
+}
+function tmMoveUp(i){
+  if(i===0)return;
+  [_customTabs[i-1],_customTabs[i]]=[_customTabs[i],_customTabs[i-1]];
+  saveTabs(); tmRender(); rebuildCustomTabs();
+}
+function tmMoveDown(i){
+  if(i>=_customTabs.length-1)return;
+  [_customTabs[i],_customTabs[i+1]]=[_customTabs[i+1],_customTabs[i]];
+  saveTabs(); tmRender(); rebuildCustomTabs();
+}
+function tmDelete(i){
+  if(!confirm(`Apagar tab "${_customTabs[i]?.label}"? As cards guardadas também serão apagadas.`))return;
+  // remove cards for this tab
+  try{localStorage.removeItem('wt_ctab_cards_'+_customTabs[i].id);}catch(e){}
+  _customTabs.splice(i,1);
+  saveTabs(); tmRender(); rebuildCustomTabs();
+}
+function tmCreateTab(){
+  const name=(document.getElementById('ntfName')?.value||'').trim();
+  const emoji=(document.getElementById('ntfEmoji')?.value||'').trim()||'📌';
+  const template=document.getElementById('ntfTemplate')?.value||'missile';
+  if(!name){alert('Insere um nome para a tab.');return;}
+  const id='ctab_'+Date.now();
+  _customTabs.push({id,label:emoji+' '+name,template,cards:[]});
+  saveTabs(); tmRender(); rebuildCustomTabs();
+  document.getElementById('ntfName').value='';
+  document.getElementById('ntfEmoji').value='';
+}
+ 
+function rebuildCustomTabs(){
+  // rebuild tab buttons
+  const btnContainer=document.getElementById('customTabBtns'); if(!btnContainer)return;
+  btnContainer.innerHTML='';
+  _customTabs.forEach(t=>{
+    const btn=document.createElement('button');
+    btn.className='tab-btn'; btn.textContent=t.label;
+    btn.onclick=function(){showTab('ctab_'+t.id,this);};
+    btnContainer.appendChild(btn);
+  });
+  // rebuild panes
+  const paneContainer=document.getElementById('customTabPanes'); if(!paneContainer)return;
+  paneContainer.innerHTML='';
+  _customTabs.forEach(t=>{
+    const pane=document.createElement('div');
+    pane.id='ctab_'+t.id; pane.className='tab-pane custom-tab-pane';
+    const gridClass=t.template==='seeker'?'skgrid':'mgrid';
+    pane.innerHTML=`
+      <div class="tab-edit-bar"><span class="teb-label">✏️ Modo edição</span>
+        <button class="teb-new-btn" onclick="openCardEditor('new','${t.template}','ctab_${t.id}')">➕ Nova card</button>
+        <span class="teb-hint">Clica em ✏️ para editar</span></div>
+      <div class="${gridClass}" id="grid_ctab_${t.id}"></div>`;
+    paneContainer.appendChild(pane);
+    renderCustomTabCards(t);
+  });
+}
+ 
+// ============================================================
+// CUSTOM TAB CARD STORAGE + RENDER
+// ============================================================
+const _ctabCards = {};
+ 
+function loadCtabCards(tabId){
+  try{ return JSON.parse(localStorage.getItem('wt_ctab_cards_'+tabId)||'[]'); }catch(e){ return []; }
+}
+function saveCtabCards(tabId,cards){
+  try{localStorage.setItem('wt_ctab_cards_'+tabId,JSON.stringify(cards));}catch(e){}
+}
+ 
+function renderCustomTabCards(tab){
+  const gridId='grid_ctab_'+tab.id;
+  const grid=document.getElementById(gridId); if(!grid)return;
+  const cards=loadCtabCards(tab.id);
+  _ctabCards[tab.id]=cards;
+  grid.innerHTML='';
+  cards.forEach((c,i)=>{
+    grid.appendChild(tab.template==='seeker'
+      ? buildCustomSeekerCard(c,tab.id,i)
+      : buildCustomMissileCard(c,tab.id,i));
+  });
+}
+ 
+// ============================================================
+// CARD EDITOR (sliding panel)
+// ============================================================
+let _cieContext = {tabId:null, template:'missile', cardIdx:-1};
+let _cieImgData = null;
+ 
+function openCardEditor(mode, template, tabPaneId, cardIdx=-1){
+  _cieContext = {tabId: tabPaneId, template, cardIdx};
+  _cieImgData = null;
+  const editor=document.getElementById('cardInlineEditor');
+  const overlay=document.getElementById('cieOverlay');
+  document.getElementById('cieTemplate').value=template;
+  // load data if editing
+  let existing = null;
+  if(mode==='edit' && cardIdx>=0){
+    const realTabId=tabPaneId.replace(/^ctab_/,'');
+    const tab=_customTabs.find(t=>t.id===realTabId);
+    if(tab){
+      const cards=loadCtabCards(tab.id);
+      existing=cards[cardIdx]||null;
+      if(existing) _cieImgData=existing.img||null;
+    }
+  }
+  document.getElementById('cieTitle').textContent=mode==='new'?'➕ Nova Card':'✏️ Editar Card';
+  document.getElementById('cieDeleteBtn').style.display=mode==='edit'?'inline-block':'none';
+  cieRenderFields(existing);
+  editor.classList.add('open');
+  overlay.classList.add('open');
+}
+ 
+function closeCardEditor(){
+  document.getElementById('cardInlineEditor').classList.remove('open');
+  document.getElementById('cieOverlay').classList.remove('open');
+}
+ 
+function cieRenderFields(data){
+  const template=document.getElementById('cieTemplate').value;
+  const d=data||{};
+  const fields=document.getElementById('cieFields');
+  if(template==='missile'){
+    fields.innerHTML=`
+      <div class="cie-section">Identificação</div>
+      <div class="cie-field"><label>Nome do míssil *</label><input id="cieF_name" value="${escHtml(d.name||'')}" placeholder="Ex: AIM-9L"></div>
+      <div class="cie-field"><label>Badge / Tipo</label><input id="cieF_badge" value="${escHtml(d.badge||'')}" placeholder="IR All-Aspect"></div>
+      <div class="cie-field"><label>Badge class (cor)</label>
+        <select id="cieF_badgeClass">
+          <option value="badge-ir"${(d.badgeClass||'')==='badge-ir'?' selected':''}>IR Rear (vermelho)</option>
+          <option value="badge-irall"${(d.badgeClass||'')==='badge-irall'?' selected':''}>IR All (rosa)</option>
+          <option value="badge-sarh"${(d.badgeClass||'')==='badge-sarh'?' selected':''}>SARH (azul)</option>
+          <option value="badge-arh"${(d.badgeClass||'')==='badge-arh'?' selected':''}>ARH (roxo)</option>
+          <option value="badge-arm"${(d.badgeClass||'')==='badge-arm'?' selected':''}>ARM (amarelo)</option>
+        </select>
+      </div>
+      <div class="cie-section">📊 Stats (como na imagem)</div>
+      <div class="cie-field"><label>Massa</label><input id="cieF_mass" value="${escHtml(d.mass||'')}" placeholder="205 kg"></div>
+      <div class="cie-field"><label>Velocidade</label><input id="cieF_speed" value="${escHtml(d.speed||'')}" placeholder="Mach 3.0"></div>
+      <div class="cie-field"><label>Alcance</label><input id="cieF_range" value="${escHtml(d.range||'')}" placeholder="42 km"></div>
+      <div class="cie-field"><label>Ogiva</label><input id="cieF_wh" value="${escHtml(d.wh||'')}" placeholder="11.5 kg"></div>
+      <div class="cie-field"><label>Overload máx.</label><input id="cieF_overload" value="${escHtml(d.overload||'')}" placeholder="23G"></div>
+      <div class="cie-field"><label>Gimbal</label><input id="cieF_gimbal" value="${escHtml(d.gimbal||'')}" placeholder="±45°"></div>
+      <div class="cie-field"><label>Track rate</label><input id="cieF_trackRate" value="${escHtml(d.trackRate||'')}" placeholder="12°/s"></div>
+      <div class="cie-field"><label>Fuze</label><input id="cieF_fuze" value="${escHtml(d.fuze||'')}" placeholder="Prox. 8 m / delay 1.8s"></div>
+      <div class="cie-field"><label>IOG</label><input id="cieF_iog" value="${escHtml(d.iog||'')}" placeholder="Não"></div>
+      <div class="cie-field"><label>Data Link</label><input id="cieF_dl" value="${escHtml(d.dl||'')}" placeholder="Não"></div>
+      <div class="cie-field"><label>Tipo seeker</label><input id="cieF_seekerType" value="${escHtml(d.seekerType||'')}" placeholder="CW"></div>
+      <div class="cie-field"><label>Aspeto / Guidance</label><input id="cieF_aspect" value="${escHtml(d.aspect||'')}" placeholder="SARH I-band CW"></div>
+      <div class="cie-field"><label>Burn time</label><input id="cieF_burnTime" value="${escHtml(d.burnTime||'')}" placeholder="2.8s"></div>
+      <div class="cie-field"><label>Guia duration</label><input id="cieF_guideDur" value="${escHtml(d.guideDur||'')}" placeholder="40s"></div>
+      <div class="cie-field"><label>Signal / Seeker</label><input id="cieF_signal" value="${escHtml(d.signal||'')}" placeholder="I-band Continuous Wave"></div>
+      <div class="cie-field"><label>IRCCM</label><input id="cieF_irccm" value="${escHtml(d.irccm||'')}" placeholder="—"></div>
+      <div class="cie-section">📝 Notas & Counters</div>
+      <div class="cie-field"><label>Nota</label><textarea id="cieF_note">${escHtml(d.note||'')}</textarea></div>
+      <div class="cie-field"><label>Como contrariar (1 por linha)</label><textarea id="cieF_counters">${escHtml((d.counters||[]).join('\n'))}</textarea></div>
+      <div class="cie-field"><label>Nação</label><input id="cieF_nation" value="${escHtml(d.nation||'')}" placeholder="USA / USSR…"></div>
+      <div class="cie-section">🖼️ Imagem</div>
+      ${cieImgUploadHtml(d.img)}`;
+  } else {
+    // seeker template
+    fields.innerHTML=`
+      <div class="cie-section">Identificação</div>
+      <div class="cie-field"><label>Tipo / Badge *</label><input id="cieF_type" value="${escHtml(d.type||'')}" placeholder="IR Rear-Aspect"></div>
+      <div class="cie-field"><label>Nome</label><input id="cieF_name" value="${escHtml(d.name||'')}" placeholder="Nome descritivo"></div>
+      <div class="cie-field"><label>Subtítulo</label><input id="cieF_abbr" value="${escHtml(d.abbr||'')}" placeholder="AIM-9M · AIM-9L/I"></div>
+      <div class="cie-field"><label>Cor badge (hex)</label><input id="cieF_color" value="${escHtml(d.color||'#374151')}" type="color" style="width:60px;padding:2px;height:32px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer"></div>
+      <div class="cie-field"><label>Descrição</label><textarea id="cieF_desc">${escHtml(d.desc||'')}</textarea></div>
+      <div class="cie-section">📊 Stats (Chave|Valor, uma por linha)</div>
+      <div class="cie-field"><label>Stats</label><textarea id="cieF_stats" style="font-family:monospace;min-height:100px">${escHtml((d.stats||[]).map(([k,v])=>k+'|'+v).join('\n'))}</textarea></div>
+      <div class="cie-section">Mísseis & Counters</div>
+      <div class="cie-field"><label>Mísseis (1 por linha)</label><textarea id="cieF_missiles">${escHtml((d.missiles||[]).join('\n'))}</textarea></div>
+      <div class="cie-field"><label>Como contrariar (1 por linha)</label><textarea id="cieF_counters">${escHtml((d.counters||[]).join('\n'))}</textarea></div>
+      <div class="cie-section">🖼️ Imagem</div>
+      ${cieImgUploadHtml(d.img)}`;
+  }
+  // bind image events after DOM update
+  setTimeout(()=>bindCieImgEvents(),50);
+}
+ 
+function cieImgUploadHtml(existingImg){
+  const hasImg=!!(existingImg);
+  return `
+    <div class="img-upload-area" onclick="document.getElementById('cieImgFile').click()">
+      <div style="font-size:11px;color:#64748b">📎 Clica para fazer upload de imagem<br><span style="font-size:10px;color:#94a3b8">(JPG, PNG, WebP — max 2MB)</span></div>
+      <input type="file" id="cieImgFile" accept="image/*">
+      <img id="cieImgPreview" class="img-preview-small" src="${hasImg?existingImg:''}" style="${hasImg?'display:block':'display:none'}">
+    </div>
+    <div class="cie-field" style="margin-top:8px"><label>Ou URL de imagem</label>
+      <input id="cieImgUrl" value="${escHtml(existingImg&&!existingImg.startsWith('data:')?existingImg:'')}" placeholder="https://…" oninput="cieImgUrlChange(this.value)">
+    </div>
+    ${hasImg?`<button onclick="clearCieImg()" style="font-size:11px;border:1px solid #fecdd3;background:#fff1f2;color:#9f1239;border-radius:6px;padding:3px 8px;cursor:pointer;margin-top:4px">🗑 Remover imagem</button>`:''}`;
+}
+ 
+function bindCieImgEvents(){
+  const fileInput=document.getElementById('cieImgFile'); if(!fileInput)return;
+  fileInput.addEventListener('change',function(e){
+    const f=e.target.files[0]; if(!f||f.size>2*1024*1024){alert('Imagem muito grande (max 2MB).');return;}
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      _cieImgData=ev.target.result;
+      const preview=document.getElementById('cieImgPreview');
+      if(preview){preview.src=_cieImgData;preview.style.display='block';}
+      document.getElementById('cieImgUrl').value='';
+    };
+    reader.readAsDataURL(f);
+  });
+}
+function cieImgUrlChange(val){
+  _cieImgData=val||null;
+  const preview=document.getElementById('cieImgPreview');
+  if(preview&&val){preview.src=val;preview.style.display='block';}
+  else if(preview){preview.style.display='none';}
+}
+function clearCieImg(){
+  _cieImgData=null;
+  const preview=document.getElementById('cieImgPreview');
+  if(preview){preview.src='';preview.style.display='none';}
+  const urlInput=document.getElementById('cieImgUrl');
+  if(urlInput)urlInput.value='';
+}
+ 
+function cieCollect(){
+  const template=document.getElementById('cieTemplate').value;
+  const imgUrl=document.getElementById('cieImgUrl')?.value.trim()||null;
+  const img=_cieImgData||(imgUrl||null);
+  if(template==='missile'){
+    return {
+      _template:'missile',
+      name: document.getElementById('cieF_name')?.value.trim()||'',
+      badge: document.getElementById('cieF_badge')?.value.trim()||'',
+      badgeClass: document.getElementById('cieF_badgeClass')?.value||'badge-ir',
+      img,
+      nation: document.getElementById('cieF_nation')?.value.trim()||'',
+      note: document.getElementById('cieF_note')?.value.trim()||'',
+      counters: (document.getElementById('cieF_counters')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
+      s:{
+        mass:      document.getElementById('cieF_mass')?.value.trim()||'',
+        speed:     document.getElementById('cieF_speed')?.value.trim()||'',
+        range:     document.getElementById('cieF_range')?.value.trim()||'',
+        wh:        document.getElementById('cieF_wh')?.value.trim()||'',
+        overload:  document.getElementById('cieF_overload')?.value.trim()||'',
+        gimbal:    document.getElementById('cieF_gimbal')?.value.trim()||'',
+        trackRate: document.getElementById('cieF_trackRate')?.value.trim()||'',
+        fuze:      document.getElementById('cieF_fuze')?.value.trim()||'',
+        iog:       document.getElementById('cieF_iog')?.value.trim()||'',
+        dl:        document.getElementById('cieF_dl')?.value.trim()||'',
+        seekerType:document.getElementById('cieF_seekerType')?.value.trim()||'',
+        aspect:    document.getElementById('cieF_aspect')?.value.trim()||'',
+        burnTime:  document.getElementById('cieF_burnTime')?.value.trim()||'',
+        guideDur:  document.getElementById('cieF_guideDur')?.value.trim()||'',
+        signal:    document.getElementById('cieF_signal')?.value.trim()||'',
+        irccm:     document.getElementById('cieF_irccm')?.value.trim()||'',
+        note:      document.getElementById('cieF_note')?.value.trim()||'',
+        counters:  (document.getElementById('cieF_counters')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
+      }
+    };
+  } else {
+    const statsLines=(document.getElementById('cieF_stats')?.value||'').split('\n').filter(Boolean);
+    return {
+      _template:'seeker',
+      type:     document.getElementById('cieF_type')?.value.trim()||'',
+      name:     document.getElementById('cieF_name')?.value.trim()||'',
+      abbr:     document.getElementById('cieF_abbr')?.value.trim()||'',
+      color:    document.getElementById('cieF_color')?.value||'#374151',
+      desc:     document.getElementById('cieF_desc')?.value.trim()||'',
+      img,
+      stats:    statsLines.map(l=>{const p=l.split('|');return[p[0].trim(),p.slice(1).join('|').trim()]}).filter(([k])=>k),
+      missiles: (document.getElementById('cieF_missiles')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
+      counters: (document.getElementById('cieF_counters')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
+      irccmTypes:[],
+    };
+  }
+}
+ 
+function cieSave(){
+  const data=cieCollect();
+  const {tabId,cardIdx}=_cieContext;
+  // determine real tab id
+  const realTabId=tabId.replace(/^ctab_/,'');
+  const tab=_customTabs.find(t=>t.id===realTabId);
+  if(!tab){alert('Tab não encontrada.');return;}
+  const cards=loadCtabCards(tab.id);
+  if(cardIdx>=0 && cardIdx<cards.length){
+    cards[cardIdx]=data;
+  } else {
+    cards.push(data);
+  }
+  saveCtabCards(tab.id,cards);
+  renderCustomTabCards(tab);
+  closeCardEditor();
+}
+ 
+function cieDelete(){
+  const {tabId,cardIdx}=_cieContext;
+  if(cardIdx<0){closeCardEditor();return;}
+  if(!confirm('Apagar esta card?'))return;
+  const realTabId=tabId.replace(/^ctab_/,'');
+  const tab=_customTabs.find(t=>t.id===realTabId);
+  if(!tab){closeCardEditor();return;}
+  const cards=loadCtabCards(tab.id);
+  cards.splice(cardIdx,1);
+  saveCtabCards(tab.id,cards);
+  renderCustomTabCards(tab);
+  closeCardEditor();
+}
+ 
+// ============================================================
+// CUSTOM CARD RENDERERS
+// ============================================================
+function buildCustomMissileCard(c,tabId,idx){
+  const d=c.s||{};
+  const rows=[
+    ['Massa',d.mass],['Velocidade',d.speed],['Alcance',d.range],
+    ['Ogiva',d.wh],['Overload máx.',d.overload],['Gimbal',d.gimbal],
+    ['Track rate',d.trackRate],['Fuze',d.fuze],['IOG',d.iog],['Data Link',d.dl],
+    ['Tipo seeker',d.seekerType],['Aspeto / Guidance',d.aspect],
+    ['Burn time',d.burnTime],['Guia duration',d.guideDur],['Signal / Seeker',d.signal],
+  ].filter(([,v])=>v&&v.trim&&v.trim()&&v!=='—');
+ 
+  const statsHtml=`<div class="sgrid">${rows.map(([k,v])=>`<div class="sg"><div class="sg-k">${escHtml(k)}</div><div class="sg-v">${escHtml(v)}</div></div>`).join('')}</div>`;
+  const irccmHtml=d.irccm?`<div class="mlabel">IRCCM</div>${irccmPill(d.irccm)}`:'';
+  const noteHtml=(d.note&&d.note.trim())?`<div class="note-box">${escHtml(d.note)}</div>`:'';
+  const counterHtml=(c.counters||[]).filter(Boolean).length?`<div class="mlabel">Como contrariar</div><ul class="counter-list">${(c.counters||[]).map(ct=>`<li>${escHtml(ct)}</li>`).join('')}</ul>`:'';
+  const imgHtml=c.img?`<div class="card-img-wrap"><img src="${escHtml(c.img)}" alt="${escHtml(c.name)}" loading="lazy"></div>`:'';
+  const customBadge='<span class="mcard-custom-badge">CUSTOM</span>';
+  const div=document.createElement('div'); div.className='mcard';
+  div.innerHTML=`
+    ${imgHtml}
+    <div class="mcard-head">
+      <div><div class="mcard-name">${escHtml(c.name||'—')}${customBadge}</div>${c.nation?`<div class="mcard-nation">${escHtml(c.nation)}</div>`:''}</div>
+      <span class="badge ${escHtml(c.badgeClass||'badge-ir')}">${escHtml(c.badge||'')}</span>
+    </div>
+    <div class="mcard-body">
+      <div class="mlabel">Estatísticas (in-game)</div>
+      ${statsHtml}${irccmHtml}${noteHtml}${counterHtml}
+      <div>
+        <button class="mcard-edit-btn" onclick="openCardEditor('edit','missile','ctab_${tabId}',${idx})">✏️ Editar</button>
+        <button class="mcard-del-btn is-custom" onclick="cieDeleteDirect('${tabId}',${idx})">🗑</button>
+      </div>
+    </div>`;
+  return div;
+}
+ 
+function buildCustomSeekerCard(c,tabId,idx){
+  const statsHtml=(c.stats||[]).map(([k,v])=>`<tr><td>${escHtml(k)}</td><td>${escHtml(v)}</td></tr>`).join('');
+  const missHtml=(c.missiles||[]).map(m=>`<span class="stag">${escHtml(m)}</span>`).join('');
+  const counterHtml=(c.counters||[]).map(ct=>`<li>${escHtml(ct)}</li>`).join('');
+  const imgHtml=c.img?`<div class="card-img-wrap"><img src="${escHtml(c.img)}" alt="${escHtml(c.name||c.type)}" loading="lazy"></div>`:'';
+  const div=document.createElement('div'); div.className='scard';
+  div.innerHTML=`
+    ${imgHtml}
+    <div class="scard-head">
+      <span class="stype-badge" style="background:${escHtml(c.color||'#374151')}">${escHtml(c.type||'')}</span>
+      <span class="scard-custom-badge">CUSTOM</span>
+      <div class="scard-name">${escHtml(c.name||'')}</div>
+      <div class="scard-sub">${escHtml(c.abbr||'')}</div>
+    </div>
+    <div class="scard-body">
+      <p style="font-size:12px;color:#444;line-height:1.5;margin-bottom:10px">${escHtml(c.desc||'')}</p>
+      ${statsHtml?`<table class="kv">${statsHtml}</table>`:''}
+      <div class="mlabel">Mísseis</div><div class="tag-row">${missHtml||'<span style="color:#94a3b8;font-size:11px">—</span>'}</div>
+      <div class="mlabel">Como contrariar</div><ul class="counter-list">${counterHtml||'<li style="color:#94a3b8">—</li>'}</ul>
+      <div>
+        <button class="scard-edit-btn" onclick="openCardEditor('edit','seeker','ctab_${tabId}',${idx})">✏️ Editar</button>
+        <button class="scard-del-btn is-custom" onclick="cieDeleteDirect('${tabId}',${idx})">🗑</button>
+      </div>
+    </div>`;
+  return div;
+}
+ 
+function cieDeleteDirect(tabId,idx){
+  if(!confirm('Apagar esta card?'))return;
+  const tab=_customTabs.find(t=>t.id===tabId);
+  if(!tab)return;
+  const cards=loadCtabCards(tab.id);
+  cards.splice(idx,1); saveCtabCards(tab.id,cards);
+  renderCustomTabCards(tab);
+}
+ 
+// Also add edit/delete buttons to existing missile grids via buildMCard override
+(function patchBuildMCard(){
+  const orig=window.buildMCard||buildMCard;
+  window.buildMCard=function(m,badgeClass){
+    const div=orig(m,badgeClass);
+    // add edit/delete overlay buttons
+    const body=div.querySelector('.mcard-body');
+    if(body){
+      const wrap=document.createElement('div');
+      wrap.innerHTML=`<button class="mcard-edit-btn" onclick="alert('Para editar cards base usa o separador Editor.')">✏️ Ver no Editor</button>`;
+      body.appendChild(wrap);
+    }
+    return div;
+  };
+})();
+ 
+// ============================================================
+// TABS + SHOWT
+// ============================================================
 function showTab(id,btn){
   document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');btn.classList.add('active');
+  const pane=document.getElementById(id);
+  if(pane) pane.classList.add('active');
+  if(btn) btn.classList.add('active');
 }
+ 
+// init custom tabs
+rebuildCustomTabs();
+tmRender();
 </script>
 </body>
 </html>
+ 
