@@ -1,4 +1,4 @@
-window.Storage = {
+window.CloudStorage = {
 
     async load(){
 
