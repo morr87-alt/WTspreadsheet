@@ -3,14 +3,13 @@ window.API = {
     async load(){
 
         const r = await fetch("/api/load");
-
         return await r.json();
 
     },
 
     async save(data){
 
-        const r = await fetch("/api/save",{
+        await fetch("/api/save",{
 
             method:"POST",
 
@@ -22,7 +21,19 @@ window.API = {
 
         });
 
-        return await r.json();
+    },
+
+    async sync(){
+
+        await this.save({
+
+            missiles:_edDB,
+
+            seekers:_skDB,
+
+            aircraft:aircraftDB
+
+        });
 
     }
 

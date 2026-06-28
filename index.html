@@ -1641,7 +1641,17 @@ function loadAircraftData(){
   }catch(e){console.warn('Erro ao carregar aviões portadores',e);}
   return db;
 }
-function saveAircraftData(){try{localStorage.setItem(AIRCRAFT_KEY,JSON.stringify(aircraftDB));}catch(e){console.warn('Erro ao guardar aviões portadores',e);}}
+
+function saveAircraftData(){
+    try{
+        localStorage.setItem(AIRCRAFT_KEY,JSON.stringify(aircraftDB));
+    }catch(e){
+        console.warn('Erro ao guardar aviões portadores',e);
+    }
+
+    API.sync();
+}
+
 let aircraftDB=loadAircraftData();
 function getAircraftList(id){return uniqCleanList(aircraftDB[id]||[]);}
 function setAircraftList(id,list){aircraftDB[id]=uniqCleanList(list);saveAircraftData();}
@@ -1939,11 +1949,56 @@ function edCatMap(){return {
 // load overrides from localStorage
 let _edDB = {};
 let _skDB = {};
-try{ _edDB = JSON.parse(localStorage.getItem(ED_KEY)||'{}'); }catch(e){}
-try{ _skDB = JSON.parse(localStorage.getItem(SEEKER_KEY)||'{}'); }catch(e){}
+
+try{
+    _edDB = JSON.parse(localStorage.getItem(ED_KEY) || '{}');
+}catch(e){}
+
+(async () => {
+    try{
+        const data = await API.load();
+
+        if(data.missiles){
+            _edDB = data.missiles;
+        }
+
+    }catch(e){
+        console.error("Erro ao carregar da D1:", e);
+    }
+})();
+
+try{
+    _skDB = JSON.parse(localStorage.getItem(SEEKER_KEY) || '{}');
+}catch(e){}
+
+(async () => {
+    try{
+        const data = await API.load();
+
+        if(data.seekers){
+            _skDB = data.seekers;
+        }
+
+    }catch(e){
+        console.error("Erro ao carregar seekers da D1:", e);
+    }
+})();
  
-function edSaveDB(){ try{localStorage.setItem(ED_KEY,JSON.stringify(_edDB));}catch(e){} }
-function edSaveSK(){ try{localStorage.setItem(SEEKER_KEY,JSON.stringify(_skDB));}catch(e){} }
+function edSaveDB(){
+    try{
+        localStorage.setItem(ED_KEY,JSON.stringify(_edDB));
+    }catch(e){}
+
+    API.sync();
+}
+
+function edSaveSK(){
+    try{
+        localStorage.setItem(SEEKER_KEY,JSON.stringify(_skDB));
+    }catch(e){}
+
+    API.sync();
+}
  
 // Apply stored overrides to a missile s-object
 function edApplyOverrides(name, s){
