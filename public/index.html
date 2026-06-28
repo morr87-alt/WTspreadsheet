@@ -133,10 +133,10 @@ tbody tr.dr td.bd{font-size:10px;color:#aaa}
 /* edit button — ESCONDIDO por defeito, aparece só em edit mode */
 .aircraft-edit-btn{display:none}
 /* trigger escondido no canto do título */
-.aircraft-edit-trigger{display:inline-block;width:8px;height:8px;border-radius:50%;background:transparent;cursor:pointer;flex-shrink:0;opacity:0;transition:opacity .2s}
-.aircraft-title:hover .aircraft-edit-trigger{opacity:.25}
-body.edit-mode .aircraft-edit-trigger{opacity:.7;background:#3b82f6}
-body.edit-mode .aircraft-title{color:#3b82f6}
+.aircraft-edit-trigger{display:none}
+.aircraft-title:hover .aircraft-edit-trigger{display:none}
+body.edit-mode .aircraft-edit-trigger{display:none}
+body.edit-mode .aircraft-title{color:inherit}
 body.edit-mode .aircraft-tag{background:#dbeafe;color:#1e40af}
 /* floating edit mode indicator */
 #editModeBar{display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);background:#0f172a;color:#e2e8f0;font-size:11px;font-weight:600;padding:6px 14px;border-radius:0 0 10px 10px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.35);gap:10px;align-items:center}
@@ -203,6 +203,7 @@ body.edit-mode .scard-del-btn.is-custom{display:inline-block}
 
 /* missile card edit/delete buttons — edit mode only */
 .mcard-edit-btn{display:none;margin-top:10px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;border:1px solid #c7d2fe;background:#eef2ff;color:#3730a3;cursor:pointer}
+body.edit-mode .mcard-edit-btn{display:inline-block}
 .mcard-del-btn{display:none;margin-top:10px;margin-left:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;border:1px solid #fecdd3;background:#fff1f2;color:#9f1239;cursor:pointer}
 body.edit-mode .mcard-edit-btn{display:inline-block}
 body.edit-mode .mcard-del-btn.is-custom{display:inline-block}
@@ -378,54 +379,26 @@ body.edit-mode .tab-btn[draggable]{cursor:grab}
 
 <!-- FULL CARD + AIRCRAFT EDITOR -->
 <div id="tAircraft" class="tab-pane">
-  <!-- Modo edição toggle — sempre visível aqui -->
+  <!-- Modo edição toggle -->
   <div id="editModeToggle" style="display:flex;align-items:center;gap:10px;margin-bottom:14px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px">
     <span style="font-size:12px;color:#475569;flex:1">Modo de edição: <strong id="editModeLabel" style="color:#dc2626">DESLIGADO</strong></span>
     <button id="editModeToggleBtn" onclick="toggleEditMode()" style="font-size:12px;font-weight:700;padding:6px 14px;border-radius:8px;border:1px solid #d1d5db;background:#fff;cursor:pointer">✏️ Ativar edição</button>
   </div>
 
-  <div class="aircraft-editor-note">
-    <strong>Editor completo de cards.</strong> Altera qualquer campo de qualquer míssil (massa, alcance, notas, counters, aviões…) e dos cards de Seekers. Campos vazios ficam ocultos na card. Tudo guardado em <strong>localStorage</strong> e exportável em JSON.
+  <!-- Export / Import / Reset -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start;margin-bottom:16px">
+    <button onclick="edExportAll()" style="border:1px solid #d1d5db;background:#fff;padding:7px 12px;border-radius:9px;font-weight:700;cursor:pointer;font-size:12px">📤 Exportar tudo</button>
+    <button onclick="edImportAll()" style="border:1px solid #d1d5db;background:#fff;padding:7px 12px;border-radius:9px;font-weight:700;cursor:pointer;font-size:12px">📥 Importar JSON</button>
+    <button onclick="edResetAll()" style="border:1px solid #fecdd3;background:#fff1f2;color:#9f1239;padding:7px 12px;border-radius:9px;font-weight:700;cursor:pointer;font-size:12px">⚠ Reset total</button>
+    <textarea id="edRaw" class="raw-box" style="min-height:60px;flex:1;min-width:200px" placeholder="JSON exportado / para importar aqui…"></textarea>
+    <div id="edStatus" class="editor-status" style="flex-basis:100%;margin-top:4px"></div>
   </div>
-  <div class="editor-wrap" style="grid-template-columns:340px 1fr;display:grid;gap:14px">
-    <!-- LEFT: selector + actions -->
-    <div class="editor-panel" style="min-width:0">
-      <h2>Selecionar item</h2>
-      <div class="editor-row"><label>Categoria</label>
-        <select id="edCat" onchange="edLoadCat()">
-          <option value="arm">ARM Missiles</option>
-          <option value="irr">IR Rear-Aspect</option>
-          <option value="ira">IR All-Aspect</option>
-          <option value="sarh">SARH</option>
-          <option value="arh">ARH</option>
-          <option value="seeker">Seekers / IRCCM</option>
-        </select>
-      </div>
-      <div class="editor-row"><label>Item</label><select id="edItem" onchange="edLoadItem()" style="max-width:100%"></select></div>
-      <div class="editor-actions" style="margin-top:12px">
-        <button class="primary" onclick="edSave()">💾 Guardar</button>
-        <button onclick="edRestore()">↩ Repor base</button>
-        <button class="warn" onclick="edClearField()">🗑 Limpar campo</button>
-      </div>
-      <div class="editor-actions">
-        <button onclick="edExportAll()">📤 Exportar tudo</button>
-        <button onclick="edImportAll()">📥 Importar JSON</button>
-        <button class="danger" onclick="edResetAll()">⚠ Reset total</button>
-      </div>
-      <div class="editor-row"><label>JSON export/import</label>
-        <textarea id="edRaw" class="raw-box" style="min-height:100px" placeholder="JSON exportado aparece aqui…"></textarea>
-      </div>
-      <div id="edStatus" class="editor-status"></div>
+
+  <!-- Index table — all items -->
+  <div class="aircraft-index" style="margin-top:4px">
+    <div style="margin-bottom:8px">
+      <input id="edSearch" type="search" placeholder="Pesquisar em todos os items…" oninput="edRenderIndex()" style="width:280px;font-size:12px;padding:5px 10px;border-radius:6px;border:1px solid #d1d5db;height:30px">
     </div>
-    <!-- RIGHT: fields -->
-    <div class="editor-panel" style="min-width:0">
-      <h2>Editar: <span id="edCurrentLabel" class="edit-chip">—</span></h2>
-      <div id="edFields"></div>
-    </div>
-  </div>
-  <!-- index table -->
-  <div class="aircraft-index" style="margin-top:16px">
-    <div class="editor-row"><input id="edSearch" type="search" placeholder="Pesquisar em todos os items…" oninput="edRenderIndex()" style="width:280px;font-size:12px;padding:5px 10px;border-radius:6px;border:1px solid #d1d5db;height:30px"></div>
     <div class="tbl-wrap"><table><thead><tr><th>Nome</th><th>Grupo</th><th>Modificado</th><th>Ação</th></tr></thead><tbody id="edIndexBody"></tbody></table></div>
   </div>
 
@@ -434,7 +407,6 @@ body.edit-mode .tab-btn[draggable]{cursor:grab}
     <h3>🗂️ Gestão de Tabs</h3>
     <p style="font-size:11px;color:#64748b;margin-bottom:12px">Arrasta as tabs na barra de cima para reordenar · Cria novas tabs com template Míssil ou Seeker · Todas as tabs podem ser apagadas.</p>
     <div id="tmList"></div>
-    <!-- New tab form -->
     <div class="new-tab-form">
       <h4>➕ Criar nova tab</h4>
       <div class="ntf-row"><label>Nome</label><input id="ntfName" placeholder="Ex: ATGM, Fox-1…" maxlength="30"></div>
@@ -511,6 +483,9 @@ body.edit-mode .tab-btn[draggable]{cursor:grab}
 
   <div id="cieFields"></div>
 
+  <!-- Permanent file input — never recreated, avoids browser security block -->
+  <input type="file" id="cieImgFile" accept="image/*" style="display:none">
+
   <div class="cie-actions">
     <button class="primary" onclick="cieSave()">💾 Guardar</button>
     <button class="danger" id="cieDeleteBtn" onclick="cieDelete()" style="display:none">🗑 Apagar</button>
@@ -570,26 +545,31 @@ async function serverLoad() {
     }
     // Apply server data → overrides localStorage
     _serverVersion = data._version || 0;
-    if (data.missiles)       Object.assign(_edDB,    data.missiles);
-    if (data.seekers)        Object.assign(_skDB,    data.seekers);
-    if (data.customMissiles) Object.assign(_custM,   data.customMissiles);
-    if (data.aircraft)       Object.assign(aircraftDB, data.aircraft);
-    if (Array.isArray(data.customSeekers)) {
+    if (data.missiles)       { Object.assign(_edDB,      data.missiles);      try{localStorage.setItem(ED_KEY,       JSON.stringify(_edDB));}catch(e){} }
+    if (data.seekers)        { Object.assign(_skDB,      data.seekers);       try{localStorage.setItem(SEEKER_KEY,   JSON.stringify(_skDB));}catch(e){} }
+    if (data.customMissiles) { Object.assign(_custM,     data.customMissiles);try{localStorage.setItem(ED_CUSTOM_KEY,JSON.stringify(_custM));}catch(e){} }
+    if (data.aircraft)       { Object.assign(aircraftDB, data.aircraft);      try{localStorage.setItem(AIRCRAFT_KEY, JSON.stringify(aircraftDB));}catch(e){} }
+    if (Array.isArray(data.customSeekers) && data.customSeekers.length) {
       data.customSeekers.forEach(cs => {
         if (!seekerData.find(x => x.type === cs.type)) seekerData.push(cs);
         if (!_custSK.find(x => x.type === cs.type))    _custSK.push(cs);
       });
+      try{localStorage.setItem(ED_CUST_SK_KEY, JSON.stringify(_custSK));}catch(e){}
     }
-    // tab manager (custom tabs)
     if (Array.isArray(data.customTabs) && data.customTabs.length) {
-      _customTabs = data.customTabs; saveTabs?.();
+      _customTabs = data.customTabs;
+      try{localStorage.setItem(TM_KEY, JSON.stringify(_customTabs));}catch(e){}
     }
-    // seeker edits & custom seekers (old system)
-    if (data.skEdits)   { Object.assign(_skEdits,  data.skEdits);  skSaveEdits?.(); }
-    if (data.skCustom)  { Object.assign(_skCustom, data.skCustom); skSaveCustom?.(); }
-    // re-save to localStorage as cache
-    _saveED(); _saveSK(); _saveCustM(); _saveCustSK();
-    saveAircraftData();
+    if (data.tabOrder) {
+      try{localStorage.setItem('wt_tab_order_v1', JSON.stringify(data.tabOrder));}catch(e){}
+    }
+    if (data.skEdits)  { Object.assign(_skEdits,  data.skEdits);  try{localStorage.setItem(SK_EDIT_KEY,  JSON.stringify(_skEdits));}catch(e){} }
+    if (data.skCustom) { Object.assign(_skCustom, data.skCustom); try{localStorage.setItem(SK_STORE_KEY, JSON.stringify(_skCustom));}catch(e){} }
+    if (data.ctabCards && typeof data.ctabCards === 'object') {
+      Object.keys(data.ctabCards).forEach(tabId => {
+        try{localStorage.setItem('wt_ctab_cards_'+tabId, JSON.stringify(data.ctabCards[tabId]));}catch(e){}
+      });
+    }
     syncIndicator('synced', data._savedAt);
     console.log(`[sync] Loaded v${_serverVersion} from server`);
   } catch(e) {
@@ -614,13 +594,20 @@ async function _doServerSave() {
     const payload = {
       missiles:       _edDB,
       seekers:        _skDB,
-      customMissiles: typeof _custM  !== 'undefined' ? _custM  : {},
-      customSeekers:  typeof _custSK !== 'undefined' ? _custSK : [],
+      customMissiles: _custM  || {},
+      customSeekers:  _custSK || [],
       aircraft:       aircraftDB,
-      // extra keys from this file's storage system
-      customTabs:     typeof _customTabs  !== 'undefined' ? _customTabs  : [],
-      skEdits:        typeof _skEdits     !== 'undefined' ? _skEdits     : {},
-      skCustom:       typeof _skCustom    !== 'undefined' ? _skCustom    : [],
+      customTabs:     _customTabs  || [],
+      skEdits:        _skEdits     || {},
+      skCustom:       _skCustom    || [],
+      tabOrder:       (()=>{ try{ return JSON.parse(localStorage.getItem('wt_tab_order_v1')||'null'); }catch(e){ return null; } })(),
+      ctabCards:      (()=>{
+        const acc={};
+        (_customTabs||[]).forEach(t=>{
+          try{ acc[t.id]=JSON.parse(localStorage.getItem('wt_ctab_cards_'+t.id)||'[]'); }catch(e){ acc[t.id]=[]; }
+        });
+        return acc;
+      })(),
     };
     const res = await fetch(`${API_URL}/data`, {
       method:  'POST',
@@ -712,6 +699,37 @@ window.addEventListener('beforeunload', e => {
 });
 
 // serverLoad() chamado no fim do script, após todas as variáveis estarem prontas
+// Auto-refresh para visitantes (sem token) — verifica actualizações a cada 30s
+let _pollInterval = null;
+function startPolling(){
+  if(_pollInterval) return;
+  _pollInterval = setInterval(async ()=>{
+    if(_serverToken) return; // editor activo — não sobrescrever
+    try{
+      const res = await fetch(`${API_URL}/data`);
+      if(!res.ok) return;
+      const data = await res.json();
+      if(!data||!data._version) return;
+      if(data._version <= _serverVersion) return; // sem novidades
+      // há dados novos — aplicar silenciosamente
+      if(data.missiles)       Object.assign(_edDB,      data.missiles);
+      if(data.seekers)        Object.assign(_skDB,      data.seekers);
+      if(data.customMissiles) Object.assign(_custM,     data.customMissiles);
+      if(data.aircraft)       Object.assign(aircraftDB, data.aircraft);
+      if(data.ctabCards && typeof data.ctabCards==='object'){
+        Object.keys(data.ctabCards).forEach(id=>{
+          try{localStorage.setItem('wt_ctab_cards_'+id,JSON.stringify(data.ctabCards[id]));}catch(e){}
+        });
+      }
+      _serverVersion = data._version;
+      // re-render cards que estão visíveis
+      if(typeof renderAllGrids === 'function') renderAllGrids();
+      else { try{ renderSeekers?.(); rebuildCustomTabPanes?.(); }catch(e){} }
+      syncIndicator('synced', data._savedAt);
+      console.log(`[sync] Poll: novos dados v${_serverVersion}`);
+    }catch(e){}
+  }, 30000); // 30 segundos
+}
 
 // ============================================================
 // AIRCRAFT CARRIER DATA +  EDITOR STORAGE
@@ -2443,23 +2461,31 @@ function edRenderIndex(){
     });
   });
 
-  all.filter(x=>!q||x.name.toLowerCase().includes(q)||(x.group||'').toLowerCase().includes(q)).forEach(x=>{
+  all.filter(x=>!q||x.name.toLowerCase().includes(q)||(x.group||'').toLowerCase().includes(q)).forEach(function(x){
     const tr=document.createElement('tr');
     const modCell=x.modified?'<span style="color:#0369a1;font-weight:700">✏ Editado</span>':'<span style="color:#94a3b8">—</span>';
-    const td=document.createElement('td');
+    const tdN=document.createElement('td'); tdN.innerHTML='<strong>'+escHtml(x.name)+'</strong>';
+    const tdG=document.createElement('td'); tdG.textContent=x.group||'';
+    const tdM=document.createElement('td'); tdM.innerHTML=modCell;
+    const tdA=document.createElement('td');
     const btn=document.createElement('button');
     btn.textContent='Editar';
     btn.style.cssText='border:1px solid #d1d5db;background:#fff;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:800;cursor:pointer';
-    if(x.type==='base_missile'){
-      btn.onclick=()=>openCardEditor('edit','missile','base_missile',x.idx);
-    } else if(x.type==='base_seeker'){
-      btn.onclick=()=>openCardEditor('edit','seeker','base_seeker',x.idx);
-    } else {
-      btn.onclick=()=>openCardEditor('edit',x.template,'ctab_'+x.tabId,x.idx);
-    }
-    td.appendChild(btn);
-    tr.innerHTML=`<td><strong>${escHtml(x.name)}</strong></td><td>${escHtml(x.group)}</td><td>${modCell}</td>`;
-    tr.appendChild(td);
+    // use data attributes to avoid closure issues
+    btn.dataset.type=x.type;
+    btn.dataset.cat=x.cat||'';
+    btn.dataset.idx=x.idx;
+    btn.dataset.tabId=x.tabId||'';
+    btn.dataset.template=x.template||'missile';
+    btn.addEventListener('click', function(){
+      const t=this.dataset.type, c=this.dataset.cat, i=parseInt(this.dataset.idx);
+      const tid=this.dataset.tabId, tmpl=this.dataset.template;
+      if(t==='base_missile') openCardEditor('edit','missile','base_missile_'+c, i);
+      else if(t==='base_seeker') openCardEditor('edit','seeker','base_seeker', i);
+      else openCardEditor('edit', tmpl, 'ctab_'+tid, i);
+    });
+    tdA.appendChild(btn);
+    tr.appendChild(tdN); tr.appendChild(tdG); tr.appendChild(tdM); tr.appendChild(tdA);
     body.appendChild(tr);
   });
 }
@@ -2476,7 +2502,6 @@ function edRenderIndex(){
 
 // init
 function initFullEditor(){
-  edLoadCat();
   edRenderIndex();
 }
 initFullEditor();
@@ -2665,7 +2690,16 @@ function buildMCard(m,badgeClass){
       ${noteHtml}
       ${counterHtml}
       ${aircraftHtml}
+      <div><button class="mcard-edit-btn" data-mname="${m.name.replace(/"/g,'&quot;')}">✏️ Editar</button></div>
     </div>`;
+  div.querySelector('.mcard-edit-btn').addEventListener('click',function(){
+    const name=this.getAttribute('data-mname');
+    const cats=[['arm',armData],['irr',irRearData],['ira',irAllData],['sarh',sarhData],['arh',arhData]];
+    for(const [cat,arr] of cats){
+      const idx=arr.findIndex(x=>x.name===name);
+      if(idx>=0){openCardEditor('edit','missile','base_missile_'+cat,idx);return;}
+    }
+  });
   return div;
 }
 
@@ -2754,7 +2788,7 @@ function buildSeekerCard(s, isCustom, idx){
       <ul class="counter-list">${counterHtml||'<li style="color:#94a3b8">—</li>'}</ul>
       ${irccmSection}
       <div>
-        <button class="scard-edit-btn" onclick="skEdOpenExisting('${editKey}')">✏️ Editar</button>
+        <button class="scard-edit-btn" data-edit-key="${escHtml(editKey)}" onclick="skEditFromCard(this)">✏️ Editar</button>
         <button class="scard-del-btn${isCustom?' is-custom':''}" onclick="skEdDeleteFromCard('${editKey}')">🗑 Apagar</button>
       </div>
     </div>`;
@@ -2764,6 +2798,17 @@ function buildSeekerCard(s, isCustom, idx){
 // ============================================================
 // SEEKER EDITOR LOGIC
 // ============================================================
+function skEditFromCard(btn){
+  const key=btn.getAttribute('data-edit-key');
+  if(!key) return;
+  if(key.startsWith('custom_')){
+    const idx=parseInt(key.replace('custom_',''));
+    openCardEditor('edit','seeker','base_seeker_custom',idx);
+  } else {
+    const idx=parseInt(key.replace('base_',''));
+    openCardEditor('edit','seeker','base_seeker',idx);
+  }
+}
 function skEdStatus(msg,ok=true){
   const el=document.getElementById('skEdStatus');if(!el)return;
   el.textContent=msg;el.style.display='block';
@@ -3160,16 +3205,13 @@ function openCardEditor(mode, template, tabPaneId, cardIdx=-1){
   let existing = null;
 
   if(mode==='edit'){
-    if(tabPaneId==='base_missile'){
-      // editing a base missile from armData/irRearData/etc
+    if(tabPaneId.startsWith('base_missile_')){
+      const cat=tabPaneId.replace('base_missile_','');
       const cm=edCatMap();
-      const cats=['arm','irr','ira','sarh','arh'];
-      for(const cat of cats){
-        const m=cm[cat].arr[cardIdx];
-        if(m){ existing={name:m.name,badge:m.badge,badgeClass:getBadgeClassFromCat(cat),nation:m.nation||'',...m.s,counters:m.s?.counters||[],note:m.s?.note||''}; break; }
-      }
-    } else if(tabPaneId==='base_seeker'){
-      const sk=seekerData[cardIdx];
+      const m=cm[cat]?.arr[cardIdx];
+      if(m) existing={name:m.name,badge:m.badge,badgeClass:getBadgeClassFromCat(cat),nation:m.nation||'',...(m.s||{}),counters:m.s?.counters||[],note:m.s?.note||''};
+    } else if(tabPaneId==='base_seeker'||tabPaneId==='base_seeker_custom'){
+      const sk=tabPaneId==='base_seeker_custom'?_skCustom[cardIdx]:seekerData[cardIdx];
       if(sk) existing={...sk};
     } else if(cardIdx>=0){
       const realTabId=tabPaneId.replace(/^ctab_/,'');
@@ -3185,6 +3227,13 @@ function openCardEditor(mode, template, tabPaneId, cardIdx=-1){
   document.getElementById('cieTitle').textContent=mode==='new'?'➕ Nova Card':'✏️ Editar Card';
   document.getElementById('cieDeleteBtn').style.display=(mode==='edit'&&tabPaneId!=='base_missile'&&tabPaneId!=='base_seeker')?'inline-block':'none';
   cieRenderFields(existing);
+  // restore image preview if editing card with image
+  if(_cieImgData){
+    setTimeout(()=>{
+      const p=document.getElementById('cieImgPreview');
+      if(p){p.src=_cieImgData;p.style.display='block';}
+    },80);
+  }
   editor.classList.add('open');
   overlay.classList.add('open');
 }
@@ -3265,29 +3314,57 @@ function cieRenderFields(data){
 function cieImgUploadHtml(existingImg){
   const hasImg=!!(existingImg);
   return `
-    <div class="img-upload-area" onclick="document.getElementById('cieImgFile').click()">
-      <div style="font-size:11px;color:#64748b">📎 Clica para fazer upload de imagem<br><span style="font-size:10px;color:#94a3b8">(JPG, PNG, WebP — max 2MB)</span></div>
-      <input type="file" id="cieImgFile" accept="image/*">
-      <img id="cieImgPreview" class="img-preview-small" src="${hasImg?existingImg:''}" style="${hasImg?'display:block':'display:none'}">
+    <label for="cieImgFile" id="cieImgDropZone" style="display:block;border:2px dashed #cbd5e1;border-radius:10px;padding:18px;text-align:center;cursor:pointer;background:#f8fafc;transition:border-color .2s">
+      <div style="font-size:12px;color:#64748b;pointer-events:none">📎 Clica ou arrasta uma imagem aqui<br><span style="font-size:10px;color:#94a3b8">JPG · PNG · WebP — máx 2 MB</span></div>
+      <img id="cieImgPreview" src="${hasImg?escHtml(existingImg):''}" style="display:${hasImg?'block':'none'};max-width:100%;max-height:140px;margin-top:10px;border-radius:8px;border:1px solid #e2e8f0;pointer-events:none">
+    </label>
+    <div class="cie-field" style="margin-top:6px">
+      <label>Ou URL de imagem</label>
+      <input id="cieImgUrl" value="${escHtml(hasImg&&!existingImg.startsWith('data:')?existingImg:'')}" placeholder="https://…" oninput="cieImgUrlChange(this.value)">
     </div>
-    <div class="cie-field" style="margin-top:8px"><label>Ou URL de imagem</label>
-      <input id="cieImgUrl" value="${escHtml(existingImg&&!existingImg.startsWith('data:')?existingImg:'')}" placeholder="https://…" oninput="cieImgUrlChange(this.value)">
-    </div>
-    ${hasImg?`<button onclick="clearCieImg()" style="font-size:11px;border:1px solid #fecdd3;background:#fff1f2;color:#9f1239;border-radius:6px;padding:3px 8px;cursor:pointer;margin-top:4px">🗑 Remover imagem</button>`:''}`;
+    <div style="margin-top:4px">
+      <button type="button" id="cieImgClearBtn" onclick="clearCieImg()" style="display:${hasImg?'inline-block':'none'};font-size:11px;border:1px solid #fecdd3;background:#fff1f2;color:#9f1239;border-radius:6px;padding:3px 10px;cursor:pointer">🗑 Remover imagem</button>
+    </div>`;
 }
 
 function bindCieImgEvents(){
-  const fileInput=document.getElementById('cieImgFile'); if(!fileInput)return;
-  fileInput.addEventListener('change',function(e){
-    const f=e.target.files[0]; if(!f||f.size>2*1024*1024){alert('Imagem muito grande (max 2MB).');return;}
-    const reader=new FileReader();
-    reader.onload=ev=>{
+  const fileInput=document.getElementById('cieImgFile');
+  if(!fileInput) return;
+  // Reset by replacing to clear old listeners
+  const fresh=fileInput.cloneNode(false);
+  fileInput.parentNode.replaceChild(fresh,fileInput);
+
+  fresh.addEventListener('change',function(){
+    const f=this.files[0]; if(!f) return;
+    if(f.size>2*1024*1024){alert('Imagem muito grande (máx 2 MB).');this.value='';return;}
+    const r=new FileReader();
+    r.onload=function(ev){
       _cieImgData=ev.target.result;
-      const preview=document.getElementById('cieImgPreview');
-      if(preview){preview.src=_cieImgData;preview.style.display='block';}
-      document.getElementById('cieImgUrl').value='';
+      const p=document.getElementById('cieImgPreview');
+      if(p){p.src=_cieImgData;p.style.display='block';}
+      const u=document.getElementById('cieImgUrl'); if(u) u.value='';
+      const cb=document.getElementById('cieImgClearBtn'); if(cb) cb.style.display='inline-block';
     };
-    reader.readAsDataURL(f);
+    r.readAsDataURL(f);
+  });
+
+  // drag-and-drop on the label zone
+  const zone=document.getElementById('cieImgDropZone');
+  if(!zone) return;
+  zone.addEventListener('dragover',function(e){e.preventDefault();this.style.borderColor='#3b82f6';this.style.background='#eff6ff';});
+  zone.addEventListener('dragleave',function(){this.style.borderColor='#cbd5e1';this.style.background='#f8fafc';});
+  zone.addEventListener('drop',function(e){
+    e.preventDefault();this.style.borderColor='#cbd5e1';this.style.background='#f8fafc';
+    const f=e.dataTransfer.files[0];
+    if(!f||!f.type.startsWith('image/')){alert('Ficheiro não é imagem.');return;}
+    if(f.size>2*1024*1024){alert('Imagem muito grande (máx 2 MB).');return;}
+    const r=new FileReader();
+    r.onload=function(ev){
+      _cieImgData=ev.target.result;
+      const p=document.getElementById('cieImgPreview'); if(p){p.src=_cieImgData;p.style.display='block';}
+      const cb=document.getElementById('cieImgClearBtn'); if(cb) cb.style.display='inline-block';
+    };
+    r.readAsDataURL(f);
   });
 }
 function cieImgUrlChange(val){
@@ -3298,10 +3375,10 @@ function cieImgUrlChange(val){
 }
 function clearCieImg(){
   _cieImgData=null;
-  const preview=document.getElementById('cieImgPreview');
-  if(preview){preview.src='';preview.style.display='none';}
-  const urlInput=document.getElementById('cieImgUrl');
-  if(urlInput)urlInput.value='';
+  const p=document.getElementById('cieImgPreview'); if(p){p.src='';p.style.display='none';}
+  const u=document.getElementById('cieImgUrl'); if(u) u.value='';
+  const f=document.getElementById('cieImgFile'); if(f) f.value='';
+  const cb=document.getElementById('cieImgClearBtn'); if(cb) cb.style.display='none';
 }
 
 function cieCollect(){
@@ -3362,35 +3439,29 @@ function cieSave(){
   const {tabId, cardIdx, mode}=_cieContext;
 
   // ── Save base missile ──
-  if(tabId==='base_missile'){
+  if(tabId.startsWith('base_missile_')){
+    const cat=tabId.replace('base_missile_','');
     const cm=edCatMap();
-    const cats=['arm','irr','ira','sarh','arh'];
-    let found=false;
-    for(const cat of cats){
-      const m=cm[cat].arr[cardIdx];
-      if(m){
-        const ov=data.s||{};
-        Object.assign(m.s, ov);
-        if(data.note) m.s.note=data.note;
-        if(data.counters) m.s.counters=data.counters;
-        _edDB[m.name]=m.s; edSaveDB();
-        cm[cat].fn(); // re-render that grid
-        edRenderIndex();
-        found=true; break;
-      }
-    }
-    if(!found){alert('Míssil não encontrado.');}
+    const m=cm[cat]?.arr[cardIdx];
+    if(!m){alert('Míssil não encontrado.');return;}
+    const ov=data.s||{};
+    if(data.note) ov.note=data.note;
+    if(data.counters) ov.counters=data.counters;
+    Object.assign(m.s, ov);
+    _edDB[m.name]=m.s; edSaveDB();
+    cm[cat].fn();
+    edRenderIndex();
     closeCardEditor(); return;
   }
 
   // ── Save base seeker ──
-  if(tabId==='base_seeker'){
-    const sk=seekerData[cardIdx];
+  if(tabId==='base_seeker'||tabId==='base_seeker_custom'){
+    const sk=tabId==='base_seeker_custom'?_skCustom[cardIdx]:seekerData[cardIdx];
     if(!sk){alert('Seeker não encontrado.');return;}
     Object.assign(sk, data);
-    _skDB[sk.type]=data; edSaveSK();
-    renderSeekers(); skEdPopulateSelect(); skEdLoad();
-    edRenderIndex();
+    if(tabId==='base_seeker'){ _skDB[sk.type]=data; edSaveSK(); }
+    else { skSaveCustom(); }
+    renderSeekers(); edRenderIndex();
     closeCardEditor(); return;
   }
 
@@ -3497,22 +3568,6 @@ function cieDeleteDirect(tabId,idx){
   renderCustomTabCards(tab);
 }
 
-// Also add edit/delete buttons to existing missile grids via buildMCard override
-(function patchBuildMCard(){
-  const orig=window.buildMCard||buildMCard;
-  window.buildMCard=function(m,badgeClass){
-    const div=orig(m,badgeClass);
-    // add edit/delete overlay buttons
-    const body=div.querySelector('.mcard-body');
-    if(body){
-      const wrap=document.createElement('div');
-      wrap.innerHTML=`<button class="mcard-edit-btn" onclick="alert('Para editar cards base usa o separador Editor.')">✏️ Ver no Editor</button>`;
-      body.appendChild(wrap);
-    }
-    return div;
-  };
-})();
-
 // ============================================================
 // TABS + SHOWT
 // ============================================================
@@ -3529,6 +3584,7 @@ function showTab(id,btn){
 rebuildCustomTabs();
 tmRender();
 serverLoad();
+startPolling();
 
 
 // ============================================================
