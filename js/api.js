@@ -57,3 +57,5 @@ window.API = {
     }
 
 };
+
+console.log("API carregada", window.API);
