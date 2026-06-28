@@ -3347,10 +3347,32 @@ function showTab(id,btn){
 }
  
 // init custom tabs
-rebuildCustomTabs();
-tmRender();
+
+async function initSite() {
+
+    await Storage.load();
+
+    rebuildCustomTabs();
+
+    tmRender();
+
+    if (typeof renderSeekers === "function") {
+        renderSeekers();
+    }
+
+    if (typeof refreshAircraftSections === "function") {
+        refreshAircraftSections();
+    }
+
+    console.log("✅ Site carregado da D1");
+
+}
+
+initSite();
+
 </script>
 <script src="js/api.js"></script>
+<script src="js/storage.js"></script>
 </body>
 </html>
  
