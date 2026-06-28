@@ -1,0 +1,11 @@
+name = "wt-reference"
+pages_build_output_dir = "public"
+compatibility_date = "2024-01-01"
+
+# KV namespace — criar com: npx wrangler kv:namespace create WT_DATA
+# Substituir <KV_NAMESPACE_ID> pelo ID gerado
+[[kv_namespaces]]
+binding = "WT_DATA"
+id = "<KV_NAMESPACE_ID>"
+
+# EDITOR_PASSWORD definida com: npx wrangler pages secret put EDITOR_PASSWORD
