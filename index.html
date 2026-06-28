@@ -3324,31 +3324,6 @@ function showTab(id,btn){
 rebuildCustomTabs();
 tmRender();
 
-<script src="js/api.js"></script>
-<script src="js/storage.js"></script>
-
-<script>
-async function initSite() {
-
-    await CloudStorage.load();
-
-    rebuildCustomTabs();
-
-    tmRender();
-
-    if (typeof renderSeekers === "function") {
-        renderSeekers();
-    }
-
-    if (typeof refreshAircraftSections === "function") {
-        refreshAircraftSections();
-    }
-
-    console.log("✅ Site carregado da D1");
-}
-
-initSite();
 </script>
-
 </body>
 </html>
