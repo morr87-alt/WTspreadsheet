@@ -6,6 +6,6 @@ compatibility_date = "2024-01-01"
 # Substituir <KV_NAMESPACE_ID> pelo ID gerado
 [[kv_namespaces]]
 binding = "WT_DATA"
-id = "<KV_NAMESPACE_ID>"
+id = "3c019aece3d2407d85bbffbf569e6f9a"
 
 # EDITOR_PASSWORD definida com: npx wrangler pages secret put EDITOR_PASSWORD
