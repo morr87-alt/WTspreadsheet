@@ -587,8 +587,8 @@ async function _doServerSave() {
     const payload = {
       missiles:       _edDB,
       seekers:        _skDB,
-      customMissiles: _custM,
-      customSeekers:  _custSK,
+      customMissiles: typeof _custM  !== 'undefined' ? _custM  : {},
+      customSeekers:  typeof _custSK !== 'undefined' ? _custSK : [],
       aircraft:       aircraftDB,
       // extra keys from this file's storage system
       customTabs:     typeof _customTabs  !== 'undefined' ? _customTabs  : [],
