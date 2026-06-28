@@ -120,6 +120,12 @@ tbody tr.dr td.bd{font-size:10px;color:#aaa}
 /* aircraft editor styles below */
 .pulse-badge{background:#fef3c7;color:#92400e;border:1px solid #fde68a;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:4px}
 .cw-badge{background:#dbeafe;color:#1e40af;border:1px solid #93c5fd;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:4px}
+.ir-badge{background:#fce7f3;color:#9d174d;border:1px solid #f9a8d4;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:4px}
+.iir-badge{background:#f3e8ff;color:#6b21a8;border:1px solid #d8b4fe;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:4px}
+.arh-badge{background:#ede9fe;color:#4c1d95;border:1px solid #c4b5fd;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:4px}
+.iog-badge{background:#ecfdf5;color:#065f46;border:1px solid #6ee7b7;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:4px}
+.dl-badge{background:#f0fdf4;color:#14532d;border:1px solid #86efac;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:4px}
+.tvm-badge{background:#fff7ed;color:#7c2d12;border:1px solid #fdba74;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:4px}
 .loft-badge{background:#ede9fe;color:#5b21b6;border:1px solid #c4b5fd;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:4px}
 
 /* === AIRCRAFT CARRIER DISPLAY — inline, sem box separada === */
@@ -273,7 +279,7 @@ body.edit-mode .tab-btn[draggable]{cursor:grab}
 </div>
 <div class="topbar">
   <h1>⚡ War Thunder — Guided Weapons Reference</h1>
-  <div class="sub">Fonte: Koppany99 / gszabi99 Guided Weaponry Spreadsheet · War Thunder Wiki &nbsp;·&nbsp; <span style="color:#60a5fa">v3 — Mísseis corrigidos · SARH Pulse/CW · ARH Loft · Aviões editáveis</span></div>
+  <div class="sub" id="topSub" style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span id="syncIndicator" style="font-size:10.5px;color:#9ca3af;font-weight:500">○ A ligar…</span></div>
   <div class="tabs" id="tabBar">
     <button class="tab-btn active" draggable="true" data-tab="tSPAA" onclick="showTab('tSPAA',this)">🛡️ SPAA vs ARM</button>
     <button class="tab-btn" draggable="true" data-tab="tARM" onclick="showTab('tARM',this)">🎯 ARM</button>
@@ -420,7 +426,63 @@ body.edit-mode .tab-btn[draggable]{cursor:grab}
       <button class="ntf-create-btn" onclick="tmCreateTab()">Criar Tab</button>
     </div>
   </div>
+
+  <!-- IRCCM TYPE MANAGER -->
+  <div class="tab-manager" id="irccmManagerSection" style="margin-bottom:18px">
+    <h3>🛡️ Tipos de IRCCM — Badges</h3>
+    <p style="font-size:11px;color:#64748b;margin-bottom:12px">Tipos predefinidos não podem ser apagados. Cria tipos custom com label, cor de fundo e cor de texto. Aparece no dropdown de IRCCM ao editar cards.</p>
+    <div id="irccmManagerList" style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px"></div>
+    <div class="new-tab-form" style="margin-top:10px">
+      <h4>➕ Criar tipo IRCCM</h4>
+      <div class="ntf-row" style="align-items:center">
+        <label>Label</label>
+        <input id="irccmNewName" placeholder="Ex: FOV+IIR, Custom…" maxlength="30" style="flex:1">
+      </div>
+      <div class="ntf-row" style="align-items:center">
+        <label>Cores</label>
+        <div style="display:flex;gap:8px;align-items:center;flex:1">
+          <input type="color" id="irccmNewBg" value="#e0e7ff" style="width:40px;height:32px;padding:2px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer">
+          <span style="font-size:11px;color:#64748b">fundo</span>
+          <input type="color" id="irccmNewFg" value="#3730a3" style="width:40px;height:32px;padding:2px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer">
+          <span style="font-size:11px;color:#64748b">texto</span>
+          <span id="irccmCreatePreview" style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;background:#e0e7ff;color:#3730a3;margin-left:4px">Preview</span>
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <button class="ntf-submit" onclick="irccmTypeCreate();irccmPreviewUpdate()">➕ Criar tipo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEEKER TYPE MANAGER -->
+  <div class="tab-manager" id="seekerTypeManagerSection">
+    <h3>🔬 Tipos de Seeker — Badges</h3>
+    <p style="font-size:11px;color:#64748b;margin-bottom:12px">Os badges predefinidos não podem ser apagados. Cria badges custom com o texto, cor de fundo e cor da letra que quiseres.</p>
+    <div id="seekerTypeManagerList"></div>
+    <div class="new-tab-form" style="margin-top:10px">
+      <h4>➕ Criar badge de seeker</h4>
+      <div class="ntf-row" style="align-items:center">
+        <label>Texto</label>
+        <input id="ntSkV" placeholder="Ex: TVM, IOG+DL…" maxlength="20" oninput="skTypePreviewUpdate()" style="flex:1">
+      </div>
+      <div class="ntf-row" style="align-items:center">
+        <label>Cor do badge</label>
+        <div style="display:flex;gap:8px;align-items:center;flex:1">
+          <input type="color" id="ntSkBg" value="#dbeafe" oninput="skTypePreviewUpdate()" style="width:40px;height:32px;padding:2px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer">
+          <span style="font-size:11px;color:#64748b">fundo</span>
+          <input type="color" id="ntSkFg" value="#1e40af" oninput="skTypePreviewUpdate()" style="width:40px;height:32px;padding:2px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer">
+          <span style="font-size:11px;color:#64748b">texto</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:11px;color:#64748b;font-weight:600">Preview:</span>
+        <span id="ntSkPreview" style="font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:3px;border:1px solid #cbd5e1;background:#dbeafe;color:#1e40af">Badge</span>
+      </div>
+      <button class="ntf-create-btn" onclick="skTypeCreate()">➕ Criar badge</button>
+    </div>
+  </div>
 </div>
+
 <!-- SEEKERS & IRCCM -->
 <div id="tSeekers" class="tab-pane">
   <div class="tab-edit-bar" id="seekerEditBar">
@@ -545,31 +607,30 @@ async function serverLoad() {
     }
     // Apply server data → overrides localStorage
     _serverVersion = data._version || 0;
-    if (data.missiles)       { Object.assign(_edDB,      data.missiles);      try{localStorage.setItem(ED_KEY,       JSON.stringify(_edDB));}catch(e){} }
-    if (data.seekers)        { Object.assign(_skDB,      data.seekers);       try{localStorage.setItem(SEEKER_KEY,   JSON.stringify(_skDB));}catch(e){} }
-    if (data.customMissiles) { Object.assign(_custM,     data.customMissiles);try{localStorage.setItem(ED_CUSTOM_KEY,JSON.stringify(_custM));}catch(e){} }
-    if (data.aircraft)       { Object.assign(aircraftDB, data.aircraft);      try{localStorage.setItem(AIRCRAFT_KEY, JSON.stringify(aircraftDB));}catch(e){} }
-    if (Array.isArray(data.customSeekers) && data.customSeekers.length) {
+    if (data.missiles)       Object.assign(_edDB,    data.missiles);
+    if (data.seekers)        Object.assign(_skDB,    data.seekers);
+    if (data.customMissiles) Object.assign(_custM,   data.customMissiles);
+    if (data.aircraft)       Object.assign(aircraftDB, data.aircraft);
+    if (Array.isArray(data.customSeekers)) {
       data.customSeekers.forEach(cs => {
         if (!seekerData.find(x => x.type === cs.type)) seekerData.push(cs);
         if (!_custSK.find(x => x.type === cs.type))    _custSK.push(cs);
       });
-      try{localStorage.setItem(ED_CUST_SK_KEY, JSON.stringify(_custSK));}catch(e){}
     }
+    // tab manager (custom tabs)
     if (Array.isArray(data.customTabs) && data.customTabs.length) {
-      _customTabs = data.customTabs;
-      try{localStorage.setItem(TM_KEY, JSON.stringify(_customTabs));}catch(e){}
+      _customTabs = data.customTabs; saveTabs?.();
     }
-    if (data.tabOrder) {
-      try{localStorage.setItem('wt_tab_order_v1', JSON.stringify(data.tabOrder));}catch(e){}
+    // seeker edits & custom seekers (old system)
+    if (data.skEdits)   { Object.assign(_skEdits,  data.skEdits);  skSaveEdits?.(); }
+    if (data.skCustom)  { Object.assign(_skCustom, data.skCustom); skSaveCustom?.(); }
+    if (Array.isArray(data.seekerTypeDefs) && data.seekerTypeDefs.length) {
+      _customSeekerTypes = data.seekerTypeDefs;
+      try{localStorage.setItem(SK_TYPE_KEY, JSON.stringify(_customSeekerTypes));}catch(e){}
     }
-    if (data.skEdits)  { Object.assign(_skEdits,  data.skEdits);  try{localStorage.setItem(SK_EDIT_KEY,  JSON.stringify(_skEdits));}catch(e){} }
-    if (data.skCustom) { Object.assign(_skCustom, data.skCustom); try{localStorage.setItem(SK_STORE_KEY, JSON.stringify(_skCustom));}catch(e){} }
-    if (data.ctabCards && typeof data.ctabCards === 'object') {
-      Object.keys(data.ctabCards).forEach(tabId => {
-        try{localStorage.setItem('wt_ctab_cards_'+tabId, JSON.stringify(data.ctabCards[tabId]));}catch(e){}
-      });
-    }
+    // re-save to localStorage as cache
+    _saveED(); _saveSK(); _saveCustM(); _saveCustSK();
+    saveAircraftData();
     syncIndicator('synced', data._savedAt);
     console.log(`[sync] Loaded v${_serverVersion} from server`);
   } catch(e) {
@@ -594,20 +655,15 @@ async function _doServerSave() {
     const payload = {
       missiles:       _edDB,
       seekers:        _skDB,
-      customMissiles: _custM  || {},
-      customSeekers:  _custSK || [],
+      customMissiles: typeof _custM  !== 'undefined' ? _custM  : {},
+      customSeekers:  typeof _custSK !== 'undefined' ? _custSK : [],
       aircraft:       aircraftDB,
-      customTabs:     _customTabs  || [],
-      skEdits:        _skEdits     || {},
-      skCustom:       _skCustom    || [],
-      tabOrder:       (()=>{ try{ return JSON.parse(localStorage.getItem('wt_tab_order_v1')||'null'); }catch(e){ return null; } })(),
-      ctabCards:      (()=>{
-        const acc={};
-        (_customTabs||[]).forEach(t=>{
-          try{ acc[t.id]=JSON.parse(localStorage.getItem('wt_ctab_cards_'+t.id)||'[]'); }catch(e){ acc[t.id]=[]; }
-        });
-        return acc;
-      })(),
+      // extra keys from this file's storage system
+      customTabs:     typeof _customTabs  !== 'undefined' ? _customTabs  : [],
+      skEdits:        typeof _skEdits     !== 'undefined' ? _skEdits     : {},
+      skCustom:       typeof _skCustom    !== 'undefined' ? _skCustom    : [],
+      seekerTypeDefs: typeof _customSeekerTypes !== 'undefined' ? _customSeekerTypes : [],
+      irccmTypeDefs: typeof _customIRCCM !== 'undefined' ? _customIRCCM : [],
     };
     const res = await fetch(`${API_URL}/data`, {
       method:  'POST',
@@ -699,37 +755,6 @@ window.addEventListener('beforeunload', e => {
 });
 
 // serverLoad() chamado no fim do script, após todas as variáveis estarem prontas
-// Auto-refresh para visitantes (sem token) — verifica actualizações a cada 30s
-let _pollInterval = null;
-function startPolling(){
-  if(_pollInterval) return;
-  _pollInterval = setInterval(async ()=>{
-    if(_serverToken) return; // editor activo — não sobrescrever
-    try{
-      const res = await fetch(`${API_URL}/data`);
-      if(!res.ok) return;
-      const data = await res.json();
-      if(!data||!data._version) return;
-      if(data._version <= _serverVersion) return; // sem novidades
-      // há dados novos — aplicar silenciosamente
-      if(data.missiles)       Object.assign(_edDB,      data.missiles);
-      if(data.seekers)        Object.assign(_skDB,      data.seekers);
-      if(data.customMissiles) Object.assign(_custM,     data.customMissiles);
-      if(data.aircraft)       Object.assign(aircraftDB, data.aircraft);
-      if(data.ctabCards && typeof data.ctabCards==='object'){
-        Object.keys(data.ctabCards).forEach(id=>{
-          try{localStorage.setItem('wt_ctab_cards_'+id,JSON.stringify(data.ctabCards[id]));}catch(e){}
-        });
-      }
-      _serverVersion = data._version;
-      // re-render cards que estão visíveis
-      if(typeof renderAllGrids === 'function') renderAllGrids();
-      else { try{ renderSeekers?.(); rebuildCustomTabPanes?.(); }catch(e){} }
-      syncIndicator('synced', data._savedAt);
-      console.log(`[sync] Poll: novos dados v${_serverVersion}`);
-    }catch(e){}
-  }, 30000); // 30 segundos
-}
 
 // ============================================================
 // AIRCRAFT CARRIER DATA +  EDITOR STORAGE
@@ -2185,12 +2210,12 @@ const MISSILE_FIELDS = [
   {key:'iog',label:'IOG'},
   {key:'dl',label:'Data Link'},
   {key:'aspect',label:'Aspeto / Guidance'},
-  {key:'irccm',label:'IRCCM'},
+  {key:'irccm',label:'IRCCM',select:'irccm'},
   {key:'burnTime',label:'Burn time'},
   {key:'guideDur',label:'Guide duration'},
   {key:'signal',label:'Signal / Seeker'},
   {key:'loftAngle',label:'Ângulo Loft'},
-  {key:'seekerType',label:'Seeker type (Pulse/CW)'},
+  {key:'seekerType',label:'Tipo seeker',select:'seekerType'},
   {key:'note',label:'Nota (note-box)',big:true},
 ];
 const SEEKER_FIELDS = [
@@ -2270,7 +2295,11 @@ function edLoadItem(){
     MISSILE_FIELDS.forEach(f=>{
       let val=(ov[f.key]!==undefined)?ov[f.key]:(s[f.key]||'');
       const row=document.createElement('div');row.className='ed-field-row';
-      if(f.big){
+      if(f.select==='seekerType'){
+        row.innerHTML=`<label>${f.label}</label>${buildSeekerTypeSelect('edf_'+f.key, val)}`;
+      } else if(f.select==='irccm'){
+        row.innerHTML=`<label>${f.label}</label>${buildIRCCMSelect('edf_'+f.key, val)}`;
+      } else if(f.big){
         row.innerHTML=`<label>${f.label}</label><textarea id="edf_${f.key}">${escHtml(String(val))}</textarea>`;
       } else {
         row.innerHTML=`<label>${f.label}</label><input id="edf_${f.key}" value="${escHtml(String(val))}">`;
@@ -2545,11 +2574,19 @@ renderSPAA();
 // ============================================================
 // RENDER: MISSILE CARDS
 // ============================================================
-function irccmPill(txt){
-  if(!txt||txt==='—')return'<span class="irccm-pill irccm-none">—</span>';
-  const t=txt.toLowerCase();
-  const cls=t.includes('nenhum')?'irccm-none':t.includes('shutoff')||t.includes('suspended')?'irccm-seeker':t.includes('fov')?'irccm-fov':t.includes('kinematic')||t.includes('angular')?'irccm-kinematic':t.includes('imaging')||t.includes('iir')?'irccm-imaging':t.includes('hmd')?'irccm-hmd':t.includes('eccm')?'irccm-kinematic':'irccm-none';
-  return`<span class="irccm-pill ${cls}">${txt}</span>`;
+function irccmPill(val){
+  if(!val||val==='—'||val==='') return '<span class="irccm-pill irccm-none">—</span>';
+  // Try to use the IRCCM type system badge
+  if(typeof getAllIRCCM === 'function'){
+    const found = getAllIRCCM().find(t=>t.v===val);
+    if(found && found.bg){
+      return `<span class="irccm-pill" style="background:${found.bg};color:${found.fg};border:1px solid ${found.fg}33">${escHtml(found.label||val)}</span>`;
+    }
+  }
+  // Fallback: css class based on content (backward compat)
+  const t=val.toLowerCase();
+  const cls=t.includes('nenhum')?'irccm-none':t.includes('shutoff')||t.includes('suspended')?'irccm-seeker':t.includes('fov')?'irccm-fov':t.includes('kinematic')||t.includes('angular')?'irccm-kinematic':t.includes('imaging')||t.includes('iir')?'irccm-imaging':'irccm-none';
+  return `<span class="irccm-pill ${cls}">${escHtml(val)}</span>`;
 }
 
 function buildAircraftSection(missileId){
@@ -2637,21 +2674,250 @@ function editAircraft(id){
 const _tSeekersEditBar=document.getElementById('seekerEditBar');
 const _tSeekersPanel=document.getElementById('seekerEditorPanel');
 
+// ============================================================
+// SEEKER TYPE SYSTEM — preset + custom badges with inline colors
+// ============================================================
+const SK_TYPE_KEY = 'wt_seeker_types_v1';
+
+// Presets: v = value shown in badge, bg/fg = colors
+const SEEKER_TYPE_PRESETS = [
+  {v:'',        label:'— Nenhum —', bg:'',        fg:''},
+  {v:'Pulse',   label:'Pulse',      bg:'#fef3c7', fg:'#92400e'},
+  {v:'CW',      label:'CW',        bg:'#dbeafe', fg:'#1e40af'},
+  {v:'Pulse/CW',label:'Pulse/CW',  bg:'#fef9c3', fg:'#713f12'},
+  {v:'IR',      label:'IR',        bg:'#fce7f3', fg:'#9d174d'},
+  {v:'IIR',     label:'IIR',       bg:'#f3e8ff', fg:'#6b21a8'},
+  {v:'ARH',     label:'ARH',       bg:'#ede9fe', fg:'#4c1d95'},
+  {v:'IOG',     label:'IOG',       bg:'#ecfdf5', fg:'#065f46'},
+  {v:'IOG+DL',  label:'IOG+DL',    bg:'#f0fdf4', fg:'#14532d'},
+  {v:'TVM',     label:'TVM',       bg:'#fff7ed', fg:'#7c2d12'},
+];
+
+let _customSeekerTypes = [];
+try{ _customSeekerTypes = JSON.parse(localStorage.getItem(SK_TYPE_KEY)||'[]'); }catch(e){}
+function saveCustomSeekerTypes(){
+  try{localStorage.setItem(SK_TYPE_KEY, JSON.stringify(_customSeekerTypes));}catch(e){}
+  serverSave?.();
+}
+
+// ============================================================
+// IRCCM TYPE SYSTEM (parallel to seekerType system)
+// ============================================================
+const IRCCM_KEY = 'wt_irccm_types_v1';
+
+const IRCCM_PRESETS = [
+  {v:'',                  label:'— Nenhum —',              bg:'',        fg:''},
+  {v:'Nenhum',            label:'Nenhum',                  bg:'#f3f4f6', fg:'#6b7280'},
+  {v:'Seeker Shutoff',    label:'Seeker Shutoff',          bg:'#fef9c3', fg:'#854d0e'},
+  {v:'FOV Gating',        label:'FOV Gating',              bg:'#dcfce7', fg:'#166534'},
+  {v:'Kinematic',         label:'Kinematic Rejection',     bg:'#dbeafe', fg:'#1e40af'},
+  {v:'IIR',               label:'Imaging IR (IIR)',        bg:'#f3e8ff', fg:'#6b21a8'},
+  {v:'Shutoff+FOV',       label:'Shutoff + FOV Gating',   bg:'#fef3c7', fg:'#92400e'},
+  {v:'FOV+Kinematic',     label:'FOV + Kinematic',        bg:'#ecfdf5', fg:'#065f46'},
+  {v:'ECCM',              label:'ECCM (ARH)',              bg:'#ede9fe', fg:'#4c1d95'},
+  {v:'LOAL',              label:'LOAL',                   bg:'#fff7ed', fg:'#7c2d12'},
+];
+
+let _customIRCCM = [];
+try{ _customIRCCM = JSON.parse(localStorage.getItem(IRCCM_KEY)||'[]'); }catch(e){}
+
+function saveCustomIRCCM(){
+  try{ localStorage.setItem(IRCCM_KEY, JSON.stringify(_customIRCCM)); }catch(e){}
+  serverSave?.();
+}
+
+function getAllIRCCM(){
+  return [...IRCCM_PRESETS, ..._customIRCCM.map(t=>({...t, custom:true}))];
+}
+
+function renderIRCCMBadge(val){
+  if(!val || val==='— Nenhum —') return '<span style="color:#94a3b8;font-size:11px">—</span>';
+  const all = getAllIRCCM();
+  const found = all.find(t=>t.v===val);
+  const bg = found?.bg || '#e5e7eb';
+  const fg = found?.fg || '#374151';
+  if(!bg) return '<span style="color:#94a3b8;font-size:11px">—</span>';
+  return `<span style="background:${bg};color:${fg};border:1px solid ${fg}33;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:3px;display:inline-block">${escHtml(found?.label||val)}</span>`;
+}
+
+function buildIRCCMSelect(id, currentVal){
+  const all = getAllIRCCM();
+  const opts = all.map(t=>`<option value="${escHtml(t.v)}"${t.v===currentVal?' selected':''}>${escHtml(t.label||t.v||'— Nenhum —')}</option>`).join('');
+  const previewHtml = renderIRCCMBadge(currentVal);
+  return `<div style="display:flex;gap:6px;align-items:center;flex:1">
+    <select id="${escHtml(id)}" style="flex:1;font-size:12px;padding:5px 8px;border:1px solid #cbd5e1;border-radius:7px;background:#fff" onchange="updateIRCCMPreview(this)">
+      ${opts}
+    </select>
+    <div id="${escHtml(id)}_preview" style="display:flex;gap:3px;align-items:center;min-width:80px">${previewHtml}</div>
+  </div>`;
+}
+
+function updateIRCCMPreview(sel){
+  const previewId = sel.id + '_preview';
+  const prev = document.getElementById(previewId);
+  if(prev) prev.innerHTML = renderIRCCMBadge(sel.value);
+}
+
+function irccmTypeCreate(){
+  const nameEl = document.getElementById('irccmNewName');
+  const bgEl   = document.getElementById('irccmNewBg');
+  const fgEl   = document.getElementById('irccmNewFg');
+  if(!nameEl) return;
+  const name = nameEl.value.trim();
+  if(!name){ alert('Escreve um nome para o tipo IRCCM'); return; }
+  if(getAllIRCCM().find(t=>t.v===name)){
+    alert('Já existe um tipo com este nome'); return;
+  }
+  const entry = { v:name, label:name, bg: bgEl?.value||'#e5e7eb', fg: fgEl?.value||'#374151' };
+  _customIRCCM.push(entry);
+  saveCustomIRCCM();
+  nameEl.value='';
+  renderIRCCMManager();
+}
+
+function irccmTypeDelete(i){
+  if(!confirm('Apagar este tipo IRCCM?')) return;
+  _customIRCCM.splice(i,1);
+  saveCustomIRCCM();
+  renderIRCCMManager();
+}
+
+function renderIRCCMManager(){
+  const el = document.getElementById('irccmManagerList'); if(!el) return;
+  el.innerHTML='';
+  // Predefined
+  IRCCM_PRESETS.filter(t=>t.v).forEach(t=>{
+    const row=document.createElement('div'); row.className='tm-row';
+    row.innerHTML=`
+      <span class="tm-name">${escHtml(t.label)}</span>
+      <span class="tm-fixed">predefinido</span>
+      ${renderIRCCMBadge(t.v)}`;
+    el.appendChild(row);
+  });
+  // Custom
+  _customIRCCM.forEach((t,i)=>{
+    const row=document.createElement('div'); row.className='tm-row';
+    row.innerHTML=`
+      <span class="tm-name">${escHtml(t.v)}</span>
+      <span class="tm-type-badge sk">custom</span>
+      ${renderIRCCMBadge(t.v)}
+      <button class="tm-btn danger" onclick="irccmTypeDelete(${i})">✕</button>`;
+    el.appendChild(row);
+  });
+}
+
+
+function getAllSeekerTypes(){
+  return [...SEEKER_TYPE_PRESETS, ..._customSeekerTypes.map(t=>({...t, custom:true}))];
+}
+
+// Render badge HTML for a given value
+function renderSeekerTypeBadges(val){
+  if(!val) return '';
+  const types = getAllSeekerTypes();
+  const found = types.find(t=>t.v===val);
+  const bg = found?.bg || '#e5e7eb';
+  const fg = found?.fg || '#374151';
+  // Pulse/CW → split into two badges
+  if(val==='Pulse/CW'){
+    const p=SEEKER_TYPE_PRESETS.find(t=>t.v==='Pulse');
+    const c=SEEKER_TYPE_PRESETS.find(t=>t.v==='CW');
+    return `<span style="background:${p.bg};color:${p.fg};border:1px solid ${p.fg}33;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:2px">Pulse</span><span style="background:${c.bg};color:${c.fg};border:1px solid ${c.fg}33;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:2px">CW</span>`;
+  }
+  return `<span style="background:${bg};color:${fg};border:1px solid ${fg}33;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-left:2px">${escHtml(val)}</span>`;
+}
+
+// Build the <select> for seeker type with live badge preview
+function buildSeekerTypeSelect(id, currentVal){
+  const types = getAllSeekerTypes();
+  const opts = types.map(t=>`<option value="${escHtml(t.v)}"${t.v===currentVal?' selected':''}>${escHtml(t.label||t.v||'— Nenhum —')}</option>`).join('');
+  return `<div style="display:flex;gap:6px;align-items:center;flex:1">
+    <select id="${escHtml(id)}" style="flex:1;font-size:12px;padding:5px 8px;border:1px solid #cbd5e1;border-radius:7px;background:#fff" onchange="updateSeekerTypeBadgePreview(this)">
+      ${opts}
+    </select>
+    <div id="${escHtml(id)}_preview" style="display:flex;gap:3px;align-items:center;min-width:60px">${renderSeekerTypeBadges(currentVal)}</div>
+  </div>`;
+}
+
+function updateSeekerTypeBadgePreview(sel){
+  const preview = document.getElementById(sel.id+'_preview');
+  if(preview) preview.innerHTML = renderSeekerTypeBadges(sel.value);
+}
+
+// Live preview in the create form
+function skTypePreviewUpdate(){
+  const text = document.getElementById('ntSkV')?.value.trim() || 'Badge';
+  const bg   = document.getElementById('ntSkBg')?.value || '#dbeafe';
+  const fg   = document.getElementById('ntSkFg')?.value || '#1e40af';
+  const prev = document.getElementById('ntSkPreview');
+  if(prev){
+    prev.textContent = text || 'Badge';
+    prev.style.background = bg;
+    prev.style.color = fg;
+    prev.style.borderColor = fg+'55';
+  }
+}
+
+function irccmPreviewUpdate(){
+  const bg  = document.getElementById('irccmNewBg')?.value  || '#e0e7ff';
+  const fg  = document.getElementById('irccmNewFg')?.value  || '#3730a3';
+  const prev= document.getElementById('irccmCreatePreview');
+  if(prev){ prev.style.background=bg; prev.style.color=fg; }
+}
+
+
+// Render the manager list
+function renderSeekerTypeManager(){
+  const el = document.getElementById('seekerTypeManagerList'); if(!el) return;
+  el.innerHTML='';
+  // Predefined
+  SEEKER_TYPE_PRESETS.filter(t=>t.v).forEach(t=>{
+    const row=document.createElement('div'); row.className='tm-row';
+    row.innerHTML=`
+      <span class="tm-name">${escHtml(t.label)}</span>
+      <span class="tm-fixed">predefinido</span>
+      ${renderSeekerTypeBadges(t.v)}`;
+    el.appendChild(row);
+  });
+  // Custom
+  _customSeekerTypes.forEach((t,i)=>{
+    const row=document.createElement('div'); row.className='tm-row';
+    row.innerHTML=`
+      <span class="tm-name">${escHtml(t.v)}</span>
+      <span class="tm-type-badge sk">custom</span>
+      ${renderSeekerTypeBadges(t.v)}
+      <button class="tm-btn danger" onclick="skTypeDelete(${i})" style="margin-left:auto">🗑</button>`;
+    el.appendChild(row);
+  });
+}
+
+function skTypeDelete(i){
+  if(!confirm('Apagar badge?'))return;
+  _customSeekerTypes.splice(i,1);
+  saveCustomSeekerTypes(); renderSeekerTypeManager();
+}
+
+function skTypeCreate(){
+  const v   = (document.getElementById('ntSkV')?.value||'').trim();
+  const bg  = document.getElementById('ntSkBg')?.value || '#dbeafe';
+  const fg  = document.getElementById('ntSkFg')?.value || '#1e40af';
+  if(!v){ alert('Escreve o texto do badge.'); return; }
+  if(getAllSeekerTypes().find(t=>t.v===v)){ alert('Este badge já existe.'); return; }
+  _customSeekerTypes.push({v, label:v, bg, fg});
+  saveCustomSeekerTypes(); renderSeekerTypeManager();
+  // reset form
+  document.getElementById('ntSkV').value='';
+  document.getElementById('ntSkBg').value='#dbeafe';
+  document.getElementById('ntSkFg').value='#1e40af';
+  skTypePreviewUpdate();
+}
+
 function buildMCard(m,badgeClass){
   const d=m.s;
   const missileId=m.name.replace(/[^a-zA-Z0-9]/g,'_');
 
   // Build seeker type badge
-  let seekerBadge='';
-  if(d.seekerType){
-    if(d.seekerType.includes('Pulse')&&d.seekerType.includes('CW')){
-      seekerBadge=`<span class="pulse-badge">Pulse</span><span class="cw-badge">CW</span>`;
-    } else if(d.seekerType.includes('Pulse')){
-      seekerBadge=`<span class="pulse-badge">Pulse</span>`;
-    } else if(d.seekerType.includes('CW')){
-      seekerBadge=`<span class="cw-badge">CW</span>`;
-    }
-  }
+  let seekerBadge = d.seekerType ? renderSeekerTypeBadges(d.seekerType) : '';
 
   // Loft badge
   let loftBadge='';
@@ -2663,7 +2929,7 @@ function buildMCard(m,badgeClass){
     ['Massa',d.mass],['Velocidade',d.speed],['Alcance',d.range],
     ['Ogiva',d.wh],['Overload máx.',d.overload],['Gimbal',d.gimbal],
     ['Track rate',d.trackRate],['Fuze',d.fuze],['IOG',d.iog],['Data Link',d.dl],
-    ...(d.seekerType?[['Tipo seeker',d.seekerType+' '+seekerBadge]]:[]),
+    ...(d.seekerType?[['Tipo seeker', seekerBadge]]:[]),
     ...(d.loftAngle&&d.loftAngle!=='—'?[['Ângulo Loft',d.loftAngle+' '+loftBadge]]:[]),
     ['Aspeto / Guidance',d.aspect],
     ...(d.burnTime&&d.burnTime!=='—'?[['Burn time',d.burnTime]]:[]),
@@ -3278,7 +3544,8 @@ function cieRenderFields(data){
       <div class="cie-field"><label>Fuze</label><input id="cieF_fuze" value="${escHtml(d.fuze||'')}" placeholder="Prox. 8 m / delay 1.8s"></div>
       <div class="cie-field"><label>IOG</label><input id="cieF_iog" value="${escHtml(d.iog||'')}" placeholder="Não"></div>
       <div class="cie-field"><label>Data Link</label><input id="cieF_dl" value="${escHtml(d.dl||'')}" placeholder="Não"></div>
-      <div class="cie-field"><label>Tipo seeker</label><input id="cieF_seekerType" value="${escHtml(d.seekerType||'')}" placeholder="CW"></div>
+      <div class="cie-field"><label>Tipo seeker</label>${buildSeekerTypeSelect('cieF_seekerType', d.seekerType||'')}</div>
+      <div class="cie-field"><label>IRCCM</label>${buildIRCCMSelect('cieF_irccm', d.irccm||'')}</div>
       <div class="cie-field"><label>Aspeto / Guidance</label><input id="cieF_aspect" value="${escHtml(d.aspect||'')}" placeholder="SARH I-band CW"></div>
       <div class="cie-field"><label>Burn time</label><input id="cieF_burnTime" value="${escHtml(d.burnTime||'')}" placeholder="2.8s"></div>
       <div class="cie-field"><label>Guia duration</label><input id="cieF_guideDur" value="${escHtml(d.guideDur||'')}" placeholder="40s"></div>
@@ -3437,18 +3704,51 @@ function cieCollect(){
 function cieSave(){
   const data=cieCollect();
   const {tabId, cardIdx, mode}=_cieContext;
+  const _TAB_TO_CAT = {'tARM':'arm','tIRr':'irr','tIRa':'ira','tSARH':'sarh','tARH':'arh'};
 
-  // ── Save base missile ──
-  if(tabId.startsWith('base_missile_')){
-    const cat=tabId.replace('base_missile_','');
+  // ── NEW card in basic tab (tARM / tIRr / tIRa / tSARH / tARH) ──
+  if(mode==='new' && _TAB_TO_CAT[tabId]){
+    const cat=_TAB_TO_CAT[tabId];
+    const cm=edCatMap();
+    const name=(data.name||'').trim()||(data.s?.name||'').trim();
+    if(!name){alert('O campo Nome é obrigatório.');return;}
+    const badge={arm:'ARM',irr:'IR Rear',ira:'IR All',sarh:'SARH',arh:'ARH'}[cat]||'';
+    const badgeCls={arm:'badge-arm',irr:'badge-ir',ira:'badge-irall',sarh:'badge-sarh',arh:'badge-arh'}[cat]||'badge-ir';
+    const s={...(data.s||{})};
+    // merge flat fields that CIE puts at top level
+    ['mass','speed','range','wh','overload','gimbal','trackRate','fuze','iog','dl',
+     'aspect','irccm','seekerType','burnTime','guideDur','signal','loftAngle','note'].forEach(k=>{
+       if(data[k]!==undefined) s[k]=data[k];
+    });
+    s.counters=data.counters||[];
+    const newM={name,badge,badgeClass:badgeCls,nation:data.nation||'',s,_custom:true};
+    cm[cat].arr.push(newM);
+    // persist
+    if(!_custM[cat])_custM[cat]=[];
+    _custM[cat].push(newM);
+    edSaveCustM?.();
+    _edDB[name]=s; edSaveDB?.();
+    cm[cat].fn();
+    edRenderIndex();
+    closeCardEditor(); return;
+  }
+
+  // ── Save base missile (edit mode) ──
+  if(tabId.startsWith('base_missile_') || (mode==='edit' && _TAB_TO_CAT[tabId])){
+    const cat=tabId.startsWith('base_missile_')?tabId.replace('base_missile_',''):_TAB_TO_CAT[tabId];
     const cm=edCatMap();
     const m=cm[cat]?.arr[cardIdx];
     if(!m){alert('Míssil não encontrado.');return;}
     const ov=data.s||{};
     if(data.note) ov.note=data.note;
     if(data.counters) ov.counters=data.counters;
+    // also pick up flat fields from CIE
+    ['mass','speed','range','wh','overload','gimbal','trackRate','fuze','iog','dl',
+     'aspect','irccm','seekerType','burnTime','guideDur','signal'].forEach(k=>{
+       if(data[k]!==undefined) ov[k]=data[k];
+    });
     Object.assign(m.s, ov);
-    _edDB[m.name]=m.s; edSaveDB();
+    _edDB[m.name]=m.s; edSaveDB?.();
     cm[cat].fn();
     edRenderIndex();
     closeCardEditor(); return;
@@ -3504,11 +3804,11 @@ function buildCustomMissileCard(c,tabId,idx){
     ['Massa',d.mass],['Velocidade',d.speed],['Alcance',d.range],
     ['Ogiva',d.wh],['Overload máx.',d.overload],['Gimbal',d.gimbal],
     ['Track rate',d.trackRate],['Fuze',d.fuze],['IOG',d.iog],['Data Link',d.dl],
-    ['Tipo seeker',d.seekerType],['Aspeto / Guidance',d.aspect],
+    ['Tipo seeker', d.seekerType ? renderSeekerTypeBadges(d.seekerType) : null],['Aspeto / Guidance',d.aspect],
     ['Burn time',d.burnTime],['Guia duration',d.guideDur],['Signal / Seeker',d.signal],
-  ].filter(([,v])=>v&&v.trim&&v.trim()&&v!=='—');
+  ].filter(([,v])=>v&&(typeof v==='string'?v.trim()&&v!=='—':true));
 
-  const statsHtml=`<div class="sgrid">${rows.map(([k,v])=>`<div class="sg"><div class="sg-k">${escHtml(k)}</div><div class="sg-v">${escHtml(v)}</div></div>`).join('')}</div>`;
+  const statsHtml=`<div class="sgrid">${rows.map(([k,v])=>`<div class="sg"><div class="sg-k">${escHtml(String(k))}</div><div class="sg-v">${typeof v==='string'&&!v.startsWith('<')?escHtml(v):v}</div></div>`).join('')}</div>`;
   const irccmHtml=d.irccm?`<div class="mlabel">IRCCM</div>${irccmPill(d.irccm)}`:'';
   const noteHtml=(d.note&&d.note.trim())?`<div class="note-box">${escHtml(d.note)}</div>`:'';
   const counterHtml=(c.counters||[]).filter(Boolean).length?`<div class="mlabel">Como contrariar</div><ul class="counter-list">${(c.counters||[]).map(ct=>`<li>${escHtml(ct)}</li>`).join('')}</ul>`:'';
@@ -3583,8 +3883,9 @@ function showTab(id,btn){
 // init custom tabs
 rebuildCustomTabs();
 tmRender();
+renderSeekerTypeManager();
+renderIRCCMManager();
 serverLoad();
-startPolling();
 
 
 // ============================================================
