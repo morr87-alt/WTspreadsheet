@@ -529,6 +529,31 @@ let _syncPending = false;
 let _syncTimer   = null;
 let _serverVersion = 0;
 
+// Variáveis de dados — declaradas aqui para estarem disponíveis no serverLoad()
+// (serão preenchidas pelas secções respetivas mais abaixo)
+const ED_KEY        = 'wt_card_editor_v1';
+const SEEKER_KEY    = 'wt_seeker_editor_v1';
+const ED_CUSTOM_KEY = 'wt_custom_missiles_v1';
+const ED_CUST_SK_KEY= 'wt_custom_seekers_v1';
+const SK_STORE_KEY  = 'wt_seeker_custom_v1';
+const SK_EDIT_KEY   = 'wt_seeker_edits_v1';
+const TM_KEY        = 'wt_custom_tabs_v1';
+
+let _edDB    = {};
+let _skDB    = {};
+let _custM   = {};
+let _custSK  = [];
+let _skCustom = [];
+let _skEdits  = {};
+let _customTabs = [];
+
+try{ _edDB    = JSON.parse(localStorage.getItem(ED_KEY)||'{}');          }catch(e){}
+try{ _skDB    = JSON.parse(localStorage.getItem(SEEKER_KEY)||'{}');      }catch(e){}
+try{ _custM   = JSON.parse(localStorage.getItem(ED_CUSTOM_KEY)||'{}');   }catch(e){}
+try{ _custSK  = JSON.parse(localStorage.getItem(ED_CUST_SK_KEY)||'[]');  }catch(e){}
+try{ _skCustom= JSON.parse(localStorage.getItem(SK_STORE_KEY)||'[]');    }catch(e){}
+try{ _skEdits = JSON.parse(localStorage.getItem(SK_EDIT_KEY)||'{}');     }catch(e){}
+
 // ── Load data from server on startup ──────────────────────────────────────────
 async function serverLoad() {
   try {
@@ -684,10 +709,7 @@ window.addEventListener('beforeunload', e => {
   }
 });
 
-// Load on startup
-document.addEventListener('DOMContentLoaded', () => {
-  serverLoad();
-});
+// serverLoad() chamado no fim do script, após todas as variáveis estarem prontas
 
 // ============================================================
 // AIRCRAFT CARRIER DATA +  EDITOR STORAGE
@@ -2096,8 +2118,7 @@ const seekerData=[
 // ============================================================
 // FULL CARD EDITOR — missile fields + seeker fields
 // ============================================================
-const ED_KEY = 'wt_card_editor_v1';
-const SEEKER_KEY = 'wt_seeker_editor_v1';
+// (ED_KEY e SEEKER_KEY já declarados no bloco de sync no topo)
 
 // Maps category key → {dataArr, gridId, badgeClass, reRender}
 function edCatMap(){return {
@@ -2109,11 +2130,7 @@ function edCatMap(){return {
   seeker:{arr:seekerData,grid:'seekerGrid',badge:'',           fn:()=>renderSeekers()},
 };}
 
-// load overrides from localStorage
-let _edDB = {};
-let _skDB = {};
-try{ _edDB = JSON.parse(localStorage.getItem(ED_KEY)||'{}'); }catch(e){}
-try{ _skDB = JSON.parse(localStorage.getItem(SEEKER_KEY)||'{}'); }catch(e){}
+// load overrides from localStorage — já feito no bloco de sync (topo do script)
 
 function edSaveDB(){ try{localStorage.setItem(ED_KEY,JSON.stringify(_edDB));}catch(e){} serverSave?.(); }
 function edSaveSK(){ try{localStorage.setItem(SEEKER_KEY,JSON.stringify(_skDB));}catch(e){} serverSave?.(); }
@@ -2657,18 +2674,12 @@ bindAircraftEditor();
 // ============================================================
 // SEEKERS — storage + custom cards
 // ============================================================
-const SK_STORE_KEY = 'wt_seeker_custom_v1';
-const SK_EDIT_KEY  = 'wt_seeker_edits_v1';
+// (SK_STORE_KEY, SK_EDIT_KEY, _skCustom, _skEdits já declarados no bloco de sync)
 
 // Deep clone base data
 function skClone(d){ return JSON.parse(JSON.stringify(d)); }
 
-// Load custom seeker cards and edits from localStorage
-let _skCustom = [];   // extra cards created by user
-let _skEdits  = {};   // overrides for base seekerData cards, keyed by index
-
-try{ _skCustom = JSON.parse(localStorage.getItem(SK_STORE_KEY)||'[]'); }catch(e){ _skCustom=[]; }
-try{ _skEdits  = JSON.parse(localStorage.getItem(SK_EDIT_KEY)||'{}');  }catch(e){ _skEdits={}; }
+// (carregados do localStorage no bloco de sync no topo)
 
 function skSaveCustom(){ try{localStorage.setItem(SK_STORE_KEY, JSON.stringify(_skCustom));}catch(e){} serverSave?.(); }
 function skSaveEdits(){  try{localStorage.setItem(SK_EDIT_KEY,  JSON.stringify(_skEdits)); }catch(e){} serverSave?.(); }
@@ -3012,7 +3023,7 @@ window.WTEdit={editAircraft:function(id){
 // ============================================================
 // TAB MANAGER
 // ============================================================
-const TM_KEY = 'wt_custom_tabs_v1';
+// (TM_KEY já declarado no bloco de sync no topo)
 const FIXED_TABS = [
   {id:'tSPAA',label:'🛡️ SPAA vs ARM',fixed:true},
   {id:'tARM',label:'🎯 ARM',fixed:true},
@@ -3024,7 +3035,7 @@ const FIXED_TABS = [
   {id:'tSeekers',label:'🔬 Seekers & IRCCM',fixed:true},
 ];
 
-let _customTabs = [];
+// (_customTabs já declarado no bloco de sync)
 try{ _customTabs = JSON.parse(localStorage.getItem(TM_KEY)||'[]'); }catch(e){ _customTabs=[]; }
 function saveTabs(){ try{localStorage.setItem(TM_KEY,JSON.stringify(_customTabs));}catch(e){} serverSave?.(); }
 
@@ -3473,6 +3484,9 @@ function showTab(id,btn){
 // init custom tabs
 rebuildCustomTabs();
 tmRender();
+
+// ── Carregar dados do servidor (após todas as variáveis inicializadas) ──────────
+serverLoad();
 </script>
 </body>
 </html>
