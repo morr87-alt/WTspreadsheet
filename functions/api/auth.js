@@ -46,7 +46,7 @@ if (password !== correct) {
       await new Promise(r => setTimeout(r, 500));
       return json({ error: 'Password incorreta' }, 401);
     }
-    const token = await makeToken(env.EDITOR_PASSWORD);
+    const token = await makeToken(correct);
     return json({ ok: true, token });
   } catch {
     return json({ error: 'Request inválido' }, 400);
