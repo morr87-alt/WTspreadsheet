@@ -1424,8 +1424,25 @@ let _skDB = {};
 try{ _edDB = JSON.parse(localStorage.getItem(ED_KEY)||'{}'); }catch(e){}
 try{ _skDB = JSON.parse(localStorage.getItem(SEEKER_KEY)||'{}'); }catch(e){}
 
-function edSaveDB(){ try{localStorage.setItem(ED_KEY,JSON.stringify(_edDB));}catch(e){} }
-function edSaveSK(){ try{localStorage.setItem(SEEKER_KEY,JSON.stringify(_skDB));}catch(e){} }
+function edSaveDB(){
+    try{
+        localStorage.setItem(ED_KEY, JSON.stringify(_edDB));
+    }catch(e){}
+
+    if(window.API){
+        API.sync();
+    }
+}
+
+function edSaveSK(){
+    try{
+        localStorage.setItem(SEEKER_KEY, JSON.stringify(_skDB));
+    }catch(e){}
+
+    if(window.API){
+        API.sync();
+    }
+}
 
 // Apply stored overrides to a missile s-object
 function edApplyOverrides(name, s){
