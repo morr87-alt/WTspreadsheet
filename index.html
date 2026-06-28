@@ -1947,9 +1947,12 @@ function edCatMap(){return {
 };}
  
 // load overrides from localStorage
+// load overrides
+
 let _edDB = {};
 let _skDB = {};
 
+// Primeiro usa o localStorage (fallback)
 try{
     _edDB = JSON.parse(localStorage.getItem(ED_KEY) || '{}');
 }catch(e){}
@@ -1958,22 +1961,20 @@ try{
     _skDB = JSON.parse(localStorage.getItem(SEEKER_KEY) || '{}');
 }catch(e){}
 
-function edSaveDB(){
+// Depois tenta substituir pelos dados da D1
+(async () => {
     try{
-        localStorage.setItem(ED_KEY,JSON.stringify(_edDB));
-    }catch(e){}
+        const db = await API.load();
 
-    API.sync();
-}
+        if(db.missiles) _edDB = db.missiles;
+        if(db.seekers) _skDB = db.seekers;
 
-function edSaveSK(){
-    try{
-        localStorage.setItem(SEEKER_KEY,JSON.stringify(_skDB));
-    }catch(e){}
+        console.log("✅ Overrides carregados da D1");
+    }catch(err){
+        console.warn("A usar localStorage:", err);
+    }
+})();
 
-    API.sync();
-}
- 
 // Apply stored overrides to a missile s-object
 function edApplyOverrides(name, s){
   const ov = _edDB[name];
