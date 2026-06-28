@@ -139,7 +139,7 @@ body.edit-mode .aircraft-edit-trigger{opacity:.7;background:#3b82f6}
 body.edit-mode .aircraft-title{color:#3b82f6}
 body.edit-mode .aircraft-tag{background:#dbeafe;color:#1e40af}
 /* floating edit mode indicator */
-#editModeBar{display:none;position:fixed;bottom:18px;right:18px;background:#0f172a;color:#e2e8f0;font-size:11px;font-weight:600;padding:8px 14px;border-radius:10px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.35);gap:10px;align-items:center}
+#editModeBar{display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);background:#0f172a;color:#e2e8f0;font-size:11px;font-weight:600;padding:6px 14px;border-radius:0 0 10px 10px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.35);gap:10px;align-items:center}
 #editModeBar.visible{display:flex}
 #editModeBar button{background:#374151;border:none;color:#e2e8f0;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer}
 #editModeBar button:hover{background:#4b5563}
@@ -224,7 +224,6 @@ body.edit-mode .tab-edit-bar{display:flex}
 .tm-name{flex:1;font-size:12px;font-weight:600;color:#111}
 .tm-type-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;background:#e0e7ff;color:#3730a3}
 .tm-type-badge.sk{background:#fef9c3;color:#854d0e}
-.tm-fixed{font-size:10px;color:#94a3b8;font-style:italic}
 .tm-btn{font-size:11px;border:1px solid #d1d5db;background:#fff;border-radius:6px;padding:3px 8px;cursor:pointer;font-weight:700}
 .tm-btn:hover{background:#f3f4f6}
 .tm-btn.danger{border-color:#fecdd3;background:#fff1f2;color:#9f1239}
@@ -259,6 +258,9 @@ body.edit-mode .tab-edit-bar{display:flex}
 .img-upload-area:hover{border-color:#3b82f6}
 .img-upload-area input[type=file]{display:none}
 .img-preview-small{width:100%;max-height:90px;object-fit:cover;border-radius:6px;margin-top:6px;display:none}
+body.edit-mode .tab-btn[draggable]{cursor:grab}
+.tab-btn.drag-over{border-bottom:2px solid #60a5fa;background:rgba(96,165,250,.12)}
+.tab-btn.dragging{opacity:.4;cursor:grabbing}
 </style>
 </head>
 <body>
@@ -272,14 +274,14 @@ body.edit-mode .tab-edit-bar{display:flex}
   <h1>⚡ War Thunder — Guided Weapons Reference</h1>
   <div class="sub">Fonte: Koppany99 / gszabi99 Guided Weaponry Spreadsheet · War Thunder Wiki &nbsp;·&nbsp; <span style="color:#60a5fa">v3 — Mísseis corrigidos · SARH Pulse/CW · ARH Loft · Aviões editáveis</span></div>
   <div class="tabs" id="tabBar">
-    <button class="tab-btn active" onclick="showTab('tSPAA',this)">🛡️ SPAA vs ARM</button>
-    <button class="tab-btn" onclick="showTab('tARM',this)">🎯 ARM</button>
-    <button class="tab-btn" onclick="showTab('tIRr',this)">🔴 IR Rear-Aspect</button>
-    <button class="tab-btn" onclick="showTab('tIRa',this)">🔶 IR All-Aspect</button>
-    <button class="tab-btn" onclick="showTab('tSARH',this)">📡 SARH</button>
-    <button class="tab-btn" onclick="showTab('tARH',this)">⚡ ARH</button>
-    <button class="tab-btn" id="btnAircraftEditor" onclick="tryOpenEditor(this)">🔒 Aviões / Editor</button>
-    <button class="tab-btn" onclick="showTab('tSeekers',this)">🔬 Seekers & IRCCM</button>
+    <button class="tab-btn active" draggable="true" data-tab="tSPAA" onclick="showTab('tSPAA',this)">🛡️ SPAA vs ARM</button>
+    <button class="tab-btn" draggable="true" data-tab="tARM" onclick="showTab('tARM',this)">🎯 ARM</button>
+    <button class="tab-btn" draggable="true" data-tab="tIRr" onclick="showTab('tIRr',this)">🔴 IR Rear-Aspect</button>
+    <button class="tab-btn" draggable="true" data-tab="tIRa" onclick="showTab('tIRa',this)">🔶 IR All-Aspect</button>
+    <button class="tab-btn" draggable="true" data-tab="tSARH" onclick="showTab('tSARH',this)">📡 SARH</button>
+    <button class="tab-btn" draggable="true" data-tab="tARH" onclick="showTab('tARH',this)">⚡ ARH</button>
+    <button class="tab-btn" draggable="true" data-tab="tAircraft" id="btnAircraftEditor" onclick="tryOpenEditor(this)">🔒 Aviões / Editor</button>
+    <button class="tab-btn" draggable="true" data-tab="tSeekers" onclick="showTab('tSeekers',this)">🔬 Seekers & IRCCM</button>
     <div id="customTabBtns"></div>
   </div>
 </div>
@@ -430,7 +432,7 @@ body.edit-mode .tab-edit-bar{display:flex}
   <!-- TAB MANAGER -->
   <div class="tab-manager" id="tabManagerSection">
     <h3>🗂️ Gestão de Tabs</h3>
-    <p style="font-size:11px;color:#64748b;margin-bottom:12px">Arrasta para reordenar · Cria novas tabs com template Míssil ou Seeker · As tabs fixas (SPAA, ARM, IRr, IRa, SARH, ARH, Editor, Seekers) não podem ser apagadas mas podem ser reordenadas.</p>
+    <p style="font-size:11px;color:#64748b;margin-bottom:12px">Arrasta as tabs na barra de cima para reordenar · Cria novas tabs com template Míssil ou Seeker · Todas as tabs podem ser apagadas.</p>
     <div id="tmList"></div>
     <!-- New tab form -->
     <div class="new-tab-form">
@@ -2428,24 +2430,38 @@ function edRenderIndex(){
   const all=[];
   const cm=edCatMap();
   ['arm','irr','ira','sarh','arh'].forEach(cat=>{
-    const info=cm[cat];
-    info.arr.forEach((m,i)=>{all.push({cat,idx:i,name:m.name,group:m.badge,modified:!!_edDB[m.name]});});
+    cm[cat].arr.forEach((m,i)=>{
+      all.push({type:'base_missile',cat,idx:i,name:m.name,group:m.badge||cat.toUpperCase(),modified:!!_edDB[m.name]});
+    });
   });
-  seekerData.forEach((sk,i)=>{all.push({cat:'seeker',idx:i,name:sk.type,group:'Seeker',modified:!!_skDB[sk.type]});});
-  all.filter(x=>!q||x.name.toLowerCase().includes(q)||x.group.toLowerCase().includes(q)).forEach(x=>{
+  seekerData.forEach((sk,i)=>{
+    all.push({type:'base_seeker',idx:i,name:sk.type,group:'Seeker',modified:!!_skDB[sk.type]});
+  });
+  _customTabs.forEach(t=>{
+    loadCtabCards(t.id).forEach((c,i)=>{
+      all.push({type:'ctab',tabId:t.id,template:t.template,idx:i,name:c.name||c.type||'Card '+(i+1),group:t.label,modified:true});
+    });
+  });
+
+  all.filter(x=>!q||x.name.toLowerCase().includes(q)||(x.group||'').toLowerCase().includes(q)).forEach(x=>{
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td><strong>${escHtml(x.name)}</strong></td><td>${escHtml(x.group)}</td>
-      <td>${x.modified?'<span style="color:#0369a1;font-weight:700">✏ Editado</span>':'<span style="color:#94a3b8">—</span>'}</td>
-      <td><button onclick="edJumpTo('${x.cat}',${x.idx})">Editar</button></td>`;
+    const modCell=x.modified?'<span style="color:#0369a1;font-weight:700">✏ Editado</span>':'<span style="color:#94a3b8">—</span>';
+    const td=document.createElement('td');
+    const btn=document.createElement('button');
+    btn.textContent='Editar';
+    btn.style.cssText='border:1px solid #d1d5db;background:#fff;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:800;cursor:pointer';
+    if(x.type==='base_missile'){
+      btn.onclick=()=>openCardEditor('edit','missile','base_missile',x.idx);
+    } else if(x.type==='base_seeker'){
+      btn.onclick=()=>openCardEditor('edit','seeker','base_seeker',x.idx);
+    } else {
+      btn.onclick=()=>openCardEditor('edit',x.template,'ctab_'+x.tabId,x.idx);
+    }
+    td.appendChild(btn);
+    tr.innerHTML=`<td><strong>${escHtml(x.name)}</strong></td><td>${escHtml(x.group)}</td><td>${modCell}</td>`;
+    tr.appendChild(td);
     body.appendChild(tr);
   });
-}
-function edJumpTo(cat,idx){
-  const btnTab=document.getElementById('btnAircraftEditor');
-  if(btnTab)showTab('tAircraft',btnTab);
-  document.getElementById('edCat').value=cat; edLoadCat();
-  document.getElementById('edItem').value=idx; edLoadItem();
-  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 // Apply saved overrides on page load
@@ -2669,6 +2685,7 @@ filterGrid('irRearGrid',irRearData,'f3s','badge-ir');
 filterGrid('irAllGrid',irAllData,'f4s','badge-irall');
 filterGrid('sarhGrid',sarhData,'f5s','badge-sarh');
 filterGrid('arhGrid',arhData,'f6s','badge-arh');
+renderSeekers();
 bindAircraftEditor();
 
 // ============================================================
@@ -3024,16 +3041,6 @@ window.WTEdit={editAircraft:function(id){
 // TAB MANAGER
 // ============================================================
 // (TM_KEY já declarado no bloco de sync no topo)
-const FIXED_TABS = [
-  {id:'tSPAA',label:'🛡️ SPAA vs ARM',fixed:true},
-  {id:'tARM',label:'🎯 ARM',fixed:true},
-  {id:'tIRr',label:'🔴 IR Rear-Aspect',fixed:true},
-  {id:'tIRa',label:'🔶 IR All-Aspect',fixed:true},
-  {id:'tSARH',label:'📡 SARH',fixed:true},
-  {id:'tARH',label:'⚡ ARH',fixed:true},
-  {id:'tAircraft',label:'✏️ Aviões / Editor',fixed:true},
-  {id:'tSeekers',label:'🔬 Seekers & IRCCM',fixed:true},
-];
 
 // (_customTabs já declarado no bloco de sync)
 try{ _customTabs = JSON.parse(localStorage.getItem(TM_KEY)||'[]'); }catch(e){ _customTabs=[]; }
@@ -3042,25 +3049,15 @@ function saveTabs(){ try{localStorage.setItem(TM_KEY,JSON.stringify(_customTabs)
 function tmRender(){
   const list=document.getElementById('tmList'); if(!list)return;
   list.innerHTML='';
-  // fixed tabs
-  FIXED_TABS.forEach(t=>{
-    const row=document.createElement('div'); row.className='tm-row';
-    row.innerHTML=`<span class="tm-drag" title="Tab fixa">☰</span><span class="tm-name">${t.label}</span><span class="tm-fixed">fixa</span>`;
-    list.appendChild(row);
-  });
-  // custom tabs
   _customTabs.forEach((t,i)=>{
     const row=document.createElement('div'); row.className='tm-row'; row.dataset.idx=i;
     row.innerHTML=`
-      <span class="tm-drag" draggable="true">☰</span>
+      <span class="tm-drag">☰</span>
       <span class="tm-name" contenteditable="true" onblur="tmRename(${i},this.textContent.trim())">${escHtml(t.label)}</span>
-      <span class="tm-type-badge${t.template==='seeker'?' sk':''}">${t.template==='seeker'?'Seeker':'Míssil'}</span>
-      <select style="font-size:11px;border:1px solid #e2e8f0;border-radius:6px;padding:2px 6px" onchange="tmChangeType(${i},this.value)">
-        <option value="missile"${t.template==='missile'?' selected':''}>Míssil</option>
-        <option value="seeker"${t.template==='seeker'?' selected':''}>Seeker</option>
+      <select style="font-size:11px;border:1px solid #e2e8f0;border-radius:6px;padding:2px 6px;color:#374151" onchange="tmChangeType(${i},this.value)">
+        <option value="missile"${t.template==='missile'?' selected':''}>🚀 Míssil</option>
+        <option value="seeker"${t.template==='seeker'?' selected':''}>🔬 Seeker</option>
       </select>
-      <button class="tm-btn" onclick="tmMoveUp(${i})">↑</button>
-      <button class="tm-btn" onclick="tmMoveDown(${i})">↓</button>
       <button class="tm-btn danger" onclick="tmDelete(${i})">🗑</button>`;
     list.appendChild(row);
   });
@@ -3076,19 +3073,8 @@ function tmChangeType(i,val){
   _customTabs[i].template=val;
   saveTabs(); rebuildCustomTabs();
 }
-function tmMoveUp(i){
-  if(i===0)return;
-  [_customTabs[i-1],_customTabs[i]]=[_customTabs[i],_customTabs[i-1]];
-  saveTabs(); tmRender(); rebuildCustomTabs();
-}
-function tmMoveDown(i){
-  if(i>=_customTabs.length-1)return;
-  [_customTabs[i],_customTabs[i+1]]=[_customTabs[i+1],_customTabs[i]];
-  saveTabs(); tmRender(); rebuildCustomTabs();
-}
 function tmDelete(i){
   if(!confirm(`Apagar tab "${_customTabs[i]?.label}"? As cards guardadas também serão apagadas.`))return;
-  // remove cards for this tab
   try{localStorage.removeItem('wt_ctab_cards_'+_customTabs[i].id);}catch(e){}
   _customTabs.splice(i,1);
   saveTabs(); tmRender(); rebuildCustomTabs();
@@ -3112,6 +3098,7 @@ function rebuildCustomTabs(){
   _customTabs.forEach(t=>{
     const btn=document.createElement('button');
     btn.className='tab-btn'; btn.textContent=t.label;
+    btn.draggable=true; btn.dataset.tab='ctab_'+t.id;
     btn.onclick=function(){showTab('ctab_'+t.id,this);};
     btnContainer.appendChild(btn);
   });
@@ -3164,27 +3151,46 @@ let _cieContext = {tabId:null, template:'missile', cardIdx:-1};
 let _cieImgData = null;
 
 function openCardEditor(mode, template, tabPaneId, cardIdx=-1){
-  _cieContext = {tabId: tabPaneId, template, cardIdx};
+  _cieContext = {tabId: tabPaneId, template, cardIdx, mode};
   _cieImgData = null;
   const editor=document.getElementById('cardInlineEditor');
   const overlay=document.getElementById('cieOverlay');
   document.getElementById('cieTemplate').value=template;
-  // load data if editing
+
   let existing = null;
-  if(mode==='edit' && cardIdx>=0){
-    const realTabId=tabPaneId.replace(/^ctab_/,'');
-    const tab=_customTabs.find(t=>t.id===realTabId);
-    if(tab){
-      const cards=loadCtabCards(tab.id);
-      existing=cards[cardIdx]||null;
-      if(existing) _cieImgData=existing.img||null;
+
+  if(mode==='edit'){
+    if(tabPaneId==='base_missile'){
+      // editing a base missile from armData/irRearData/etc
+      const cm=edCatMap();
+      const cats=['arm','irr','ira','sarh','arh'];
+      for(const cat of cats){
+        const m=cm[cat].arr[cardIdx];
+        if(m){ existing={name:m.name,badge:m.badge,badgeClass:getBadgeClassFromCat(cat),nation:m.nation||'',...m.s,counters:m.s?.counters||[],note:m.s?.note||''}; break; }
+      }
+    } else if(tabPaneId==='base_seeker'){
+      const sk=seekerData[cardIdx];
+      if(sk) existing={...sk};
+    } else if(cardIdx>=0){
+      const realTabId=tabPaneId.replace(/^ctab_/,'');
+      const tab=_customTabs.find(t=>t.id===realTabId);
+      if(tab){
+        const cards=loadCtabCards(tab.id);
+        existing=cards[cardIdx]||null;
+        if(existing) _cieImgData=existing.img||null;
+      }
     }
   }
+
   document.getElementById('cieTitle').textContent=mode==='new'?'➕ Nova Card':'✏️ Editar Card';
-  document.getElementById('cieDeleteBtn').style.display=mode==='edit'?'inline-block':'none';
+  document.getElementById('cieDeleteBtn').style.display=(mode==='edit'&&tabPaneId!=='base_missile'&&tabPaneId!=='base_seeker')?'inline-block':'none';
   cieRenderFields(existing);
   editor.classList.add('open');
   overlay.classList.add('open');
+}
+
+function getBadgeClassFromCat(cat){
+  return{arm:'badge-arm',irr:'badge-ir',ira:'badge-irall',sarh:'badge-sarh',arh:'badge-arh'}[cat]||'badge-ir';
 }
 
 function closeCardEditor(){
@@ -3194,7 +3200,9 @@ function closeCardEditor(){
 
 function cieRenderFields(data){
   const template=document.getElementById('cieTemplate').value;
-  const d=data||{};
+  const raw=data||{};
+  // normalise: base missiles store stats in .s, custom cards also use .s — flatten for the form
+  const d={...raw, ...(raw.s||{})};
   const fields=document.getElementById('cieFields');
   if(template==='missile'){
     fields.innerHTML=`
@@ -3351,8 +3359,42 @@ function cieCollect(){
 
 function cieSave(){
   const data=cieCollect();
-  const {tabId,cardIdx}=_cieContext;
-  // determine real tab id
+  const {tabId, cardIdx, mode}=_cieContext;
+
+  // ── Save base missile ──
+  if(tabId==='base_missile'){
+    const cm=edCatMap();
+    const cats=['arm','irr','ira','sarh','arh'];
+    let found=false;
+    for(const cat of cats){
+      const m=cm[cat].arr[cardIdx];
+      if(m){
+        const ov=data.s||{};
+        Object.assign(m.s, ov);
+        if(data.note) m.s.note=data.note;
+        if(data.counters) m.s.counters=data.counters;
+        _edDB[m.name]=m.s; edSaveDB();
+        cm[cat].fn(); // re-render that grid
+        edRenderIndex();
+        found=true; break;
+      }
+    }
+    if(!found){alert('Míssil não encontrado.');}
+    closeCardEditor(); return;
+  }
+
+  // ── Save base seeker ──
+  if(tabId==='base_seeker'){
+    const sk=seekerData[cardIdx];
+    if(!sk){alert('Seeker não encontrado.');return;}
+    Object.assign(sk, data);
+    _skDB[sk.type]=data; edSaveSK();
+    renderSeekers(); skEdPopulateSelect(); skEdLoad();
+    edRenderIndex();
+    closeCardEditor(); return;
+  }
+
+  // ── Save custom tab card ──
   const realTabId=tabId.replace(/^ctab_/,'');
   const tab=_customTabs.find(t=>t.id===realTabId);
   if(!tab){alert('Tab não encontrada.');return;}
@@ -3364,6 +3406,7 @@ function cieSave(){
   }
   saveCtabCards(tab.id,cards);
   renderCustomTabCards(tab);
+  edRenderIndex();
   closeCardEditor();
 }
 
@@ -3481,12 +3524,67 @@ function showTab(id,btn){
   if(btn) btn.classList.add('active');
 }
 
+// ── Carregar dados do servidor (após todas as variáveis inicializadas) ──────────
 // init custom tabs
 rebuildCustomTabs();
 tmRender();
-
-// ── Carregar dados do servidor (após todas as variáveis inicializadas) ──────────
 serverLoad();
+
+
+// ============================================================
+// TAB BAR DRAG-AND-DROP REORDER (só em modo edição)
+// ============================================================
+(function initTabDrag(){
+  const bar = document.getElementById('tabBar');
+  if(!bar) return;
+  let dragged = null;
+
+  bar.addEventListener('dragstart', e => {
+    if(!document.body.classList.contains('edit-mode')) { e.preventDefault(); return; }
+    const btn = e.target.closest('.tab-btn[draggable]');
+    if(!btn) return;
+    dragged = btn;
+    btn.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+
+  bar.addEventListener('dragend', e => {
+    if(dragged) dragged.classList.remove('dragging');
+    bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('drag-over'));
+    dragged = null;
+  });
+
+  bar.addEventListener('dragover', e => {
+    if(!document.body.classList.contains('edit-mode') || !dragged) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const target = e.target.closest('.tab-btn[draggable]');
+    bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('drag-over'));
+    if(target && target !== dragged) target.classList.add('drag-over');
+  });
+
+  bar.addEventListener('dragleave', e => {
+    const target = e.target.closest('.tab-btn');
+    if(target) target.classList.remove('drag-over');
+  });
+
+  bar.addEventListener('drop', e => {
+    if(!document.body.classList.contains('edit-mode') || !dragged) return;
+    e.preventDefault();
+    const target = e.target.closest('.tab-btn[draggable]');
+    if(!target || target === dragged) return;
+    target.classList.remove('drag-over');
+    const targetRect = target.getBoundingClientRect();
+    const mid = targetRect.left + targetRect.width / 2;
+    if(e.clientX < mid) {
+      bar.insertBefore(dragged, target);
+    } else {
+      bar.insertBefore(dragged, target.nextSibling);
+    }
+  });
+})();
+
+
 </script>
 </body>
 </html>
