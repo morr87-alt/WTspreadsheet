@@ -1123,23 +1123,13 @@ function loadAircraftData(){
   }catch(e){console.warn('Erro ao carregar aviões portadores',e);}
   return db;
 }
-
-function saveAircraftData(){
-    try{
-        localStorage.setItem(AIRCRAFT_KEY,JSON.stringify(aircraftDB));
-    }catch(e){
-        console.warn('Erro ao guardar aviões portadores',e);
-    }
-
-    API.sync();
-}
-
+function saveAircraftData(){try{localStorage.setItem(AIRCRAFT_KEY,JSON.stringify(aircraftDB));}catch(e){console.warn('Erro ao guardar aviões portadores',e);}}
 let aircraftDB=loadAircraftData();
 function getAircraftList(id){return uniqCleanList(aircraftDB[id]||[]);}
 function setAircraftList(id,list){aircraftDB[id]=uniqCleanList(list);saveAircraftData();}
 function aircraftMetaById(id){return AIRCRAFT_META.find(x=>x.id===id)||{id,name:id,group:'—',source:'—'};}
- 
- 
+
+
 // ============================================================
 // SPAA DATA
 // ============================================================
@@ -1221,7 +1211,7 @@ const spaaRows=[
   {name:'ADATS (USA)',nation:'USA',rank:'VIII',br:'11.7',band:'I',c:[F,F,N,F,F,N,N,F,N,N,F,F,F,F,F,F,F,F]},
   {name:'MIM-146 ADATS',nation:'USA',rank:'VIII',br:'12.7',band:'I',c:[F,F,N,F,F,N,N,F,N,N,F,F,F,F,F,F,F,F]},
 ];
- 
+
 // ============================================================
 // ARM DATA
 // ============================================================
@@ -1241,7 +1231,7 @@ const armData=[
   {name:'LD-10',badge:'ARM',s:{mass:'—',speed:'Mach 3.0',range:'~60 km',wh:'—',overload:'—',gimbal:'Wide',trackRate:'—',fuze:'Prox.',iog:'Sim',dl:'Não',aspect:'Passive radar homing (E–J band)',irccm:'—',burnTime:'—',guideDur:'—',signal:'Passive RF — E to J band',note:'ARM chinês leve. IOG. E–J band.',counters:['IOG: desligar e mover']}},
   {name:'AS-37 Martel',badge:'ARM',s:{mass:'530 kg',speed:'Mach 1.5',range:'~60 km',wh:'149.5 kg',overload:'—',gimbal:'Wide',trackRate:'—',fuze:'Prox.',iog:'Não',dl:'Não',aspect:'Passive radar homing (C–I band)',irccm:'—',burnTime:'—',guideDur:'—',signal:'Passive RF — C to I band',note:'ARM franco-britânico antigo. Sem IOG. Ogiva 149.5kg. Lento (Mach 1.5) mas ogiva devastante.',counters:['Desligar radar — sem IOG o míssil perde guia']}},
 ];
- 
+
 // ============================================================
 // IR REAR-ASPECT DATA
 // ============================================================
@@ -1263,7 +1253,7 @@ const irRearData=[
   {name:'Rb24',badge:'IR Rear',s:{mass:'75 kg',speed:'Mach 2.5',range:'~5 km',wh:'4.5 kg',overload:'10G',gimbal:'±25°',trackRate:'12°/s',fuze:'Prox. 4 m',iog:'Não',dl:'Não',aspect:'Rear-aspect',irccm:'Nenhum',burnTime:'2.2s',guideDur:'20s',signal:'Uncooled IR (AIM-9B licenciado)',note:'AIM-9B sueco. Performance idêntica.',counters:['Flares eficazes']}},
   {name:'Rb24J',badge:'IR Rear',s:{mass:'75 kg',speed:'Mach 2.5',range:'~8 km',wh:'4.5 kg',overload:'18G',gimbal:'±45°',trackRate:'20°/s',fuze:'Prox. 5 m',iog:'Não',dl:'Não',aspect:'Rear-aspect',irccm:'Nenhum',burnTime:'2.2s',guideDur:'—',signal:'Uncooled IR (AIM-9J licenciado)',note:'AIM-9J sueco. 18G.',counters:['Flares eficazes']}},
 ];
- 
+
 // ============================================================
 // IR ALL-ASPECT DATA  (R-73M REMOVIDO — não existe no jogo)
 // ============================================================
@@ -1306,7 +1296,7 @@ const irAllData=[
   {name:'9M336 Verba',badge:'IR All',s:{mass:'11.7 kg',speed:'Mach 1.7',range:'~8 km',wh:'0.92 kg',overload:'12G',gimbal:'±40°',trackRate:'12°/s',fuze:'Prox. 1.2 m / delay 1.25s',iog:'Não',dl:'Não',aspect:'All-aspect',irccm:'FOV Gating + Seeker Shutoff',burnTime:'1.9s+6.6s',guideDur:'13s',signal:'Triple waveband IR',note:'MANPADS russo moderno. Triple waveband IR — máxima resistência a flares. Fuze de prox.',counters:['Triple waveband — extremamente difícil de enganar com flares','Guidance 13s: manter distância']}},
   {name:'9M342 Igla-S',badge:'IR All',s:{mass:'11.7 kg',speed:'Mach 1.7',range:'~8 km',wh:'0.92 kg',overload:'12G',gimbal:'±40°',trackRate:'12°/s',fuze:'Prox. 1.2 m / delay 1.25s',iog:'Não',dl:'Não',aspect:'All-aspect',irccm:'FOV Gating + Seeker Shutoff',burnTime:'1.9s+6.6s',guideDur:'13s',signal:'Dual waveband IR',note:'MANPADS russo. Similar ao Verba mas dual waveband (não triple). IRCCM duplo.',counters:['IRCCM duplo — difícil com flares']}},
 ];
- 
+
 // ============================================================
 // SARH DATA — Pulse/CW separados no tipo de seeker
 // ============================================================
@@ -1332,7 +1322,7 @@ const sarhData=[
   {name:'PL-11',badge:'SARH',s:{mass:'230 kg',speed:'Mach 4.0',range:'50 km',wh:'10.2 kg',overload:'23.3G',gimbal:'±50°',trackRate:'12°/s',fuze:'Prox. 8 m / delay 0.5s',iog:'Não',dl:'Não',seekerType:'CW',aspect:'SARH I-band CW',irccm:'—',burnTime:'3.5s',guideDur:'45s',signal:'I-band CW ang. speed rejection 45°/s',note:'CW. Cópia chinesa do Aspide-1A. Performance idêntica.',counters:['Notch + chaff','Angular speed rejection 45°/s']}},
   {name:'Sedjil',badge:'SARH',s:{mass:'625 kg',speed:'Mach 3.0+',range:'~40 km',wh:'46.4 kg TNTe',overload:'27.7G',gimbal:'±60°',trackRate:'20°/s',fuze:'Prox. 20 m / delay 1.5s',iog:'Não',dl:'Não',seekerType:'CW',aspect:'SARH I-band CW',irccm:'—',burnTime:'5s + 21s sustainer',guideDur:'105s',signal:'I-band CW',note:'CW. Mais pesado dos SARHs (625kg). Ogiva MÁXIMA: 46.4kg TNTe. Fuze 20m. Guidance 105s — o mais longo.',counters:['Notch + chaff','Fuze 20m: raio perigoso mesmo com boa manobra']}},
 ];
- 
+
 // ============================================================
 // ARH DATA — com ângulo de Loft
 // ============================================================
@@ -1350,7 +1340,7 @@ const arhData=[
   {name:'Derby / I-Derby',badge:'ARH',s:{mass:'118 kg',speed:'Mach 4.0',range:'~50 km',wh:'23 kg',overload:'~35G',gimbal:'±60°',trackRate:'High',fuze:'Prox. 8 m',iog:'Sim',dl:'Sim',loftAngle:'15°',aspect:'ARH X-band PD + IOG + DL',irccm:'ECCM',burnTime:'—',guideDur:'—',signal:'Active X-band PD',note:'ARH israelita. Ogiva grande (23kg). Loft 15°. Sustainer fraco.',counters:['Sustainer fraco: distância é eficaz','Notch + chaff']}},
   {name:'Meteor',badge:'ARH',s:{mass:'190 kg',speed:'Mach 4.0+ sustained',range:'100+ km',wh:'18 kg',overload:'~50G',gimbal:'±60°',trackRate:'Very high',fuze:'Prox. 15 m',iog:'Sim',dl:'Sim',loftAngle:'25°',aspect:'ARH X-band PD + IOG + DL (ramjet)',irccm:'ECCM avançado',burnTime:'Ramjet contínuo',guideDur:'—',signal:'Active X-band PD (ramjet)',note:'ÚNICO ARH com ramjet — Mach 4+ constante. Loft 25°. NEZ massivamente maior que todos os outros.',counters:['Terrain masking IMEDIATO obrigatório','NEZ enorme — sem escape a longa distância']}},
 ];
- 
+
 // ============================================================
 // SEEKER / IRCCM DATA
 // ============================================================
@@ -1410,14 +1400,14 @@ const seekerData=[
    counters:['Notch + chaff quando seeker ativo ligar (RWR alerta)','Terrain masking ANTES do seeker turn-on','Altitude change + notch','Meteor: terrain masking imediato é a única opção'],
    irccmTypes:[]},
 ];
- 
- 
+
+
 // ============================================================
 // FULL CARD EDITOR — missile fields + seeker fields
 // ============================================================
 const ED_KEY = 'wt_card_editor_v1';
 const SEEKER_KEY = 'wt_seeker_editor_v1';
- 
+
 // Maps category key → {dataArr, gridId, badgeClass, reRender}
 function edCatMap(){return {
   arm:  {arr:armData,   grid:'armGrid',    badge:'badge-arm',  fn:()=>filterGrid('armGrid',armData,'f2s','badge-arm')},
@@ -1427,35 +1417,15 @@ function edCatMap(){return {
   arh:  {arr:arhData,   grid:'arhGrid',    badge:'badge-arh',  fn:()=>filterGrid('arhGrid',arhData,'f6s','badge-arh')},
   seeker:{arr:seekerData,grid:'seekerGrid',badge:'',           fn:()=>renderSeekers()},
 };}
- 
-// load overrides from localStorage
-// load overrides
 
+// load overrides from localStorage
 let _edDB = {};
 let _skDB = {};
+try{ _edDB = JSON.parse(localStorage.getItem(ED_KEY)||'{}'); }catch(e){}
+try{ _skDB = JSON.parse(localStorage.getItem(SEEKER_KEY)||'{}'); }catch(e){}
 
-// Primeiro usa o localStorage (fallback)
-try{
-    _edDB = JSON.parse(localStorage.getItem(ED_KEY) || '{}');
-}catch(e){}
-
-try{
-    _skDB = JSON.parse(localStorage.getItem(SEEKER_KEY) || '{}');
-}catch(e){}
-
-// Depois tenta substituir pelos dados da D1
-(async () => {
-    try{
-        const db = await API.load();
-
-        if(db.missiles) _edDB = db.missiles;
-        if(db.seekers) _skDB = db.seekers;
-
-        console.log("✅ Overrides carregados da D1");
-    }catch(err){
-        console.warn("A usar localStorage:", err);
-    }
-})();
+function edSaveDB(){ try{localStorage.setItem(ED_KEY,JSON.stringify(_edDB));}catch(e){} }
+function edSaveSK(){ try{localStorage.setItem(SEEKER_KEY,JSON.stringify(_skDB));}catch(e){} }
 
 // Apply stored overrides to a missile s-object
 function edApplyOverrides(name, s){
@@ -1473,7 +1443,7 @@ function edApplySeekerOv(seekerType, sk){
   Object.keys(ov).forEach(k=>{ merged[k] = ov[k]; });
   return merged;
 }
- 
+
 // The missile fields we let users edit
 const MISSILE_FIELDS = [
   {key:'mass',label:'Massa'},
@@ -1502,7 +1472,7 @@ const SEEKER_FIELDS = [
   {key:'missiles',label:'Mísseis (um por linha)',list:true},
   {key:'counters',label:'Como contrariar (um por linha)',list:true},
 ];
- 
+
 function edStatus(msg,ok=true){
   const el=document.getElementById('edStatus');if(!el)return;
   el.textContent=msg;el.style.display='block';
@@ -1511,10 +1481,10 @@ function edStatus(msg,ok=true){
   el.style.color=ok?'#14532d':'#9f1239';
   clearTimeout(window._edT);window._edT=setTimeout(()=>el.style.display='none',3000);
 }
- 
+
 function edCurrentCat(){ return document.getElementById('edCat')?.value||'arm'; }
 function edCurrentItem(){ return document.getElementById('edItem')?.value||''; }
- 
+
 function edLoadCat(){
   const cat=edCurrentCat(), cm=edCatMap(), info=cm[cat];
   if(!info)return;
@@ -1532,7 +1502,7 @@ function edLoadCat(){
   edLoadItem();
   edRenderIndex();
 }
- 
+
 function edLoadItem(){
   const cat=edCurrentCat(), idx=parseInt(edCurrentItem());
   const cm=edCatMap(),info=cm[cat];
@@ -1541,7 +1511,7 @@ function edLoadItem(){
   const lbl=document.getElementById('edCurrentLabel');
   if(!fields)return;
   fields.innerHTML='';
- 
+
   if(cat==='seeker'){
     const sk=seekerData[idx];if(!sk)return;
     if(lbl)lbl.textContent=sk.type;
@@ -1600,7 +1570,7 @@ function edLoadItem(){
     fields.appendChild(pRow);
   }
 }
- 
+
 function edCollectCounters(){
   const wrap=document.getElementById('edCountersWrap');if(!wrap)return null;
   const inputs=wrap.querySelectorAll('input');
@@ -1629,11 +1599,11 @@ function edAddCounter(){
   // focus last
   setTimeout(()=>{const wrap=document.getElementById('edCountersWrap');const inputs=wrap?.querySelectorAll('input');if(inputs&&inputs.length)inputs[inputs.length-1].focus();},50);
 }
- 
+
 function edSave(){
   const cat=edCurrentCat(), idx=parseInt(edCurrentItem()), cm=edCatMap(), info=cm[cat];
   if(!info||isNaN(idx)){edStatus('Nada selecionado',false);return;}
- 
+
   if(cat==='seeker'){
     const sk=seekerData[idx];if(!sk)return;
     const ov={};
@@ -1680,30 +1650,6 @@ function edSave(){
   }
 }
 
-function edSaveDB() {
-    try {
-        localStorage.setItem(ED_KEY, JSON.stringify(_edDB));
-    } catch (e) {
-        console.warn(e);
-    }
-
-    if (window.API) {
-        API.sync();
-    }
-}
-
-function edSaveSK() {
-    try {
-        localStorage.setItem(SEEKER_KEY, JSON.stringify(_skDB));
-    } catch (e) {
-        console.warn(e);
-    }
-
-    if (window.API) {
-        API.sync();
-    }
-}
- 
 function edRestore(){
   const cat=edCurrentCat(), idx=parseInt(edCurrentItem()), cm=edCatMap(), info=cm[cat];
   if(!info||isNaN(idx))return;
@@ -1725,7 +1671,7 @@ function edRestore(){
     edStatus('Reposto para dados base ✓');
   }
 }
- 
+
 function edClearField(){
   // clears current focused input in edFields
   const f=document.activeElement;
@@ -1735,7 +1681,7 @@ function edClearField(){
     edStatus('Clica num campo primeiro',false);
   }
 }
- 
+
 function edExportAll(){
   const data={missiles:_edDB, seekers:_skDB, aircraft:aircraftDB};
   document.getElementById('edRaw').value=JSON.stringify(data,null,2);
@@ -1766,7 +1712,7 @@ function edResetAll(){
   localStorage.removeItem(AIRCRAFT_KEY);
   location.reload();
 }
- 
+
 function edRenderIndex(){
   const body=document.getElementById('edIndexBody');if(!body)return;
   const q=(document.getElementById('edSearch')?.value||'').toLowerCase();
@@ -1793,7 +1739,7 @@ function edJumpTo(cat,idx){
   document.getElementById('edItem').value=idx; edLoadItem();
   window.scrollTo({top:0,behavior:'smooth'});
 }
- 
+
 // Apply saved overrides on page load
 (function applyStoredOverrides(){
   [armData,irRearData,irAllData,sarhData,arhData].forEach(arr=>arr.forEach(m=>{
@@ -1803,15 +1749,15 @@ function edJumpTo(cat,idx){
     const ov=_skDB[sk.type]; if(ov) Object.assign(sk,ov);
   });
 })();
- 
+
 // init
 function initFullEditor(){
   edLoadCat();
   edRenderIndex();
 }
 initFullEditor();
- 
- 
+
+
 // ============================================================
 // RENDER: SPAA TAB
 // ============================================================
@@ -1846,7 +1792,7 @@ document.getElementById('f1c').addEventListener('change',renderSPAA);
 document.getElementById('f1s').addEventListener('input',renderSPAA);
 document.getElementById('s1t').textContent=spaaRows.length;
 renderSPAA();
- 
+
 // ============================================================
 // RENDER: MISSILE CARDS
 // ============================================================
@@ -1856,7 +1802,7 @@ function irccmPill(txt){
   const cls=t.includes('nenhum')?'irccm-none':t.includes('shutoff')||t.includes('suspended')?'irccm-seeker':t.includes('fov')?'irccm-fov':t.includes('kinematic')||t.includes('angular')?'irccm-kinematic':t.includes('imaging')||t.includes('iir')?'irccm-imaging':t.includes('hmd')?'irccm-hmd':t.includes('eccm')?'irccm-kinematic':'irccm-none';
   return`<span class="irccm-pill ${cls}">${txt}</span>`;
 }
- 
+
 function buildAircraftSection(missileId){
   const planes=getAircraftList(missileId);
   const tagsHtml=planes.length
@@ -1870,7 +1816,7 @@ function buildAircraftSection(missileId){
     <div class="aircraft-tags" id="tags_${missileId}">${tagsHtml}</div>
   </div>`;
 }
- 
+
 function refreshAircraftSections(){
   document.querySelectorAll('[id^="tags_"]').forEach(el=>{
     const id=el.id.replace(/^tags_/,'');
@@ -1880,7 +1826,7 @@ function refreshAircraftSections(){
       :'<span class="aircraft-empty">Nenhum avião portador registado</span>';
   });
 }
- 
+
 function populateAircraftEditor(){
   const sel=document.getElementById('edAircraftItem'); if(!sel)return;
   const old=sel.value; sel.innerHTML='';
@@ -1934,18 +1880,18 @@ function editAircraft(id){
   const btn=document.getElementById('btnAircraftEditor');if(btn)showTab('tAircraft',btn);
   window.scrollTo({top:0,behavior:'smooth'});
 }
- 
+
 // Edit mode activation — now handled by toggleEditMode() in the editor tab
 // Hidden keyboard trigger removed — activation is explicit via button in Editor tab
- 
+
 // Seekers tab also gets edit bar:
 const _tSeekersEditBar=document.getElementById('seekerEditBar');
 const _tSeekersPanel=document.getElementById('seekerEditorPanel');
- 
+
 function buildMCard(m,badgeClass){
   const d=m.s;
   const missileId=m.name.replace(/[^a-zA-Z0-9]/g,'_');
- 
+
   // Build seeker type badge
   let seekerBadge='';
   if(d.seekerType){
@@ -1957,13 +1903,13 @@ function buildMCard(m,badgeClass){
       seekerBadge=`<span class="cw-badge">CW</span>`;
     }
   }
- 
+
   // Loft badge
   let loftBadge='';
   if(d.loftAngle&&d.loftAngle!=='—'){
     loftBadge=`<span class="loft-badge">Loft ${d.loftAngle}</span>`;
   }
- 
+
   const rows=[
     ['Massa',d.mass],['Velocidade',d.speed],['Alcance',d.range],
     ['Ogiva',d.wh],['Overload máx.',d.overload],['Gimbal',d.gimbal],
@@ -1975,13 +1921,13 @@ function buildMCard(m,badgeClass){
     ...(d.guideDur&&d.guideDur!=='—'?[['Guia duration',d.guideDur]]:[]),
     ...(d.signal?[['Signal / Seeker',d.signal]]:[]),
   ].filter(([,v])=>v!==undefined && v!==null && v!=='' && v!=='—');
- 
+
   const statsHtml=`<div class="sgrid">${rows.map(([k,v])=>`<div class="sg"><div class="sg-k">${k}</div><div class="sg-v">${v}</div></div>`).join('')}</div>`;
   const irccmHtml=`<div class="mlabel">IRCCM / Seeker type</div>${irccmPill(d.irccm||'—')}`;
   const noteHtml=(d.note&&d.note.trim())?`<div class="note-box">${d.note}</div>`:'';
   const counterHtml=d.counters&&d.counters.filter(Boolean).length?`<div class="mlabel">Como contrariar</div><ul class="counter-list">${d.counters.filter(Boolean).map(c=>`<li>${c}</li>`).join('')}</ul>`:'';
   const aircraftHtml=buildAircraftSection(missileId);
- 
+
   const div=document.createElement('div');div.className='mcard';
   div.innerHTML=`
     <div class="mcard-head">
@@ -1998,7 +1944,7 @@ function buildMCard(m,badgeClass){
     </div>`;
   return div;
 }
- 
+
 function filterGrid(gridId,data,inputId,badgeClass){
   const s=(document.getElementById(inputId)?.value||'').toLowerCase();
   const g=document.getElementById(gridId);g.innerHTML='';
@@ -2009,33 +1955,33 @@ function filterGrid(gridId,data,inputId,badgeClass){
     return hay.includes(s);
   }).forEach(m=>g.appendChild(buildMCard(m,badgeClass)));
 }
- 
+
 filterGrid('armGrid',armData,'f2s','badge-arm');
 filterGrid('irRearGrid',irRearData,'f3s','badge-ir');
 filterGrid('irAllGrid',irAllData,'f4s','badge-irall');
 filterGrid('sarhGrid',sarhData,'f5s','badge-sarh');
 filterGrid('arhGrid',arhData,'f6s','badge-arh');
 bindAircraftEditor();
- 
+
 // ============================================================
 // SEEKERS — storage + custom cards
 // ============================================================
 const SK_STORE_KEY = 'wt_seeker_custom_v1';
 const SK_EDIT_KEY  = 'wt_seeker_edits_v1';
- 
+
 // Deep clone base data
 function skClone(d){ return JSON.parse(JSON.stringify(d)); }
- 
+
 // Load custom seeker cards and edits from localStorage
 let _skCustom = [];   // extra cards created by user
 let _skEdits  = {};   // overrides for base seekerData cards, keyed by index
- 
+
 try{ _skCustom = JSON.parse(localStorage.getItem(SK_STORE_KEY)||'[]'); }catch(e){ _skCustom=[]; }
 try{ _skEdits  = JSON.parse(localStorage.getItem(SK_EDIT_KEY)||'{}');  }catch(e){ _skEdits={}; }
- 
+
 function skSaveCustom(){ try{localStorage.setItem(SK_STORE_KEY, JSON.stringify(_skCustom));}catch(e){} }
 function skSaveEdits(){  try{localStorage.setItem(SK_EDIT_KEY,  JSON.stringify(_skEdits)); }catch(e){} }
- 
+
 // Apply stored edits to base seekerData on load
 (function applySkEdits(){
   Object.keys(_skEdits).forEach(i=>{
@@ -2043,7 +1989,7 @@ function skSaveEdits(){  try{localStorage.setItem(SK_EDIT_KEY,  JSON.stringify(_
     Object.assign(seekerData[idx], _skEdits[i]);
   });
 })();
- 
+
 // ============================================================
 // RENDER: SEEKERS
 // ============================================================
@@ -2059,7 +2005,7 @@ function renderSeekers(){
     g.appendChild(buildSeekerCard(s, true, ci));
   });
 }
- 
+
 function buildSeekerCard(s, isCustom, idx){
   const div=document.createElement('div');div.className='scard';
   const irccmSection=(s.irccmTypes||[]).length?`
@@ -2072,7 +2018,7 @@ function buildSeekerCard(s, isCustom, idx){
   const counterHtml=(s.counters||[]).map(c=>`<li>${c}</li>`).join('');
   const customBadge=isCustom?`<span class="scard-custom-badge">CUSTOM</span>`:'';
   const editKey=isCustom?`custom_${idx}`:`base_${idx}`;
- 
+
   div.innerHTML=`
     <div class="scard-head">
       <span class="stype-badge" style="background:${s.color}">${s.type}</span>
@@ -2095,7 +2041,7 @@ function buildSeekerCard(s, isCustom, idx){
     </div>`;
   return div;
 }
- 
+
 // ============================================================
 // SEEKER EDITOR LOGIC
 // ============================================================
@@ -2107,7 +2053,7 @@ function skEdStatus(msg,ok=true){
   el.style.color=ok?'#14532d':'#9f1239';
   clearTimeout(window._skEdT);window._skEdT=setTimeout(()=>el.style.display='none',3000);
 }
- 
+
 function skEdPopulateSelect(selectedVal){
   const sel=document.getElementById('skEdItem');if(!sel)return;
   sel.innerHTML='<option value="__new__">— Nova card —</option>';
@@ -2119,7 +2065,7 @@ function skEdPopulateSelect(selectedVal){
   });
   if(selectedVal) sel.value=selectedVal;
 }
- 
+
 function skEdGetData(val){
   if(!val||val==='__new__') return null;
   if(val.startsWith('base_')){
@@ -2130,7 +2076,7 @@ function skEdGetData(val){
     return _skCustom[idx]?skClone(_skCustom[idx]):null;
   }
 }
- 
+
 function skEdLoad(){
   const val=document.getElementById('skEdItem')?.value||'__new__';
   const lbl=document.getElementById('skEdLabel');
@@ -2140,7 +2086,7 @@ function skEdLoad(){
   if(lbl) lbl.textContent=data?data.type:'Nova card';
   fields.innerHTML=skEdBuildForm(data||{color:'#374151',type:'',name:'',abbr:'',desc:'',stats:[],missiles:[],counters:[],irccmTypes:[]});
 }
- 
+
 function skEdBuildForm(s){
   const statsStr=(s.stats||[]).map(([k,v])=>k+'|'+v).join('\n');
   const missStr=(s.missiles||[]).join('\n');
@@ -2161,7 +2107,7 @@ function skEdBuildForm(s){
     <div class="ed-section">Tipos IRCCM <span style="font-weight:400;letter-spacing:0;font-size:9px">(JSON: [{name,desc,ex}])</span></div>
     <div class="ed-field-row"><label>irccmTypes</label><textarea id="skf_irccm" style="min-height:90px;font-family:monospace;font-size:11px;resize:vertical">${escHtml(irccmStr)}</textarea></div>`;
 }
- 
+
 function skEdCollect(){
   const statsLines=(document.getElementById('skf_stats')?.value||'').split('\n').filter(Boolean);
   const stats=statsLines.map(l=>{const p=l.split('|');return[p[0]?.trim()||'',p.slice(1).join('|').trim()];}).filter(([k])=>k);
@@ -2179,7 +2125,7 @@ function skEdCollect(){
     irccmTypes,
   };
 }
- 
+
 function skEdSave(){
   const val=document.getElementById('skEdItem')?.value||'__new__';
   const data=skEdCollect();
@@ -2205,7 +2151,7 @@ function skEdSave(){
   renderSeekers();
   skEdStatus('Card guardada ✓');
 }
- 
+
 function skEdRestore(){
   const val=document.getElementById('skEdItem')?.value;
   if(!val||val==='__new__'){skEdLoad();return;}
@@ -2219,7 +2165,7 @@ function skEdRestore(){
   }
   skEdStatus('Cards custom não têm base para repor — edita ou apaga.',false);
 }
- 
+
 function skEdDelete(){
   const val=document.getElementById('skEdItem')?.value;
   if(!val||val==='__new__'){skEdStatus('Nada selecionado',false);return;}
@@ -2231,7 +2177,7 @@ function skEdDelete(){
   renderSeekers();
   skEdStatus('Card apagada ✓');
 }
- 
+
 function skEdDeleteFromCard(editKey){
   if(editKey.startsWith('base_')){alert('Não podes apagar cards base.');return;}
   if(!confirm('Apagar esta card custom?'))return;
@@ -2240,19 +2186,19 @@ function skEdDeleteFromCard(editKey){
   renderSeekers();
   skEdPopulateSelect('__new__'); skEdLoad();
 }
- 
+
 function skEdOpenNew(){
   document.getElementById('skEdItem').value='__new__';
   skEdLoad();
   document.getElementById('seekerEditorPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
- 
+
 function skEdOpenExisting(editKey){
   document.getElementById('skEdItem').value=editKey;
   skEdLoad();
   document.getElementById('seekerEditorPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
- 
+
 function skEdExport(){
   const data={base_edits:_skEdits, custom:_skCustom};
   document.getElementById('skEdRaw').value=JSON.stringify(data,null,2);
@@ -2273,17 +2219,17 @@ function skEdImport(){
     skEdStatus('Importado ✓');
   }catch(e){skEdStatus('JSON inválido: '+(e.message||e),false);}
 }
- 
+
 // Init seeker editor
 skEdPopulateSelect();
 skEdLoad();
- 
+
 // ============================================================
 // PASSWORD + EDITOR LOCK
 // ============================================================
 const EDITOR_PW = 'wt2025';
 let _editorUnlocked = false;
- 
+
 function tryOpenEditor(btn){
   if(_editorUnlocked){ showTab('tAircraft',btn); return; }
   document.getElementById('pwInput').value='';
@@ -2308,16 +2254,16 @@ function closePwModal(){
   document.getElementById('pwModal').style.display='none';
 }
 document.getElementById('pwInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkPw();});
- 
+
 // ============================================================
 // EDIT MODE TOGGLE (visible in editor tab)
 // ============================================================
 let _editMode = false;
- 
+
 function toggleEditMode(){
   _editMode ? exitEditMode() : enterEditMode();
 }
- 
+
 function enterEditMode(){
   _editMode=true; document.body.classList.add('edit-mode');
   document.getElementById('editModeBar')?.classList.add('visible');
@@ -2337,7 +2283,7 @@ function enterEditMode(){
   });
   tmRender();
 }
- 
+
 function exitEditMode(){
   _editMode=false; document.body.classList.remove('edit-mode');
   document.getElementById('editModeBar')?.classList.remove('visible');
@@ -2355,7 +2301,7 @@ function exitEditMode(){
     if(el._editHandler){el.removeEventListener('click',el._editHandler);el._editHandler=null;}
   });
 }
- 
+
 window.WTEdit={editAircraft:function(id){
   const allArrs=[['arm',armData],['irr',irRearData],['ira',irAllData],['sarh',sarhData],['arh',arhData]];
   for(const [cat,arr] of allArrs){
@@ -2365,7 +2311,7 @@ window.WTEdit={editAircraft:function(id){
   const btn=document.getElementById('btnAircraftEditor');if(btn)showTab('tAircraft',btn);
   window.scrollTo({top:0,behavior:'smooth'});
 },enterEditMode,exitEditMode};
- 
+
 // ============================================================
 // TAB MANAGER
 // ============================================================
@@ -2380,11 +2326,11 @@ const FIXED_TABS = [
   {id:'tAircraft',label:'✏️ Aviões / Editor',fixed:true},
   {id:'tSeekers',label:'🔬 Seekers & IRCCM',fixed:true},
 ];
- 
+
 let _customTabs = [];
 try{ _customTabs = JSON.parse(localStorage.getItem(TM_KEY)||'[]'); }catch(e){ _customTabs=[]; }
 function saveTabs(){ try{localStorage.setItem(TM_KEY,JSON.stringify(_customTabs));}catch(e){} }
- 
+
 function tmRender(){
   const list=document.getElementById('tmList'); if(!list)return;
   list.innerHTML='';
@@ -2411,7 +2357,7 @@ function tmRender(){
     list.appendChild(row);
   });
 }
- 
+
 function tmRename(i,val){
   if(!val||!_customTabs[i])return;
   _customTabs[i].label=val;
@@ -2450,7 +2396,7 @@ function tmCreateTab(){
   document.getElementById('ntfName').value='';
   document.getElementById('ntfEmoji').value='';
 }
- 
+
 function rebuildCustomTabs(){
   // rebuild tab buttons
   const btnContainer=document.getElementById('customTabBtns'); if(!btnContainer)return;
@@ -2477,19 +2423,19 @@ function rebuildCustomTabs(){
     renderCustomTabCards(t);
   });
 }
- 
+
 // ============================================================
 // CUSTOM TAB CARD STORAGE + RENDER
 // ============================================================
 const _ctabCards = {};
- 
+
 function loadCtabCards(tabId){
   try{ return JSON.parse(localStorage.getItem('wt_ctab_cards_'+tabId)||'[]'); }catch(e){ return []; }
 }
 function saveCtabCards(tabId,cards){
   try{localStorage.setItem('wt_ctab_cards_'+tabId,JSON.stringify(cards));}catch(e){}
 }
- 
+
 function renderCustomTabCards(tab){
   const gridId='grid_ctab_'+tab.id;
   const grid=document.getElementById(gridId); if(!grid)return;
@@ -2502,13 +2448,13 @@ function renderCustomTabCards(tab){
       : buildCustomMissileCard(c,tab.id,i));
   });
 }
- 
+
 // ============================================================
 // CARD EDITOR (sliding panel)
 // ============================================================
 let _cieContext = {tabId:null, template:'missile', cardIdx:-1};
 let _cieImgData = null;
- 
+
 function openCardEditor(mode, template, tabPaneId, cardIdx=-1){
   _cieContext = {tabId: tabPaneId, template, cardIdx};
   _cieImgData = null;
@@ -2532,12 +2478,12 @@ function openCardEditor(mode, template, tabPaneId, cardIdx=-1){
   editor.classList.add('open');
   overlay.classList.add('open');
 }
- 
+
 function closeCardEditor(){
   document.getElementById('cardInlineEditor').classList.remove('open');
   document.getElementById('cieOverlay').classList.remove('open');
 }
- 
+
 function cieRenderFields(data){
   const template=document.getElementById('cieTemplate').value;
   const d=data||{};
@@ -2599,7 +2545,7 @@ function cieRenderFields(data){
   // bind image events after DOM update
   setTimeout(()=>bindCieImgEvents(),50);
 }
- 
+
 function cieImgUploadHtml(existingImg){
   const hasImg=!!(existingImg);
   return `
@@ -2613,7 +2559,7 @@ function cieImgUploadHtml(existingImg){
     </div>
     ${hasImg?`<button onclick="clearCieImg()" style="font-size:11px;border:1px solid #fecdd3;background:#fff1f2;color:#9f1239;border-radius:6px;padding:3px 8px;cursor:pointer;margin-top:4px">🗑 Remover imagem</button>`:''}`;
 }
- 
+
 function bindCieImgEvents(){
   const fileInput=document.getElementById('cieImgFile'); if(!fileInput)return;
   fileInput.addEventListener('change',function(e){
@@ -2641,7 +2587,7 @@ function clearCieImg(){
   const urlInput=document.getElementById('cieImgUrl');
   if(urlInput)urlInput.value='';
 }
- 
+
 function cieCollect(){
   const template=document.getElementById('cieTemplate').value;
   const imgUrl=document.getElementById('cieImgUrl')?.value.trim()||null;
@@ -2694,7 +2640,7 @@ function cieCollect(){
     };
   }
 }
- 
+
 function cieSave(){
   const data=cieCollect();
   const {tabId,cardIdx}=_cieContext;
@@ -2712,7 +2658,7 @@ function cieSave(){
   renderCustomTabCards(tab);
   closeCardEditor();
 }
- 
+
 function cieDelete(){
   const {tabId,cardIdx}=_cieContext;
   if(cardIdx<0){closeCardEditor();return;}
@@ -2726,7 +2672,7 @@ function cieDelete(){
   renderCustomTabCards(tab);
   closeCardEditor();
 }
- 
+
 // ============================================================
 // CUSTOM CARD RENDERERS
 // ============================================================
@@ -2739,7 +2685,7 @@ function buildCustomMissileCard(c,tabId,idx){
     ['Tipo seeker',d.seekerType],['Aspeto / Guidance',d.aspect],
     ['Burn time',d.burnTime],['Guia duration',d.guideDur],['Signal / Seeker',d.signal],
   ].filter(([,v])=>v&&v.trim&&v.trim()&&v!=='—');
- 
+
   const statsHtml=`<div class="sgrid">${rows.map(([k,v])=>`<div class="sg"><div class="sg-k">${escHtml(k)}</div><div class="sg-v">${escHtml(v)}</div></div>`).join('')}</div>`;
   const irccmHtml=d.irccm?`<div class="mlabel">IRCCM</div>${irccmPill(d.irccm)}`:'';
   const noteHtml=(d.note&&d.note.trim())?`<div class="note-box">${escHtml(d.note)}</div>`:'';
@@ -2763,7 +2709,7 @@ function buildCustomMissileCard(c,tabId,idx){
     </div>`;
   return div;
 }
- 
+
 function buildCustomSeekerCard(c,tabId,idx){
   const statsHtml=(c.stats||[]).map(([k,v])=>`<tr><td>${escHtml(k)}</td><td>${escHtml(v)}</td></tr>`).join('');
   const missHtml=(c.missiles||[]).map(m=>`<span class="stag">${escHtml(m)}</span>`).join('');
@@ -2790,7 +2736,7 @@ function buildCustomSeekerCard(c,tabId,idx){
     </div>`;
   return div;
 }
- 
+
 function cieDeleteDirect(tabId,idx){
   if(!confirm('Apagar esta card?'))return;
   const tab=_customTabs.find(t=>t.id===tabId);
@@ -2799,7 +2745,7 @@ function cieDeleteDirect(tabId,idx){
   cards.splice(idx,1); saveCtabCards(tab.id,cards);
   renderCustomTabCards(tab);
 }
- 
+
 // Also add edit/delete buttons to existing missile grids via buildMCard override
 (function patchBuildMCard(){
   const orig=window.buildMCard||buildMCard;
@@ -2815,7 +2761,7 @@ function cieDeleteDirect(tabId,idx){
     return div;
   };
 })();
- 
+
 // ============================================================
 // TABS + SHOWT
 // ============================================================
@@ -2826,7 +2772,7 @@ function showTab(id,btn){
   if(pane) pane.classList.add('active');
   if(btn) btn.classList.add('active');
 }
- 
+
 // init custom tabs
 rebuildCustomTabs();
 tmRender();
