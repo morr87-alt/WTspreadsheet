@@ -1954,36 +1954,10 @@ try{
     _edDB = JSON.parse(localStorage.getItem(ED_KEY) || '{}');
 }catch(e){}
 
-(async () => {
-    try{
-        const data = await API.load();
-
-        if(data.missiles){
-            _edDB = data.missiles;
-        }
-
-    }catch(e){
-        console.error("Erro ao carregar da D1:", e);
-    }
-})();
-
 try{
     _skDB = JSON.parse(localStorage.getItem(SEEKER_KEY) || '{}');
 }catch(e){}
 
-(async () => {
-    try{
-        const data = await API.load();
-
-        if(data.seekers){
-            _skDB = data.seekers;
-        }
-
-    }catch(e){
-        console.error("Erro ao carregar seekers da D1:", e);
-    }
-})();
- 
 function edSaveDB(){
     try{
         localStorage.setItem(ED_KEY,JSON.stringify(_edDB));
