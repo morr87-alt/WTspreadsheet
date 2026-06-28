@@ -1,39 +1,58 @@
 window.API = {
 
-    async load(){
+    cache: null,
+
+    async load() {
+
+        if (this.cache) {
+            return this.cache;
+        }
 
         const r = await fetch("/api/load");
+
+        const data = await r.json();
+
+        this.cache = data;
+
+        return data;
+
+    },
+
+    async save(data) {
+
+        this.cache = data;
+
+        const r = await fetch("/api/save", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+
+        });
+
         return await r.json();
 
     },
 
-    async save(data){
+    async sync() {
 
-        await fetch("/api/save",{
+        const data = {
 
-            method:"POST",
+            missiles: window._edDB || {},
 
-            headers:{
-                "Content-Type":"application/json"
-            },
+            seekers: window._skDB || {},
 
-            body:JSON.stringify(data)
+            aircraft: window.aircraftDB || {},
 
-        });
+            customTabs: window._customTabs || []
 
-    },
+        };
 
-    async sync(){
-
-        await this.save({
-
-            missiles:_edDB,
-
-            seekers:_skDB,
-
-            aircraft:aircraftDB
-
-        });
+        return await this.save(data);
 
     }
 
