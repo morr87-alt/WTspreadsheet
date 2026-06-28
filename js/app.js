@@ -1679,6 +1679,30 @@ function edSave(){
     edStatus('Card guardada ✓');
   }
 }
+
+function edSaveDB() {
+    try {
+        localStorage.setItem(ED_KEY, JSON.stringify(_edDB));
+    } catch (e) {
+        console.warn(e);
+    }
+
+    if (window.API) {
+        API.sync();
+    }
+}
+
+function edSaveSK() {
+    try {
+        localStorage.setItem(SEEKER_KEY, JSON.stringify(_skDB));
+    } catch (e) {
+        console.warn(e);
+    }
+
+    if (window.API) {
+        API.sync();
+    }
+}
  
 function edRestore(){
   const cat=edCurrentCat(), idx=parseInt(edCurrentItem()), cm=edCatMap(), info=cm[cat];
