@@ -3321,7 +3321,13 @@ function showTab(id,btn){
 }
  
 // init custom tabs
+rebuildCustomTabs();
+tmRender();
 
+<script src="js/api.js"></script>
+<script src="js/storage.js"></script>
+
+<script>
 async function initSite() {
 
     await CloudStorage.load();
@@ -3339,14 +3345,10 @@ async function initSite() {
     }
 
     console.log("✅ Site carregado da D1");
-
 }
 
 initSite();
-
 </script>
-<script src="js/api.js"></script>
-<script src="js/storage.js"></script>
+
 </body>
 </html>
- 
