@@ -153,10 +153,7 @@ body.edit-mode .aircraft-edit-trigger{display:none}
 body.edit-mode .aircraft-title{color:inherit}
 body.edit-mode .aircraft-tag{background:#dbeafe;color:#1e40af}
 /* floating edit mode indicator */
-#editModeBar{display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);background:#0f172a;color:#e2e8f0;font-size:11px;font-weight:600;padding:6px 14px;border-radius:0 0 10px 10px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.35);gap:10px;align-items:center}
-#editModeBar.visible{display:flex}
-#editModeBar button{background:#374151;border:none;color:#e2e8f0;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer}
-#editModeBar button:hover{background:#4b5563}
+/* edit mode: editable sg cells */
 /* === EDITOR PANEL (tAircraft tab) === */
 .aircraft-editor-note{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12;padding:10px 12px;border-radius:10px;margin-bottom:14px;line-height:1.45}
 .editor-wrap{display:grid;grid-template-columns:1fr;max-width:100%;gap:14px;margin-top:12px}
@@ -432,12 +429,6 @@ body.dark #seekerTypeManagerList .tm-row{background:#1e293b;border-color:#334155
 </style>
 </head>
 <body>
-<div id="editModeBar">
-  ✏️ Modo edição ativo — aviões portadores + criar/editar Seekers & IRCCM
-  <button onclick="WTEdit.exitEditMode()">Sair</button>
-  <button onclick="_doServerSave()" style="background:#166534;border:none;color:#fff;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">☁️ Guardar</button>
-  <span id="syncIndicator" style="font-size:10.5px;color:#9ca3af;font-weight:500">○ A ligar…</span>
-</div>
 <div class="topbar">
   <h1>⚡ War Thunder — Guided Weapons Reference</h1>
   <div class="sub" id="topSub" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
@@ -482,38 +473,24 @@ body.dark #seekerTypeManagerList .tm-row{background:#1e293b;border-color:#334155
   </div>
   <div class="ctrl">
     <select id="f1n"><option value="">Todas as nações</option></select>
-    <select id="f1c"><option value="">Qualquer cobertura</option><option value="full">● Total</option><option value="partial">◐ Parcial</option><option value="none">○ Nenhuma</option><option value="na">Sem radar</option></select>
+    <select id="f1c" style="display:none"><option value="">Qualquer cobertura</option><option value="full">● Total</option><option value="partial">◐ Parcial</option><option value="none">○ Nenhuma</option><option value="na">Sem radar</option></select>
     <input type="text" id="f1s" placeholder="Pesquisar SPAA...">
   </div>
-  <div class="legend">
+  <div class="legend" id="spaaLegend" style="display:none">
     <div class="leg"><span class="cb-full">Total</span></div>
     <div class="leg"><span class="cb-partial">Parcial</span></div>
     <div class="leg"><span class="cb-none">—</span> Nenhuma</div>
     <div class="leg"><span class="cb-na">N/A</span> Sem radar</div>
+    <button class="spaa-edit-btn" onclick="openSPAAAddModal()" style="margin-left:auto">➕ Adicionar SPAA</button>
   </div>
-  <div class="tbl-wrap"><table><thead>
-    <tr>
-      <th class="hl" rowspan="2">SPAA / ARM</th>
-      <th rowspan="2">Nação</th><th rowspan="2">Rank</th><th rowspan="2">BR</th><th rowspan="2">Banda</th>
-      <th>AGM-88C</th><th>AGM-88A</th><th>AGM-122</th><th>Kh-31PD</th>
-      <th>Kh-31P L111</th><th>Kh-31P L112</th><th>Kh-31P L113</th>
-      <th>Kh-58U A</th><th>Kh-58U B</th><th>Kh-58U C</th>
-      <th>Kh-27PS</th><th>Kh-25MPU</th><th>Kh-58USh</th>
-      <th>ALARM</th><th>YJ-91A</th><th>CM-102</th><th>LD-10</th><th>AS-37</th>
-    </tr>
-    <tr class="bands">
-      <th>C–J</th><th>E–J</th><th>J</th><th>D–I</th>
-      <th>I</th><th>D–F</th><th>G–H</th>
-      <th>I</th><th>F–H</th><th>D–E</th>
-      <th>I</th><th>D–J</th><th>D–I</th>
-      <th>E–J</th><th>D–I</th><th>E–J</th><th>E–J</th><th>C–I</th>
-    </tr>
-  </thead><tbody id="tb1"></tbody></table></div>
+  <div class="legend" id="spaaLegendMin">
+    <button class="spaa-edit-btn" onclick="openSPAAAddModal()" style="margin-left:auto">➕ Adicionar SPAA</button>
+  </div>
+  <div class="tbl-wrap"><table id="spaaTable"><thead id="spaaHead"></thead><tbody id="tb1"></tbody></table></div>
 </div>
 
 <!-- ARM -->
 <div id="tARM" class="tab-pane">
-  <div class="tab-edit-bar"><span class="teb-label">✏️ Modo edição</span><button class="teb-new-btn" onclick="openCardEditor('new','missile','tARM')">➕ Nova card</button><span class="teb-hint">Clica em ✏️ em qualquer card para editar</span></div>
   <div class="sbtn"><input type="text" id="f2s" placeholder="Pesquisar míssil..." oninput="filterGrid('armGrid',armData,'f2s','badge-arm')"></div>
   <div class="mgrid" id="armGrid"></div>
 </div>
@@ -806,6 +783,12 @@ async function serverLoad() {
         if (!_custSK.find(x => x.type === cs.type))    _custSK.push(cs);
       });
     }
+    if (data.spaaData && typeof data.spaaData==='object') {
+      _edDB.__spaa = data.spaaData;
+    }
+    if (Array.isArray(data.spaaCustomRows) && data.spaaCustomRows.length) {
+      _edDB.__spaaCustom = data.spaaCustomRows;
+    }
     // tab manager (custom tabs)
     if (Array.isArray(data.customTabs) && data.customTabs.length) {
       _customTabs = data.customTabs; saveTabs?.();
@@ -826,6 +809,10 @@ async function serverLoad() {
       _customBC = data.badgeClassDefs;
       try{localStorage.setItem(BC_KEY, JSON.stringify(_customBC));}catch(e){}
     }
+    if (Array.isArray(data.irccmTypeDefs) && data.irccmTypeDefs.length) {
+      _customIRCCM = data.irccmTypeDefs;
+      try{localStorage.setItem(IRCCM_KEY, JSON.stringify(_customIRCCM));}catch(e){}
+    }
     if (Array.isArray(data.tabOrder) && data.tabOrder.length) {
       try{
         localStorage.setItem('wt_tab_order_v1', JSON.stringify(data.tabOrder));
@@ -842,6 +829,23 @@ async function serverLoad() {
     // re-save to localStorage as cache
     _saveED(); _saveSK(); _saveCustM(); _saveCustSK();
     saveAircraftData();
+    // re-apply missile overrides (including root fields) to live data
+    const _ROOT_LD = new Set(['badge','badgeClass','nation']);
+    [armData,irRearData,irAllData,sarhData,arhData].forEach(arr=>arr.forEach(m=>{
+      const ov=_edDB[m.name]; if(!ov) return;
+      Object.keys(ov).forEach(k=>{ if(ov[k]!==undefined){ if(_ROOT_LD.has(k)) m[k]=ov[k]; else m.s[k]=ov[k]; } });
+    }));
+    seekerData.forEach(sk=>{ const ov=_skDB[sk.type]; if(ov) Object.assign(sk,ov); });
+    // rebuild UI with fresh data
+    if(typeof rebuildCustomTabs==='function') rebuildCustomTabs();
+    if(typeof renderSeekers==='function') renderSeekers();
+    if(typeof renderSPAA==='function') renderSPAA();
+    // re-render missile grids with updated data
+    try{
+      const cm = edCatMap();
+      cm.arm.fn(); cm.irr.fn(); cm.ira.fn(); cm.sarh.fn(); cm.arh.fn();
+    }catch(e){}
+    try{ refreshAircraftSections(); }catch(e){}
     syncIndicator('synced', data._savedAt);
     console.log(`[sync] Loaded v${_serverVersion} from server`);
   } catch(e) {
@@ -877,6 +881,8 @@ async function _doServerSave() {
       irccmTypeDefs:  typeof _customIRCCM       !== 'undefined' ? _customIRCCM       : [],
       badgeClassDefs: typeof _customBC           !== 'undefined' ? _customBC          : [],
       tabOrder: (()=>{ try{ return JSON.parse(localStorage.getItem('wt_tab_order_v1')||'null'); }catch(e){ return null; } })(),
+      spaaData: _edDB.__spaa || {},
+      spaaCustomRows: _edDB.__spaaCustom || [],
       ctabCards: (()=>{
         const result={};
         (_customTabs||[]).forEach(t=>{
@@ -2437,6 +2443,9 @@ function edApplySeekerOv(seekerType, sk){
 
 // The missile fields we let users edit
 const MISSILE_FIELDS = [
+  {key:'badge',     label:'Badge (texto)',  root:true},
+  {key:'badgeClass',label:'Badge (cor)',    root:true, select:'badgeClass'},
+  {key:'nation',    label:'Nação',          root:true},
   {key:'mass',label:'Massa'},
   {key:'speed',label:'Velocidade'},
   {key:'range',label:'Alcance'},
@@ -2531,9 +2540,14 @@ function edLoadItem(){
     // Stats fields
     const secStats=document.createElement('div');secStats.className='ed-section';secStats.textContent='Estatísticas';fields.appendChild(secStats);
     MISSILE_FIELDS.forEach(f=>{
-      let val=(ov[f.key]!==undefined)?ov[f.key]:(s[f.key]||'');
+      // root fields (badge, badgeClass, nation) live on m, not m.s
+      const src = f.root ? m : s;
+      const ovVal = ov[f.key];
+      let val = (ovVal!==undefined) ? ovVal : (src[f.key]||'');
       const row=document.createElement('div');row.className='ed-field-row';
-      if(f.select==='seekerType'){
+      if(f.select==='badgeClass'){
+        row.innerHTML=`<label>${f.label}</label>${buildBadgeClassSelect('edf_'+f.key, val)}`;
+      } else if(f.select==='seekerType'){
         row.innerHTML=`<label>${f.label}</label>${buildSeekerTypeSelect('edf_'+f.key, val)}`;
       } else if(f.select==='irccm'){
         row.innerHTML=`<label>${f.label}</label>${buildIRCCMSelect('edf_'+f.key, val)}`;
@@ -2620,14 +2634,22 @@ function edSave(){
     edStatus('Seeker guardado ✓');
   } else {
     const m=info.arr[idx];if(!m)return;
-    const ov={};
+    const ovRoot={};  // root fields: badge, badgeClass, nation
+    const ovStats={}; // stats fields: mass, speed, etc.
+
     MISSILE_FIELDS.forEach(f=>{
       const el=document.getElementById('edf_'+f.key);if(!el)return;
-      const v=el.value.trim();
-      // if empty, we store empty string → will be hidden in card
-      ov[f.key]=v;
+      const v=el.tagName==='SELECT'?el.value:(el.value||'').trim();
+      if(f.root){
+        ovRoot[f.key]=v;
+        m[f.key]=v; // apply to live missile root
+      } else {
+        ovStats[f.key]=v;
+      }
     });
-    ov.counters=edCollectCounters()||m.s.counters||[];
+
+    ovStats.counters=edCollectCounters()||m.s.counters||[];
+
     // planes
     const pEl=document.getElementById('edf_planes');
     if(pEl){
@@ -2635,9 +2657,13 @@ function edSave(){
       const pl=pEl.value.split('\n').map(x=>x.trim()).filter(Boolean);
       setAircraftList(mid, pl);
     }
-    // apply to live data
-    Object.assign(m.s, ov);
-    _edDB[m.name]=ov; edSaveDB();
+
+    // apply stats to live data (only non-root fields)
+    Object.assign(m.s, ovStats);
+
+    // save everything together in _edDB (both root and stats)
+    _edDB[m.name] = {...ovRoot, ...ovStats};
+    edSaveDB();
     info.fn(); // re-render that grid
     refreshAircraftSections();
     edRenderIndex();
@@ -2691,8 +2717,10 @@ function edImportAll(){
     if(incoming.aircraft) Object.assign(aircraftDB, incoming.aircraft);
     edSaveDB(); edSaveSK(); saveAircraftData();
     // apply overrides to live data
+    const _ROOT = new Set(['badge','badgeClass','nation']);
     [armData,irRearData,irAllData,sarhData,arhData].forEach(arr=>arr.forEach(m=>{
-      const ov=_edDB[m.name]; if(ov) Object.assign(m.s,ov);
+      const ov=_edDB[m.name]; if(!ov) return;
+      Object.keys(ov).forEach(k=>{ if(ov[k]!==undefined){ if(_ROOT.has(k)) m[k]=ov[k]; else m.s[k]=ov[k]; } });
     }));
     edCatMap().arm.fn(); edCatMap().irr.fn(); edCatMap().ira.fn();
     edCatMap().sarh.fn(); edCatMap().arh.fn();
@@ -2759,10 +2787,16 @@ function edRenderIndex(){
 
 // Apply saved overrides on page load
 (function applyStoredOverrides(){
+  const ROOT_FIELDS = new Set(['badge','badgeClass','nation']);
   // Apply field edits to existing base missiles
   [armData,irRearData,irAllData,sarhData,arhData].forEach(arr=>arr.forEach(m=>{
     const ov=_edDB[m.name];
-    if(ov) Object.keys(ov).forEach(k=>{ if(ov[k]!==undefined) m.s[k]=ov[k]; });
+    if(ov) Object.keys(ov).forEach(k=>{
+      if(ov[k]!==undefined){
+        if(ROOT_FIELDS.has(k)) m[k]=ov[k];  // root fields on m
+        else m.s[k]=ov[k];                   // stats on m.s
+      }
+    });
   }));
   seekerData.forEach(sk=>{
     const ov=_skDB[sk.type];
@@ -2797,7 +2831,54 @@ function ic(v){
   if(v===N) return '<span class="cb-none">—</span>';
   return '<span class="cb-na">N/A</span>';
 }
+// Base ARM names — must match armData[].name exactly
+// Custom = any armData entry NOT in this list
+const _SPAA_COLS_BASE=[
+  'AGM-88C HARM','AGM-88A HARM','AGM-122 Sidearm',
+  'Kh-31PD','Kh-31P L111','Kh-31P L112','Kh-31P L113',
+  'Kh-58U A','Kh-58U B','Kh-58U C',
+  'Kh-27PS','Kh-25MPU','Kh-58USh',
+  'ALARM','YJ-91A','CM-102','LD-10','AS-37 Martel',
+];
+let _SPAA_COLS=_SPAA_COLS_BASE.slice();
+
+function rebuildSPAAHeaders(){
+  // Strictly only base ARM missiles — never include custom-created missiles
+  _SPAA_COLS = _SPAA_COLS_BASE.slice();
+
+  const head = document.getElementById('spaaHead'); if(!head) return;
+
+  const fixedCols = `<th class="hl" rowspan="2" style="min-width:160px;text-align:left">SPAA / ARM</th>
+    <th rowspan="2" style="min-width:52px">Nação</th>
+    <th rowspan="2">Rank</th>
+    <th rowspan="2">BR</th>
+    <th rowspan="2">Banda</th>`;
+
+  const nameRow = _SPAA_COLS.map(n =>
+    `<th style="font-size:10px;max-width:64px;word-break:break-word;white-space:normal;line-height:1.2;padding:4px 5px">${escHtml(n)}</th>`
+  ).join('');
+
+  const bandRow = _SPAA_COLS.map(n => {
+    const m = armData.find(a => a.name === n);
+    const band = m?.s?.aspect?.match(/\(([^)]+)\)/)?.[1] || '—';
+    return `<th class="bands" style="font-size:9px;color:#9ca3af;padding:3px 5px;background:#f3f4f6">${escHtml(band)}</th>`;
+  }).join('');
+
+  head.innerHTML = `<tr>${fixedCols}${nameRow}</tr><tr class="bands">${bandRow}</tr>`;
+  spaaRows.forEach(r => { while(r.c.length < _SPAA_COLS.length) r.c.push(NA); });
+}
+
 function renderSPAA(){
+  rebuildSPAAHeaders();
+  // show/hide coverage filter + legend based on whether custom SPAAs exist
+  const hasCustomSpaa = spaaRows.some(r=>r._custom);
+  const f1c = document.getElementById('f1c');
+  const legend = document.getElementById('spaaLegend');
+  const legendMin = document.getElementById('spaaLegendMin');
+  if(f1c) f1c.style.display = hasCustomSpaa ? '' : 'none';
+  if(legend) legend.style.display = hasCustomSpaa ? 'flex' : 'none';
+  if(legendMin) legendMin.style.display = hasCustomSpaa ? 'none' : 'flex';
+
   const nat=document.getElementById('f1n').value,cov=document.getElementById('f1c').value,srch=document.getElementById('f1s').value.toLowerCase();
   let fil=spaaRows.filter(r=>{
     if(nat&&r.nation!==nat)return false;
@@ -2807,23 +2888,42 @@ function renderSPAA(){
   });
   const byN={};fil.forEach(r=>{if(!byN[r.nation])byN[r.nation]=[];byN[r.nation].push(r);});
   const tb=document.getElementById('tb1');tb.innerHTML='';
+  const colspan=5+_SPAA_COLS.length;
   Object.keys(byN).sort().forEach(n=>{
     const nr=document.createElement('tr');nr.className='sec';
-    nr.innerHTML=`<td colspan="23">${flags[n]||''} ${n} <span style="font-weight:400;color:#6b7280;font-size:10px">(${byN[n].length})</span></td>`;
+    nr.innerHTML=`<td colspan="${colspan}">${flags[n]||''} ${n} <span style="font-weight:400;color:#6b7280;font-size:10px">(${byN[n].length})</span></td>`;
     tb.appendChild(nr);
-    byN[n].forEach((r,ri)=>{
+    byN[n].forEach(r=>{
       const tr=document.createElement('tr');tr.className='dr';
-      const editBtn=`<button class="spaa-edit-btn" onclick="openSPAAEditor('${escHtml(r.name)}')">✏️</button>`;
-      tr.innerHTML=`<td class="nm" title="${r.name}">${r.name} ${editBtn}</td><td class="mt">${r.nation}</td><td class="mt">${r.rank}</td><td class="mt">${r.br}</td><td class="bd">${r.band}</td>${r.c.map(v=>`<td>${ic(v)}</td>`).join('')}`;
+      const del=r._custom?`<button class="spaa-edit-btn" style="border-color:#fecdd3;background:#fff1f2;color:#9f1239;margin-left:3px" onclick="deleteSPAARow('${escHtml(r.name)}')">🗑</button>`:'';
+      const editBtn=`<button class="spaa-edit-btn" onclick="openSPAAEditor('${escHtml(r.name)}')">✏️</button>${del}`;
+      tr.innerHTML=`<td class="nm" title="${r.name}">${escHtml(r.name)} ${editBtn}</td><td class="mt">${escHtml(r.nation)}</td><td class="mt">${escHtml(r.rank)}</td><td class="mt">${escHtml(r.br)}</td><td class="bd">${escHtml(r.band)}</td>${r.c.map(v=>`<td>${ic(v)}</td>`).join('')}`;
       tb.appendChild(tr);
     });
   });
-  document.getElementById('s1s').textContent=fil.length;document.getElementById('s1n').textContent=Object.keys(byN).length;
+  document.getElementById('s1s').textContent=fil.length;
+  document.getElementById('s1n').textContent=Object.keys(byN).length;
 }
 document.getElementById('f1n').addEventListener('change',renderSPAA);
 document.getElementById('f1c').addEventListener('change',renderSPAA);
 document.getElementById('f1s').addEventListener('input',renderSPAA);
 document.getElementById('s1t').textContent=spaaRows.length;
+// Restore custom SPAA rows and saved coverage edits
+if(_edDB.__spaaCustom){
+  (_edDB.__spaaCustom||[]).forEach(r=>{
+    if(!spaaRows.find(x=>x.name===r.name)){
+      const vals=(_edDB.__spaa&&_edDB.__spaa[r.name])||[];
+      const c=armData.map((_,i)=>{const v=vals[i]||'N';return v==='F'?F:v==='P'?P:v==='N'?N:NA;});
+      spaaRows.push({name:r.name,nation:r.nation||'USA',rank:r.rank||'VI',br:r.br||'—',band:r.band||'—',c,_custom:true});
+    }
+  });
+}
+if(_edDB.__spaa){
+  Object.entries(_edDB.__spaa).forEach(([name,vals])=>{
+    const row=spaaRows.find(r=>r.name===name&&!r._custom);
+    if(row&&Array.isArray(vals)) row.c=vals.map(v=>v==='F'?F:v==='P'?P:v==='N'?N:NA);
+  });
+}
 renderSPAA();
 // Restore any saved SPAA edits
 if(_edDB.__spaa){
@@ -2834,7 +2934,10 @@ if(_edDB.__spaa){
   renderSPAA();
 }
 
-const _SPAA_COLS=['AGM-88C','AGM-88A','AGM-122','Kh-31PD','Kh-31P L111','Kh-31P L112','Kh-31P L113','Kh-58U A','Kh-58U B','Kh-58U C','Kh-27PS','Kh-25MPU','Kh-58USh','ALARM','YJ-91A','CM-102','LD-10','AS-37'];
+// _SPAA_COLS is derived dynamically from armData so new ARM missiles auto-appear
+function getSPAACols(){
+  return armData.map(m=>m.name);
+}
 
 function openSPAAEditor(name){
   const row=spaaRows.find(r=>r.name===name); if(!row) return;
@@ -2879,11 +2982,97 @@ function saveSPAAEdit(name){
     const v=sel.value;
     row.c[i]=v==='F'?F:v==='P'?P:v==='N'?N:NA;
   });
-  // Save to _edDB under a spaa key
   if(!_edDB.__spaa) _edDB.__spaa={};
   _edDB.__spaa[name]=row.c.map(v=>v===F?'F':v===P?'P':v===N?'N':'NA');
   edSaveDB();
   modal.remove();
+  renderSPAA();
+}
+
+function openSPAAAddModal(){
+  const existing=document.getElementById('spaaAddModal'); if(existing) existing.remove();
+  const nations=Object.keys(flags).sort();
+  const natOpts=nations.map(n=>`<option value="${n}">${flags[n]} ${n}</option>`).join('');
+  const rankOpts=['I','II','III','IV','V','VI','VII','VIII'].map(r=>`<option value="${r}"${r==='VI'?' selected':''}>Rank ${r}</option>`).join('');
+  const cols=_SPAA_COLS; // synced from armData
+  const colSelects=cols.map((col,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+      <span style="font-size:11px;font-weight:600;min-width:115px;color:#374151">${escHtml(col)}</span>
+      <select data-col="${i}" style="font-size:11px;padding:3px 8px;border:1px solid #d1d5db;border-radius:6px">
+        <option value="N">— Nenhuma</option>
+        <option value="F">Total</option>
+        <option value="P">Parcial</option>
+        <option value="NA">N/A</option>
+      </select>
+    </div>`).join('');
+  const modal=document.createElement('div');
+  modal.id='spaaAddModal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center';
+  modal.innerHTML=`
+    <div style="background:#fff;border-radius:14px;padding:24px;max-width:460px;width:95%;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.25)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <strong style="font-size:14px">➕ Adicionar SPAA</strong>
+        <button onclick="document.getElementById('spaaAddModal').remove()" style="border:none;background:none;font-size:18px;cursor:pointer;color:#6b7280">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div style="grid-column:span 2">
+          <label style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:4px">Nome *</label>
+          <input id="spaaAdd_name" placeholder="Ex: Pantsir-S1" style="width:100%;font-size:12px;padding:7px 10px;border:1px solid #d1d5db;border-radius:7px;box-sizing:border-box">
+        </div>
+        <div>
+          <label style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:4px">Nação *</label>
+          <select id="spaaAdd_nation" style="width:100%;font-size:12px;padding:7px 10px;border:1px solid #d1d5db;border-radius:7px">${natOpts}</select>
+        </div>
+        <div>
+          <label style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:4px">Rank</label>
+          <select id="spaaAdd_rank" style="width:100%;font-size:12px;padding:7px 10px;border:1px solid #d1d5db;border-radius:7px">${rankOpts}</select>
+        </div>
+        <div>
+          <label style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:4px">BR</label>
+          <input id="spaaAdd_br" placeholder="Ex: 11.3" style="width:100%;font-size:12px;padding:7px 10px;border:1px solid #d1d5db;border-radius:7px;box-sizing:border-box">
+        </div>
+        <div>
+          <label style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;display:block;margin-bottom:4px">Banda radar</label>
+          <input id="spaaAdd_band" placeholder="Ex: G, J" style="width:100%;font-size:12px;padding:7px 10px;border:1px solid #d1d5db;border-radius:7px;box-sizing:border-box">
+        </div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:#6b7280;margin-bottom:8px;text-transform:uppercase">Cobertura por míssil ARM</div>
+      <div id="spaaAddCols">${colSelects}</div>
+      <div style="display:flex;gap:8px;margin-top:18px">
+        <button onclick="confirmSPAAAdd()" style="flex:1;background:#0f172a;color:#fff;border:none;border-radius:8px;padding:9px;font-weight:700;cursor:pointer;font-size:13px">➕ Adicionar</button>
+        <button onclick="document.getElementById('spaaAddModal').remove()" style="flex:1;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:9px;cursor:pointer;font-size:13px;color:#475569">Cancelar</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+}
+
+function confirmSPAAAdd(){
+  const name=document.getElementById('spaaAdd_name')?.value.trim();
+  if(!name){alert('O nome é obrigatório.');return;}
+  if(spaaRows.find(r=>r.name===name)){alert('Já existe uma SPAA com este nome.');return;}
+  const nation=document.getElementById('spaaAdd_nation')?.value||'USA';
+  const rank=document.getElementById('spaaAdd_rank')?.value||'VI';
+  const br=document.getElementById('spaaAdd_br')?.value.trim()||'—';
+  const band=document.getElementById('spaaAdd_band')?.value.trim()||'—';
+  const colEls=document.querySelectorAll('#spaaAddCols select[data-col]');
+  const c=_SPAA_COLS.map((_,i)=>{const v=colEls[i]?.value||'N';return v==='F'?F:v==='P'?P:v==='N'?N:NA;});
+  spaaRows.push({name,nation,rank,br,band,c,_custom:true});
+  if(!_edDB.__spaa) _edDB.__spaa={};
+  _edDB.__spaa[name]=c.map(v=>v===F?'F':v===P?'P':v===N?'N':'NA');
+  if(!_edDB.__spaaCustom) _edDB.__spaaCustom=[];
+  _edDB.__spaaCustom.push({name,nation,rank,br,band});
+  edSaveDB();
+  document.getElementById('spaaAddModal').remove();
+  renderSPAA();
+}
+
+function deleteSPAARow(name){
+  if(!confirm(`Apagar "${name}" da tabela?`)) return;
+  const idx=spaaRows.findIndex(r=>r.name===name&&r._custom);
+  if(idx>=0) spaaRows.splice(idx,1);
+  if(_edDB.__spaa) delete _edDB.__spaa[name];
+  if(_edDB.__spaaCustom) _edDB.__spaaCustom=(_edDB.__spaaCustom||[]).filter(r=>r.name!==name);
+  edSaveDB();
   renderSPAA();
 }
 function irccmPill(val){
@@ -3311,9 +3500,17 @@ function skTypeCreate(){
   skTypePreviewUpdate();
 }
 
-function buildMCard(m,badgeClass){
+function buildMCard(m, defaultBadgeClass){
   const d=m.s;
   const missileId=m.name.replace(/[^a-zA-Z0-9]/g,'_');
+
+  // Use m.badgeClass if set (editor override), otherwise use the default from filterGrid
+  const activeBadgeClass = m.badgeClass || defaultBadgeClass;
+  // Get inline style if it's a custom badge class
+  const badgeInlineStyle = getBadgeStyle(activeBadgeClass);
+  const badgeStyleAttr = badgeInlineStyle ? ` style="${badgeInlineStyle}"` : '';
+  // Badge text: use m.badge if set, otherwise default label
+  const badgeText = m.badge || activeBadgeClass.replace('badge-','').toUpperCase();
 
   // Build seeker type badge
   let seekerBadge = d.seekerType ? renderSeekerTypeBadges(d.seekerType) : '';
@@ -3346,7 +3543,7 @@ function buildMCard(m,badgeClass){
   div.innerHTML=`
     <div class="mcard-head">
       <div><div class="mcard-name">${m.name}</div></div>
-      <span class="badge ${badgeClass}">${m.badge}</span>
+      <span class="badge ${activeBadgeClass}"${badgeStyleAttr}>${badgeText}</span>
     </div>
     <div class="mcard-body">
       <div class="mlabel">Estatísticas (in-game)</div>
@@ -3657,7 +3854,7 @@ skEdLoad();
 // PASSWORD + EDITOR LOCK
 // ============================================================
 const EDITOR_PW = 'wt2025';
-let _editorUnlocked = false;
+let _editorUnlocked = sessionStorage.getItem('wt_ed_unlocked')==='1';
 
 function tryOpenEditor(btn){
   if(_editorUnlocked){ showTab('tAircraft',btn); return; }
@@ -3670,6 +3867,7 @@ async function checkPw(){
   const val = document.getElementById('pwInput').value;
   if(val === EDITOR_PW){
     _editorUnlocked = true;
+    sessionStorage.setItem('wt_ed_unlocked','1');
     document.getElementById('pwModal').style.display='none';
     document.getElementById('btnAircraftEditor').textContent='✏️ Aviões / Editor';
     showTab('tAircraft', window._pwBtn);
@@ -3687,6 +3885,7 @@ async function checkPw(){
 }
 function closePwModal(){
   document.getElementById('pwModal').style.display='none';
+  sessionStorage.removeItem('wt_ed_unlocked');
 }
 document.getElementById('pwInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkPw();});
 
@@ -3701,7 +3900,6 @@ function toggleEditMode(){
 
 function enterEditMode(){
   _editMode=true; document.body.classList.add('edit-mode');
-  document.getElementById('editModeBar')?.classList.add('visible');
   document.getElementById('editModeLabel').textContent='LIGADO';
   document.getElementById('editModeLabel').style.color='#16a34a';
   document.getElementById('editModeToggleBtn').textContent='🔴 Desativar edição';
@@ -3721,7 +3919,6 @@ function enterEditMode(){
 
 function exitEditMode(){
   _editMode=false; document.body.classList.remove('edit-mode');
-  document.getElementById('editModeBar')?.classList.remove('visible');
   document.getElementById('editModeLabel').textContent='DESLIGADO';
   document.getElementById('editModeLabel').style.color='#dc2626';
   document.getElementById('editModeToggleBtn').textContent='✏️ Ativar edição';
@@ -3923,9 +4120,8 @@ function cieRenderFields(data){
     fields.innerHTML=`
       <div class="cie-section">Identificação</div>
       <div class="cie-field"><label>Nome do míssil *</label><input id="cieF_name" value="${escHtml(d.name||'')}" placeholder="Ex: AIM-9L"></div>
-      <div class="cie-field"><label>Badge / Tipo</label><input id="cieF_badge" value="${escHtml(d.badge||'')}" placeholder="IR All-Aspect"></div>
-      <div class="cie-field"><label>Badge class (cor)</label>
-        ${buildBadgeClassSelect('cieF_badgeClass', d.badgeClass||'badge-ir')}
+      <div class="cie-field"><label>Badge / Tipo</label>
+        ${buildBadgeClassSelect('cieF_badgeClass', d.badgeClass||d.badge||'badge-ir')}
       </div>
       <div class="cie-section">📊 Stats (como na imagem)</div>
       <div class="cie-field"><label>Massa</label><input id="cieF_mass" value="${escHtml(d.mass||'')}" placeholder="205 kg"></div>
@@ -4090,8 +4286,8 @@ function cieCollect(){
     return {
       _template:'missile',
       name: document.getElementById('cieF_name')?.value.trim()||'',
-      badge: document.getElementById('cieF_badge')?.value.trim()||'',
       badgeClass: document.getElementById('cieF_badgeClass')?.value||'badge-ir',
+      badge: (()=>{ const bc=document.getElementById('cieF_badgeClass')?.value||'badge-ir'; const found=getAllBadgeClasses().find(t=>t.v===bc); return found?.label||bc; })(),
       img,
       nation: document.getElementById('cieF_nation')?.value.trim()||'',
       note: document.getElementById('cieF_note')?.value.trim()||'',
@@ -4175,16 +4371,25 @@ function cieSave(){
     const cm=edCatMap();
     const m=cm[cat]?.arr[cardIdx];
     if(!m){alert('Míssil não encontrado.');return;}
-    const ov=data.s||{};
-    if(data.note) ov.note=data.note;
-    if(data.counters) ov.counters=data.counters;
-    // also pick up flat fields from CIE
+
+    // Root fields — apply to m directly
+    const ROOT = new Set(['badge','badgeClass','nation']);
+    const ovRoot={};
+    ROOT.forEach(k=>{ if(data[k]!==undefined){ m[k]=data[k]; ovRoot[k]=data[k]; } });
+
+    // Stats fields
+    const ovStats=data.s||{};
+    if(data.note) ovStats.note=data.note;
+    if(data.counters) ovStats.counters=data.counters;
     ['mass','speed','range','wh','overload','gimbal','trackRate','fuze','iog','dl',
-     'aspect','irccm','seekerType','burnTime','guideDur','signal'].forEach(k=>{
-       if(data[k]!==undefined) ov[k]=data[k];
+     'aspect','irccm','seekerType','loftAngle','burnTime','guideDur','signal'].forEach(k=>{
+       if(data[k]!==undefined) ovStats[k]=data[k];
     });
-    Object.assign(m.s, ov);
-    _edDB[m.name]=m.s; edSaveDB?.();
+    Object.assign(m.s, ovStats);
+
+    // Save both root and stats in _edDB
+    _edDB[m.name]={...ovRoot,...ovStats};
+    edSaveDB?.();
     cm[cat].fn();
     edRenderIndex();
     closeCardEditor(); return;
@@ -4214,6 +4419,7 @@ function cieSave(){
   saveCtabCards(tab.id,cards);
   renderCustomTabCards(tab);
   edRenderIndex();
+  // if this tab is ARM, sync SPAA table
   closeCardEditor();
 }
 
