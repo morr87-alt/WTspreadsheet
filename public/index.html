@@ -268,6 +268,159 @@ body.edit-mode .tab-edit-bar{display:flex}
 body.edit-mode .tab-btn[draggable]{cursor:grab}
 .tab-btn.drag-over{border-bottom:2px solid #60a5fa;background:rgba(96,165,250,.12)}
 .tab-btn.dragging{opacity:.4;cursor:grabbing}
+/* ══════════════════════════════════════
+   DARK MODE
+   ══════════════════════════════════════ */
+body.dark{background:#0f172a;color:#cbd5e1}
+
+/* topbar já é escuro — só ajustes */
+body.dark .topbar{background:#0a0f1e;border-color:#1e293b}
+body.dark #dmBtn{border-color:#334155;color:#fbbf24}
+
+/* content background */
+body.dark .content{background:#0f172a}
+
+/* tabs */
+body.dark .tab-btn{color:#64748b}
+body.dark .tab-btn:hover{color:#cbd5e1}
+body.dark .tab-btn.active{color:#60a5fa;border-bottom-color:#3b82f6}
+
+/* missile cards */
+body.dark .mcard{background:#1e293b;border-color:#334155}
+body.dark .mcard:hover{box-shadow:0 4px 16px rgba(0,0,0,.5)}
+body.dark .mcard-head{border-color:#334155}
+body.dark .mcard-name{color:#f1f5f9}
+body.dark .mcard-nation{color:#475569}
+body.dark .mlabel{color:#475569}
+body.dark .sg{background:#0f172a;border:1px solid #1e293b}
+body.dark .sg-k{color:#475569}
+body.dark .sg-v{color:#e2e8f0}
+body.dark .note-box{background:#1e293b;border-left-color:#6366f1;color:#94a3b8}
+body.dark .counter-list li{color:#94a3b8}
+body.dark .irccm-pill{filter:brightness(.9) saturate(.8)}
+
+/* seeker cards */
+body.dark .scard{background:#1e293b;border-color:#334155}
+body.dark .scard-head{border-color:#334155}
+body.dark .scard-name{color:#f1f5f9}
+body.dark .scard-sub{color:#475569}
+body.dark .kv tr td{border-color:#1e293b}
+body.dark .kv td:first-child{color:#475569}
+body.dark .kv td:last-child{color:#e2e8f0}
+body.dark .stag{background:#1e293b;color:#94a3b8;border:1px solid #334155}
+body.dark .irccm-section{background:#1c1a10;border-color:#44360033}
+body.dark .irccm-name{color:#e2e8f0}
+body.dark .irccm-desc{color:#94a3b8}
+body.dark .irccm-examples{color:#b45309}
+
+/* stats strip */
+body.dark .stat-val{color:#f1f5f9}
+body.dark .stat-lbl{color:#475569}
+
+/* search / controls */
+body.dark .ctrl select,body.dark .ctrl input,
+body.dark .sbtn input{background:#1e293b;border-color:#334155;color:#e2e8f0}
+body.dark .ctrl select:focus,body.dark .ctrl input:focus,
+body.dark .sbtn input:focus{outline:none;border-color:#3b82f6}
+
+/* SPAA table */
+body.dark .tbl-wrap{background:#1e293b;border-color:#334155}
+body.dark thead th{background:#0f172a;color:#64748b;border-color:#1e293b}
+body.dark thead th.hl{background:#0f172a}
+body.dark thead tr.bands th{background:#1e293b;color:#334155}
+body.dark tbody tr{border-color:#1e293b}
+body.dark tbody tr.sec td{background:rgba(30,58,138,.25);color:#93c5fd}
+body.dark tbody tr.dr td{background:#1e293b;color:#cbd5e1}
+body.dark tbody tr.dr:hover td{background:#334155}
+body.dark tbody tr.dr td.nm{background:#1e293b;border-color:#334155}
+body.dark tbody tr.dr:hover td.nm{background:#334155}
+body.dark tbody tr.dr td.mt{color:#475569}
+body.dark tbody tr.dr td.bd{color:#1e293b}
+
+/* aircraft tags */
+body.dark .aircraft-tag{background:rgba(30,58,138,.25);color:#93c5fd;border:none}
+body.dark .aircraft-empty{color:#334155}
+body.dark .aircraft-title{color:#475569}
+
+/* editor panels */
+body.dark .editor-panel{background:#1e293b;border-color:#334155;box-shadow:none}
+body.dark .editor-panel h2{color:#f1f5f9}
+body.dark .editor-row label{color:#64748b}
+body.dark .editor-row select,body.dark .editor-row input,
+body.dark .editor-row textarea{background:#0f172a;border-color:#334155;color:#e2e8f0}
+body.dark .editor-actions button{background:#1e293b;border-color:#334155;color:#e2e8f0}
+body.dark .editor-actions button.primary{background:#2563eb;border-color:#2563eb;color:#fff}
+body.dark .editor-actions button.danger{background:#3f0d0d;border-color:#7f1d1d;color:#fca5a5}
+body.dark .editor-actions button.warn{background:#3f2900;border-color:#78350f;color:#fcd34d}
+body.dark .raw-box{background:#0f172a;border-color:#334155;color:#e2e8f0}
+body.dark .edit-chip{background:#1e3a8a;color:#93c5fd;border-color:#1e40af}
+body.dark .ed-field-row label{color:#475569}
+body.dark .ed-field-row input,body.dark .ed-field-row textarea{background:#0f172a;border-color:#334155;color:#e2e8f0}
+body.dark .ed-section{color:#334155;border-color:#1e293b}
+body.dark .editor-status{background:#052e16;border-color:#166534;color:#86efac}
+body.dark .aircraft-editor-note{background:#3f1c02;border-color:#78350f;color:#fcd34d}
+body.dark .aircraft-index td{border-color:#1e293b;color:#cbd5e1}
+body.dark .aircraft-index th{background:#0f172a;color:#64748b;border-color:#1e293b}
+body.dark .aircraft-index button{background:#1e293b;border-color:#334155;color:#e2e8f0}
+body.dark .aircraft-index button:hover{background:#334155}
+
+/* tab manager */
+body.dark .tab-manager{border-color:#1e293b}
+body.dark .tab-manager h3{color:#f1f5f9}
+body.dark .tm-row{background:#1e293b;border-color:#334155}
+body.dark .tm-name{color:#e2e8f0}
+body.dark .tm-drag{color:#334155}
+body.dark .tm-fixed{color:#334155}
+body.dark .tm-btn{background:#0f172a;border-color:#334155;color:#e2e8f0}
+body.dark .tm-btn:hover{background:#334155}
+body.dark .tm-btn.danger{background:#3f0d0d;border-color:#7f1d1d;color:#fca5a5}
+body.dark .new-tab-form{background:#0f172a;border-color:#334155}
+body.dark .new-tab-form h4{color:#64748b}
+body.dark .ntf-row label{color:#475569}
+body.dark .ntf-row input,body.dark .ntf-row select{background:#1e293b;border-color:#334155;color:#e2e8f0}
+body.dark .ntf-create-btn{background:#052e16;border-color:#166534;color:#86efac}
+body.dark .ntf-create-btn:hover{background:#14532d}
+
+/* edit mode bars */
+body.dark #editModeToggle{background:#1e293b;border-color:#334155}
+body.dark .tab-edit-bar{background:#1c1500;border-color:#78350f44}
+body.dark .teb-label{color:#fcd34d}
+body.dark .teb-hint{color:#78350f}
+body.dark .teb-new-btn{background:#052e16;border-color:#166534;color:#86efac}
+
+/* sliding card editor */
+body.dark .card-inline-editor{background:#1e293b;border-color:#334155}
+body.dark .cie-header{border-color:#334155}
+body.dark .cie-header h3{color:#f1f5f9}
+body.dark .cie-close{color:#475569}
+body.dark .cie-field label{color:#475569}
+body.dark .cie-field input,body.dark .cie-field textarea,
+body.dark .cie-field select{background:#0f172a;border-color:#334155;color:#e2e8f0}
+body.dark .cie-section{color:#334155;border-color:#1e293b}
+body.dark .cie-actions{border-color:#334155;background:#1e293b}
+body.dark .cie-actions button{background:#0f172a;border-color:#334155;color:#e2e8f0}
+body.dark .cie-actions button.primary{background:#2563eb;border-color:#2563eb;color:#fff}
+body.dark .cie-actions button.danger{background:#3f0d0d;border-color:#7f1d1d;color:#fca5a5}
+body.dark .cie-overlay{background:rgba(0,0,0,.6)}
+body.dark .img-upload-area{background:#0f172a;border-color:#334155;color:#64748b}
+
+/* password modal */
+body.dark #pwModal > div{background:#1e293b;color:#e2e8f0}
+body.dark #pwModal input{background:#0f172a;border-color:#334155;color:#e2e8f0}
+
+/* card images */
+body.dark .card-img-wrap{background:#0f172a;border-color:#334155}
+
+/* edit/delete buttons in dark */
+body.dark .mcard-edit-btn,body.dark .scard-edit-btn{background:#1e3a8a;border-color:#1e40af;color:#93c5fd}
+body.dark .mcard-del-btn,body.dark .scard-del-btn{background:#3f0d0d;border-color:#7f1d1d;color:#fca5a5}
+body.dark .scard-custom-badge,body.dark .mcard-custom-badge{background:#1c1500;border-color:#78350f;color:#fcd34d}
+
+/* legend dots unchanged (coloured) */
+body.dark .leg{color:#475569}
+
+/* seeker type manager */
+body.dark #seekerTypeManagerList .tm-row{background:#1e293b;border-color:#334155}
 </style>
 </head>
 <body>
@@ -279,7 +432,10 @@ body.edit-mode .tab-btn[draggable]{cursor:grab}
 </div>
 <div class="topbar">
   <h1>⚡ War Thunder — Guided Weapons Reference</h1>
-  <div class="sub" id="topSub" style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span id="syncIndicator" style="font-size:10.5px;color:#9ca3af;font-weight:500">○ A ligar…</span></div>
+  <div class="sub" id="topSub" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+    <span id="syncIndicator" style="font-size:10.5px;color:#9ca3af;font-weight:500">○ A ligar…</span>
+    <button id="dmBtn" onclick="toggleDarkMode()" title="Dark / Light mode" style="background:none;border:1px solid #374151;color:#9ca3af;border-radius:6px;padding:2px 8px;font-size:13px;cursor:pointer;line-height:1.4;flex-shrink:0">🌙</button>
+  </div>
   <div class="tabs" id="tabBar">
     <button class="tab-btn active" draggable="true" data-tab="tSPAA" onclick="showTab('tSPAA',this)">🛡️ SPAA vs ARM</button>
     <button class="tab-btn" draggable="true" data-tab="tARM" onclick="showTab('tARM',this)">🎯 ARM</button>
@@ -451,6 +607,31 @@ body.edit-mode .tab-btn[draggable]{cursor:grab}
       <div style="margin-top:8px">
         <button class="ntf-submit" onclick="irccmTypeCreate();irccmPreviewUpdate()">➕ Criar tipo</button>
       </div>
+    </div>
+  </div>
+
+  <!-- BADGE CLASS MANAGER -->
+  <div class="tab-manager" id="bcManagerSection">
+    <h3>🏷️ Badges de Míssil (cor)</h3>
+    <p style="font-size:11px;color:#64748b;margin-bottom:12px">Os badges predefinidos não podem ser apagados. Cria badges custom com nome, cor de fundo e cor de texto — aparecem no selector ao criar/editar cards.</p>
+    <div id="bcManagerList" style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px"></div>
+    <div class="new-tab-form">
+      <h4>➕ Criar badge custom</h4>
+      <div class="ntf-row">
+        <label>Nome</label>
+        <input id="ntBcLabel" placeholder="Ex: ATGM, Fox-3…" maxlength="20" oninput="bcPreviewUpdateCreate()">
+      </div>
+      <div class="ntf-row" style="align-items:center">
+        <label>Cores</label>
+        <div style="display:flex;gap:8px;align-items:center;flex:1">
+          <input type="color" id="ntBcBg" value="#e0e7ff" oninput="bcPreviewUpdateCreate()" style="width:40px;height:32px;padding:2px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer">
+          <span style="font-size:11px;color:#64748b">fundo</span>
+          <input type="color" id="ntBcFg" value="#3730a3" oninput="bcPreviewUpdateCreate()" style="width:40px;height:32px;padding:2px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer">
+          <span style="font-size:11px;color:#64748b">texto</span>
+          <span id="ntBcPreview" style="font-size:10px;font-weight:700;padding:2px 10px;border-radius:4px;background:#e0e7ff;color:#3730a3">Badge</span>
+        </div>
+      </div>
+      <button class="ntf-create-btn" onclick="bcTypeCreate()">➕ Criar badge</button>
     </div>
   </div>
 
@@ -628,6 +809,23 @@ async function serverLoad() {
       _customSeekerTypes = data.seekerTypeDefs;
       try{localStorage.setItem(SK_TYPE_KEY, JSON.stringify(_customSeekerTypes));}catch(e){}
     }
+    if (Array.isArray(data.badgeClassDefs) && data.badgeClassDefs.length) {
+      _customBC = data.badgeClassDefs;
+      try{localStorage.setItem(BC_KEY, JSON.stringify(_customBC));}catch(e){}
+    }
+    if (Array.isArray(data.tabOrder) && data.tabOrder.length) {
+      try{
+        localStorage.setItem('wt_tab_order_v1', JSON.stringify(data.tabOrder));
+        // apply to DOM immediately
+        const bar = document.getElementById('tabBar');
+        if(bar){
+          data.tabOrder.forEach(tabId=>{
+            const btn = bar.querySelector(`.tab-btn[data-tab="${CSS.escape(tabId)}"]`);
+            if(btn) bar.appendChild(btn);
+          });
+        }
+      }catch(e){}
+    }
     // re-save to localStorage as cache
     _saveED(); _saveSK(); _saveCustM(); _saveCustSK();
     saveAircraftData();
@@ -663,7 +861,9 @@ async function _doServerSave() {
       skEdits:        typeof _skEdits     !== 'undefined' ? _skEdits     : {},
       skCustom:       typeof _skCustom    !== 'undefined' ? _skCustom    : [],
       seekerTypeDefs: typeof _customSeekerTypes !== 'undefined' ? _customSeekerTypes : [],
-      irccmTypeDefs: typeof _customIRCCM !== 'undefined' ? _customIRCCM : [],
+      irccmTypeDefs:  typeof _customIRCCM       !== 'undefined' ? _customIRCCM       : [],
+      badgeClassDefs: typeof _customBC           !== 'undefined' ? _customBC          : [],
+      tabOrder: (()=>{ try{ return JSON.parse(localStorage.getItem('wt_tab_order_v1')||'null'); }catch(e){ return null; } })(),
     };
     const res = await fetch(`${API_URL}/data`, {
       method:  'POST',
@@ -712,7 +912,25 @@ async function serverAuth(password) {
   }
 }
 
-// ── Sync indicator in topbar ──────────────────────────────────────────────────
+// ── DARK MODE ──────────────────────────────────────────────────────────────────
+function applyDarkMode(dark){
+  document.body.classList.toggle('dark', dark);
+  const btn = document.getElementById('dmBtn');
+  if(btn) btn.textContent = dark ? '☀️' : '🌙';
+}
+function toggleDarkMode(){
+  const isDark = document.body.classList.toggle('dark');
+  localStorage.setItem('wt_dark_mode', isDark ? '1' : '0');
+  const btn = document.getElementById('dmBtn');
+  if(btn) btn.textContent = isDark ? '☀️' : '🌙';
+}
+// Apply on load
+(function(){
+  const saved = localStorage.getItem('wt_dark_mode');
+  // default: follow OS preference if no saved preference
+  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+  applyDarkMode(saved !== null ? saved === '1' : prefersDark);
+})();
 function syncIndicator(state, ts) {
   const el = document.getElementById('syncIndicator');
   if (!el) return;
@@ -2521,11 +2739,22 @@ function edRenderIndex(){
 
 // Apply saved overrides on page load
 (function applyStoredOverrides(){
+  // Apply field edits to existing base missiles
   [armData,irRearData,irAllData,sarhData,arhData].forEach(arr=>arr.forEach(m=>{
-    const ov=_edDB[m.name]; if(ov) Object.assign(m.s,ov);
+    const ov=_edDB[m.name];
+    if(ov) Object.keys(ov).forEach(k=>{ if(ov[k]!==undefined) m.s[k]=ov[k]; });
   }));
   seekerData.forEach(sk=>{
-    const ov=_skDB[sk.type]; if(ov) Object.assign(sk,ov);
+    const ov=_skDB[sk.type];
+    if(ov) Object.keys(ov).forEach(k=>{ if(ov[k]!==undefined) sk[k]=ov[k]; });
+  });
+  // Load custom missiles created by the user into live arrays
+  const _liveArrays={arm:armData,irr:irRearData,ira:irAllData,sarh:sarhData,arh:arhData};
+  Object.keys(_custM||{}).forEach(cat=>{
+    const arr=_liveArrays[cat]; if(!arr) return;
+    (_custM[cat]||[]).forEach(cm=>{
+      if(!arr.find(x=>x.name===cm.name)) arr.push(cm);
+    });
   });
 })();
 
@@ -2726,6 +2955,93 @@ function saveCustomIRCCM(){
   serverSave?.();
 }
 
+// ── BADGE CLASS SYSTEM (cor do badge do míssil) ──────────────────────────────
+const BC_KEY = 'wt_badge_classes_v1';
+
+const BC_PRESETS = [
+  {v:'badge-ir',    label:'IR Rear',  bg:'#fee2e2', fg:'#991b1b'},
+  {v:'badge-irall', label:'IR All',   bg:'#fce7f3', fg:'#9d174d'},
+  {v:'badge-sarh',  label:'SARH',     bg:'#e0e7ff', fg:'#3730a3'},
+  {v:'badge-arh',   label:'ARH',      bg:'#ede9fe', fg:'#5b21b6'},
+  {v:'badge-arm',   label:'ARM',      bg:'#fef3c7', fg:'#92400e'},
+];
+
+let _customBC = [];
+try{ _customBC = JSON.parse(localStorage.getItem(BC_KEY)||'[]'); }catch(e){}
+function saveCustomBC(){ try{localStorage.setItem(BC_KEY,JSON.stringify(_customBC));}catch(e){} serverSave?.(); }
+
+function getAllBadgeClasses(){ return [...BC_PRESETS, ..._customBC.map(t=>({...t,custom:true}))]; }
+
+function buildBadgeClassSelect(id, currentVal){
+  const all = getAllBadgeClasses();
+  const opts = all.map(t=>`<option value="${escHtml(t.v)}"${t.v===currentVal?' selected':''}>${escHtml(t.label)}</option>`).join('');
+  const found = all.find(t=>t.v===currentVal)||BC_PRESETS[0];
+  return `<div style="display:flex;gap:6px;align-items:center;flex:1">
+    <select id="${escHtml(id)}" style="flex:1;font-size:12px;padding:5px 8px;border:1px solid #cbd5e1;border-radius:7px;background:#fff" onchange="bcPreviewUpdate(this)">
+      ${opts}
+    </select>
+    <span id="${escHtml(id)}_preview" style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;background:${found.bg};color:${found.fg};white-space:nowrap">
+      ${escHtml(found.label)}
+    </span>
+  </div>`;
+}
+
+function bcPreviewUpdate(sel){
+  const all = getAllBadgeClasses();
+  const found = all.find(t=>t.v===sel.value)||BC_PRESETS[0];
+  const prev = document.getElementById(sel.id+'_preview');
+  if(prev){ prev.style.background=found.bg; prev.style.color=found.fg; prev.textContent=found.label; }
+}
+
+function getBadgeStyle(badgeClass){
+  const all = getAllBadgeClasses();
+  const found = all.find(t=>t.v===badgeClass);
+  if(found) return `background:${found.bg};color:${found.fg}`;
+  return '';
+}
+
+function bcPreviewUpdateCreate(){
+  const text=(document.getElementById('ntBcLabel')?.value||'').trim()||'Badge';
+  const bg=document.getElementById('ntBcBg')?.value||'#e0e7ff';
+  const fg=document.getElementById('ntBcFg')?.value||'#3730a3';
+  const prev=document.getElementById('ntBcPreview');
+  if(prev){prev.textContent=text;prev.style.background=bg;prev.style.color=fg;}
+}
+
+function bcTypeCreate(){
+  const label=(document.getElementById('ntBcLabel')?.value||'').trim();
+  const bg=document.getElementById('ntBcBg')?.value||'#e0e7ff';
+  const fg=document.getElementById('ntBcFg')?.value||'#3730a3';
+  if(!label){alert('Escreve o nome do badge.');return;}
+  const v='badge-custom-'+Date.now();
+  _customBC.push({v,label,bg,fg});
+  saveCustomBC(); renderBCManager();
+  document.getElementById('ntBcLabel').value='';
+}
+
+function bcTypeDelete(i){
+  if(!confirm('Apagar este badge?'))return;
+  _customBC.splice(i,1); saveCustomBC(); renderBCManager();
+}
+
+function renderBCManager(){
+  const el=document.getElementById('bcManagerList'); if(!el)return;
+  el.innerHTML='';
+  BC_PRESETS.forEach(t=>{
+    const row=document.createElement('div'); row.className='tm-row';
+    row.innerHTML=`<span class="tm-name">${escHtml(t.label)}</span><span class="tm-fixed">predefinido</span>
+      <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;background:${t.bg};color:${t.fg}">${escHtml(t.label)}</span>`;
+    el.appendChild(row);
+  });
+  _customBC.forEach((t,i)=>{
+    const row=document.createElement('div'); row.className='tm-row';
+    row.innerHTML=`<span class="tm-name">${escHtml(t.label)}</span><span class="tm-type-badge sk">custom</span>
+      <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;background:${t.bg};color:${t.fg}">${escHtml(t.label)}</span>
+      <button class="tm-btn danger" onclick="bcTypeDelete(${i})" style="margin-left:auto">🗑</button>`;
+    el.appendChild(row);
+  });
+}
+
 function getAllIRCCM(){
   return [...IRCCM_PRESETS, ..._customIRCCM.map(t=>({...t, custom:true}))];
 }
@@ -2919,18 +3235,15 @@ function buildMCard(m,badgeClass){
   // Build seeker type badge
   let seekerBadge = d.seekerType ? renderSeekerTypeBadges(d.seekerType) : '';
 
-  // Loft badge
-  let loftBadge='';
-  if(d.loftAngle&&d.loftAngle!=='—'){
-    loftBadge=`<span class="loft-badge">Loft ${d.loftAngle}</span>`;
-  }
+  // Loft — sem badge, só valor no grid
+  const loftVal = (d.loftAngle && d.loftAngle !== '—') ? d.loftAngle : '';
 
   const rows=[
     ['Massa',d.mass],['Velocidade',d.speed],['Alcance',d.range],
     ['Ogiva',d.wh],['Overload máx.',d.overload],['Gimbal',d.gimbal],
     ['Track rate',d.trackRate],['Fuze',d.fuze],['IOG',d.iog],['Data Link',d.dl],
     ...(d.seekerType?[['Tipo seeker', seekerBadge]]:[]),
-    ...(d.loftAngle&&d.loftAngle!=='—'?[['Ângulo Loft',d.loftAngle+' '+loftBadge]]:[]),
+    ...(loftVal?[['Ângulo Loft', loftVal]]:[]),
     ['Aspeto / Guidance',d.aspect],
     ...(d.burnTime&&d.burnTime!=='—'?[['Burn time',d.burnTime]]:[]),
     ...(d.guideDur&&d.guideDur!=='—'?[['Guia duration',d.guideDur]]:[]),
@@ -2938,7 +3251,10 @@ function buildMCard(m,badgeClass){
   ].filter(([,v])=>v!==undefined && v!==null && v!=='' && v!=='—');
 
   const statsHtml=`<div class="sgrid">${rows.map(([k,v])=>`<div class="sg"><div class="sg-k">${k}</div><div class="sg-v">${v}</div></div>`).join('')}</div>`;
-  const irccmHtml=`<div class="mlabel">IRCCM / Seeker type</div>${irccmPill(d.irccm||'—')}`;
+  const _irccmVal=d.irccm||'';
+  const irccmHtml=(_irccmVal&&_irccmVal!=='Nenhum'&&_irccmVal!=='—')
+    ? `<div class="mlabel">IRCCM / Seeker type</div>${irccmPill(_irccmVal)}`
+    : '';
   const noteHtml=(d.note&&d.note.trim())?`<div class="note-box">${d.note}</div>`:'';
   const counterHtml=d.counters&&d.counters.filter(Boolean).length?`<div class="mlabel">Como contrariar</div><ul class="counter-list">${d.counters.filter(Boolean).map(c=>`<li>${c}</li>`).join('')}</ul>`:'';
   const aircraftHtml=buildAircraftSection(missileId);
@@ -3525,13 +3841,7 @@ function cieRenderFields(data){
       <div class="cie-field"><label>Nome do míssil *</label><input id="cieF_name" value="${escHtml(d.name||'')}" placeholder="Ex: AIM-9L"></div>
       <div class="cie-field"><label>Badge / Tipo</label><input id="cieF_badge" value="${escHtml(d.badge||'')}" placeholder="IR All-Aspect"></div>
       <div class="cie-field"><label>Badge class (cor)</label>
-        <select id="cieF_badgeClass">
-          <option value="badge-ir"${(d.badgeClass||'')==='badge-ir'?' selected':''}>IR Rear (vermelho)</option>
-          <option value="badge-irall"${(d.badgeClass||'')==='badge-irall'?' selected':''}>IR All (rosa)</option>
-          <option value="badge-sarh"${(d.badgeClass||'')==='badge-sarh'?' selected':''}>SARH (azul)</option>
-          <option value="badge-arh"${(d.badgeClass||'')==='badge-arh'?' selected':''}>ARH (roxo)</option>
-          <option value="badge-arm"${(d.badgeClass||'')==='badge-arm'?' selected':''}>ARM (amarelo)</option>
-        </select>
+        ${buildBadgeClassSelect('cieF_badgeClass', d.badgeClass||'badge-ir')}
       </div>
       <div class="cie-section">📊 Stats (como na imagem)</div>
       <div class="cie-field"><label>Massa</label><input id="cieF_mass" value="${escHtml(d.mass||'')}" placeholder="205 kg"></div>
@@ -3546,11 +3856,12 @@ function cieRenderFields(data){
       <div class="cie-field"><label>Data Link</label><input id="cieF_dl" value="${escHtml(d.dl||'')}" placeholder="Não"></div>
       <div class="cie-field"><label>Tipo seeker</label>${buildSeekerTypeSelect('cieF_seekerType', d.seekerType||'')}</div>
       <div class="cie-field"><label>IRCCM</label>${buildIRCCMSelect('cieF_irccm', d.irccm||'')}</div>
+      <div class="cie-field"><label>Ângulo Loft</label><input id="cieF_loftAngle" value="${escHtml(d.loftAngle||d.s?.loftAngle||'')}" placeholder="20°"></div>
       <div class="cie-field"><label>Aspeto / Guidance</label><input id="cieF_aspect" value="${escHtml(d.aspect||'')}" placeholder="SARH I-band CW"></div>
       <div class="cie-field"><label>Burn time</label><input id="cieF_burnTime" value="${escHtml(d.burnTime||'')}" placeholder="2.8s"></div>
       <div class="cie-field"><label>Guia duration</label><input id="cieF_guideDur" value="${escHtml(d.guideDur||'')}" placeholder="40s"></div>
       <div class="cie-field"><label>Signal / Seeker</label><input id="cieF_signal" value="${escHtml(d.signal||'')}" placeholder="I-band Continuous Wave"></div>
-      <div class="cie-field"><label>IRCCM</label><input id="cieF_irccm" value="${escHtml(d.irccm||'')}" placeholder="—"></div>
+      
       <div class="cie-section">📝 Notas & Counters</div>
       <div class="cie-field"><label>Nota</label><textarea id="cieF_note">${escHtml(d.note||'')}</textarea></div>
       <div class="cie-field"><label>Como contrariar (1 por linha)</label><textarea id="cieF_counters">${escHtml((d.counters||[]).join('\n'))}</textarea></div>
@@ -3674,6 +3985,8 @@ function cieCollect(){
         iog:       document.getElementById('cieF_iog')?.value.trim()||'',
         dl:        document.getElementById('cieF_dl')?.value.trim()||'',
         seekerType:document.getElementById('cieF_seekerType')?.value.trim()||'',
+        irccm:     document.getElementById('cieF_irccm')?.value||'',
+        loftAngle: document.getElementById('cieF_loftAngle')?.value.trim()||'',
         aspect:    document.getElementById('cieF_aspect')?.value.trim()||'',
         burnTime:  document.getElementById('cieF_burnTime')?.value.trim()||'',
         guideDur:  document.getElementById('cieF_guideDur')?.value.trim()||'',
@@ -3726,8 +4039,8 @@ function cieSave(){
     // persist
     if(!_custM[cat])_custM[cat]=[];
     _custM[cat].push(newM);
-    edSaveCustM?.();
-    _edDB[name]=s; edSaveDB?.();
+    _saveCustM();
+    _edDB[name]=s; edSaveDB();
     cm[cat].fn();
     edRenderIndex();
     closeCardEditor(); return;
@@ -3819,7 +4132,7 @@ function buildCustomMissileCard(c,tabId,idx){
     ${imgHtml}
     <div class="mcard-head">
       <div><div class="mcard-name">${escHtml(c.name||'—')}${customBadge}</div>${c.nation?`<div class="mcard-nation">${escHtml(c.nation)}</div>`:''}</div>
-      <span class="badge ${escHtml(c.badgeClass||'badge-ir')}">${escHtml(c.badge||'')}</span>
+      <span class="badge ${escHtml(c.badgeClass||'badge-ir')}" style="${getBadgeStyle(c.badgeClass||'badge-ir')}">${escHtml(c.badge||'')}</span>
     </div>
     <div class="mcard-body">
       <div class="mlabel">Estatísticas (in-game)</div>
@@ -3885,6 +4198,7 @@ rebuildCustomTabs();
 tmRender();
 renderSeekerTypeManager();
 renderIRCCMManager();
+renderBCManager();
 serverLoad();
 
 
@@ -3895,6 +4209,25 @@ serverLoad();
   const bar = document.getElementById('tabBar');
   if(!bar) return;
   let dragged = null;
+
+  // Save current tab button order to localStorage + server
+  function saveTabOrder(){
+    const order = [...bar.querySelectorAll('.tab-btn[data-tab]')].map(b=>b.dataset.tab);
+    try{ localStorage.setItem('wt_tab_order_v1', JSON.stringify(order)); }catch(e){}
+    serverSave?.();
+  }
+
+  // Restore tab order from localStorage on init
+  function restoreTabOrder(){
+    let order;
+    try{ order = JSON.parse(localStorage.getItem('wt_tab_order_v1')||'null'); }catch(e){}
+    if(!Array.isArray(order)||!order.length) return;
+    order.forEach(tabId=>{
+      const btn = bar.querySelector(`.tab-btn[data-tab="${CSS.escape(tabId)}"]`);
+      if(btn) bar.appendChild(btn); // move to end in order
+    });
+  }
+  restoreTabOrder();
 
   bar.addEventListener('dragstart', e => {
     if(!document.body.classList.contains('edit-mode')) { e.preventDefault(); return; }
@@ -3938,6 +4271,7 @@ serverLoad();
     } else {
       bar.insertBefore(dragged, target.nextSibling);
     }
+    saveTabOrder(); // ← guarda sempre após drop
   });
 })();
 
