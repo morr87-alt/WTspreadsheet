@@ -711,6 +711,20 @@ body.dark #seekerTypeManagerList .tm-row{background:#1e293b;border-color:#334155
 
   <div id="cieFields"></div>
 
+  <!-- Permanent image upload zone — never recreated, avoids ID collisions and browser security blocks -->
+  <div class="cie-section" id="cieImgSection" style="display:none">🖼️ Imagem</div>
+  <div id="cieImgWrap" style="display:none">
+    <label for="cieImgFile" id="cieImgDropZone" style="display:block;border:2px dashed #cbd5e1;border-radius:10px;padding:18px;text-align:center;cursor:pointer;background:#f8fafc;transition:border-color .2s">
+      <div style="font-size:12px;color:#64748b;pointer-events:none">📎 Clica ou arrasta uma imagem aqui<br><span style="font-size:10px;color:#94a3b8">JPG · PNG · WebP — máx 2 MB</span></div>
+      <img id="cieImgPreview" src="" style="display:none;max-width:100%;max-height:140px;margin-top:10px;border-radius:8px;border:1px solid #e2e8f0;pointer-events:none">
+    </label>
+    <div class="cie-field" style="margin-top:6px">
+      <label>Ou URL de imagem</label>
+      <input id="cieImgUrl" placeholder="https://…" oninput="cieImgUrlChange(this.value)">
+    </div>
+    <button type="button" id="cieImgClearBtn" onclick="clearCieImg()" style="display:none;font-size:11px;border:1px solid #fecdd3;background:#fff1f2;color:#9f1239;border-radius:6px;padding:3px 10px;cursor:pointer;margin-top:2px">🗑 Remover imagem</button>
+  </div>
+
   <!-- Permanent file input — never recreated, avoids browser security block -->
   <input type="file" id="cieImgFile" accept="image/*" style="display:none">
 
@@ -830,7 +844,7 @@ async function serverLoad() {
     _saveED(); _saveSK(); _saveCustM(); _saveCustSK();
     saveAircraftData();
     // re-apply missile overrides (including root fields) to live data
-    const _ROOT_LD = new Set(['badge','badgeClass','nation']);
+    const _ROOT_LD = new Set(['badge','badgeClass','nation','img']);
     [armData,irRearData,irAllData,sarhData,arhData].forEach(arr=>arr.forEach(m=>{
       const ov=_edDB[m.name]; if(!ov) return;
       Object.keys(ov).forEach(k=>{ if(ov[k]!==undefined){ if(_ROOT_LD.has(k)) m[k]=ov[k]; else m.s[k]=ov[k]; } });
@@ -2717,7 +2731,7 @@ function edImportAll(){
     if(incoming.aircraft) Object.assign(aircraftDB, incoming.aircraft);
     edSaveDB(); edSaveSK(); saveAircraftData();
     // apply overrides to live data
-    const _ROOT = new Set(['badge','badgeClass','nation']);
+    const _ROOT = new Set(['badge','badgeClass','nation','img']);
     [armData,irRearData,irAllData,sarhData,arhData].forEach(arr=>arr.forEach(m=>{
       const ov=_edDB[m.name]; if(!ov) return;
       Object.keys(ov).forEach(k=>{ if(ov[k]!==undefined){ if(_ROOT.has(k)) m[k]=ov[k]; else m.s[k]=ov[k]; } });
@@ -2787,7 +2801,7 @@ function edRenderIndex(){
 
 // Apply saved overrides on page load
 (function applyStoredOverrides(){
-  const ROOT_FIELDS = new Set(['badge','badgeClass','nation']);
+  const ROOT_FIELDS = new Set(['badge','badgeClass','nation','img']);
   // Apply field edits to existing base missiles
   [armData,irRearData,irAllData,sarhData,arhData].forEach(arr=>arr.forEach(m=>{
     const ov=_edDB[m.name];
@@ -3538,11 +3552,13 @@ function buildMCard(m, defaultBadgeClass){
   const noteHtml=(d.note&&d.note.trim())?`<div class="note-box">${d.note}</div>`:'';
   const counterHtml=d.counters&&d.counters.filter(Boolean).length?`<div class="mlabel">Como contrariar</div><ul class="counter-list">${d.counters.filter(Boolean).map(c=>`<li>${c}</li>`).join('')}</ul>`:'';
   const aircraftHtml=buildAircraftSection(missileId);
+  const imgHtml=m.img?`<div class="card-img-wrap"><img src="${escHtml(m.img)}" alt="${escHtml(m.name)}" loading="lazy"></div>`:'';
 
   const div=document.createElement('div');div.className='mcard';
   div.innerHTML=`
+    ${imgHtml}
     <div class="mcard-head">
-      <div><div class="mcard-name">${m.name}</div></div>
+      <div><div class="mcard-name">${m.name}</div>${m.nation?`<div class="mcard-nation">${escHtml(m.nation)}</div>`:''}</div>
       <span class="badge ${activeBadgeClass}"${badgeStyleAttr}>${badgeText}</span>
     </div>
     <div class="mcard-body">
@@ -4072,7 +4088,7 @@ function openCardEditor(mode, template, tabPaneId, cardIdx=-1){
       const cat=tabPaneId.replace('base_missile_','');
       const cm=edCatMap();
       const m=cm[cat]?.arr[cardIdx];
-      if(m) existing={name:m.name,badge:m.badge,badgeClass:getBadgeClassFromCat(cat),nation:m.nation||'',...(m.s||{}),counters:m.s?.counters||[],note:m.s?.note||''};
+      if(m) existing={name:m.name,badge:m.badge,badgeClass:m.badgeClass||getBadgeClassFromCat(cat),nation:m.nation||'',img:m.img||null,...(m.s||{}),counters:m.s?.counters||[],note:m.s?.note||'',planes:getAircraftList(missileIdFromName(m.name))};
     } else if(tabPaneId==='base_seeker'||tabPaneId==='base_seeker_custom'){
       const sk=tabPaneId==='base_seeker_custom'?_skCustom[cardIdx]:seekerData[cardIdx];
       if(sk) existing={...sk};
@@ -4082,7 +4098,10 @@ function openCardEditor(mode, template, tabPaneId, cardIdx=-1){
       if(tab){
         const cards=loadCtabCards(tab.id);
         existing=cards[cardIdx]||null;
-        if(existing) _cieImgData=existing.img||null;
+        if(existing){
+          _cieImgData=existing.img||null;
+          if(!existing.planes) existing.planes=getAircraftList(missileIdFromName(existing.name||''));
+        }
       }
     }
   }
@@ -4146,8 +4165,8 @@ function cieRenderFields(data){
       <div class="cie-field"><label>Nota</label><textarea id="cieF_note">${escHtml(d.note||'')}</textarea></div>
       <div class="cie-field"><label>Como contrariar (1 por linha)</label><textarea id="cieF_counters">${escHtml((d.counters||[]).join('\n'))}</textarea></div>
       <div class="cie-field"><label>Nação</label><input id="cieF_nation" value="${escHtml(d.nation||'')}" placeholder="USA / USSR…"></div>
-      <div class="cie-section">🖼️ Imagem</div>
-      ${cieImgUploadHtml(d.img)}`;
+      <div class="cie-section">✈️ Aviões Portadores</div>
+      <div class="cie-field"><label>Aviões (um por linha)</label><textarea id="cieF_planes" style="min-height:90px" placeholder="F-16C&#10;F-15C&#10;F/A-18C">${escHtml((d.planes||[]).join('\n'))}</textarea></div>`;
   } else {
     // seeker template
     const irccmRows=(d.irccmTypes||[]).map((t,i)=>`
@@ -4174,38 +4193,45 @@ function cieRenderFields(data){
       <div class="cie-field"><label>Como contrariar (1 por linha)</label><textarea id="cieF_counters">${escHtml((d.counters||[]).join('\n'))}</textarea></div>
       <div class="cie-section">🛡️ Tipos IRCCM Incluídos</div>
       <div id="cieIrccmList">${irccmRows}</div>
-      <button type="button" onclick="cieAddIrccmRow()" style="font-size:11px;border:1px solid #c7d2fe;background:#eef2ff;color:#3730a3;border-radius:7px;padding:5px 12px;cursor:pointer;font-weight:700;margin-bottom:10px">➕ Adicionar tipo IRCCM</button>
-      <div class="cie-section">🖼️ Imagem</div>
-      ${cieImgUploadHtml(d.img)}`;
+      <button type="button" onclick="cieAddIrccmRow()" style="font-size:11px;border:1px solid #c7d2fe;background:#eef2ff;color:#3730a3;border-radius:7px;padding:5px 12px;cursor:pointer;font-weight:700;margin-bottom:10px">➕ Adicionar tipo IRCCM</button>`;
   }
-  // bind image events after DOM update
-  setTimeout(()=>bindCieImgEvents(),50);
+  // show + populate the permanent image section
+  cieSetupImgSection(d.img);
 }
 
-function cieImgUploadHtml(existingImg){
-  const hasImg=!!(existingImg);
-  return `
-    <label for="cieImgFile" id="cieImgDropZone" style="display:block;border:2px dashed #cbd5e1;border-radius:10px;padding:18px;text-align:center;cursor:pointer;background:#f8fafc;transition:border-color .2s">
-      <div style="font-size:12px;color:#64748b;pointer-events:none">📎 Clica ou arrasta uma imagem aqui<br><span style="font-size:10px;color:#94a3b8">JPG · PNG · WebP — máx 2 MB</span></div>
-      <img id="cieImgPreview" src="${hasImg?escHtml(existingImg):''}" style="display:${hasImg?'block':'none'};max-width:100%;max-height:140px;margin-top:10px;border-radius:8px;border:1px solid #e2e8f0;pointer-events:none">
-    </label>
-    <div class="cie-field" style="margin-top:6px">
-      <label>Ou URL de imagem</label>
-      <input id="cieImgUrl" value="${escHtml(hasImg&&!existingImg.startsWith('data:')?existingImg:'')}" placeholder="https://…" oninput="cieImgUrlChange(this.value)">
-    </div>
-    <div style="margin-top:4px">
-      <button type="button" id="cieImgClearBtn" onclick="clearCieImg()" style="display:${hasImg?'inline-block':'none'};font-size:11px;border:1px solid #fecdd3;background:#fff1f2;color:#9f1239;border-radius:6px;padding:3px 10px;cursor:pointer">🗑 Remover imagem</button>
-    </div>`;
+function cieSetupImgSection(existingImg){
+  document.getElementById('cieImgSection').style.display='block';
+  document.getElementById('cieImgWrap').style.display='block';
+  _cieImgData = existingImg && existingImg.startsWith('data:') ? existingImg : null;
+  const hasImg = !!existingImg;
+  const p=document.getElementById('cieImgPreview');
+  const u=document.getElementById('cieImgUrl');
+  const cb=document.getElementById('cieImgClearBtn');
+  const f=document.getElementById('cieImgFile');
+  if(f) f.value='';
+  if(p){
+    p.src = hasImg ? existingImg : '';
+    p.style.display = hasImg ? 'block' : 'none';
+  }
+  if(u){
+    u.value = (hasImg && !existingImg.startsWith('data:')) ? existingImg : '';
+  }
+  if(cb){
+    cb.style.display = hasImg ? 'inline-block' : 'none';
+  }
+  bindCieImgEvents();
 }
 
+let _cieImgEventsBound = false;
 function bindCieImgEvents(){
-  const fileInput=document.getElementById('cieImgFile');
-  if(!fileInput) return;
-  // Reset by replacing to clear old listeners
-  const fresh=fileInput.cloneNode(false);
-  fileInput.parentNode.replaceChild(fresh,fileInput);
+  if(_cieImgEventsBound) return; // permanent elements — bind listeners only once ever
+  _cieImgEventsBound = true;
 
-  fresh.addEventListener('change',function(){
+  const fileInput=document.getElementById('cieImgFile');
+  const zone=document.getElementById('cieImgDropZone');
+  if(!fileInput || !zone) return;
+
+  fileInput.addEventListener('change',function(){
     const f=this.files[0]; if(!f) return;
     if(f.size>2*1024*1024){alert('Imagem muito grande (máx 2 MB).');this.value='';return;}
     const r=new FileReader();
@@ -4219,9 +4245,6 @@ function bindCieImgEvents(){
     r.readAsDataURL(f);
   });
 
-  // drag-and-drop on the label zone
-  const zone=document.getElementById('cieImgDropZone');
-  if(!zone) return;
   zone.addEventListener('dragover',function(e){e.preventDefault();this.style.borderColor='#3b82f6';this.style.background='#eff6ff';});
   zone.addEventListener('dragleave',function(){this.style.borderColor='#cbd5e1';this.style.background='#f8fafc';});
   zone.addEventListener('drop',function(e){
@@ -4292,6 +4315,7 @@ function cieCollect(){
       nation: document.getElementById('cieF_nation')?.value.trim()||'',
       note: document.getElementById('cieF_note')?.value.trim()||'',
       counters: (document.getElementById('cieF_counters')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
+      planes: (document.getElementById('cieF_planes')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
       s:{
         mass:      document.getElementById('cieF_mass')?.value.trim()||'',
         speed:     document.getElementById('cieF_speed')?.value.trim()||'',
@@ -4353,14 +4377,17 @@ function cieSave(){
        if(data[k]!==undefined) s[k]=data[k];
     });
     s.counters=data.counters||[];
-    const newM={name,badge,badgeClass:badgeCls,nation:data.nation||'',s,_custom:true};
+    const newM={name,badge,badgeClass:badgeCls,nation:data.nation||'',img:data.img||null,s,_custom:true};
     cm[cat].arr.push(newM);
     // persist
     if(!_custM[cat])_custM[cat]=[];
     _custM[cat].push(newM);
     _saveCustM();
     _edDB[name]=s; edSaveDB();
+    // save aircraft carriers
+    if(data.planes) setAircraftList(missileIdFromName(name), data.planes);
     cm[cat].fn();
+    refreshAircraftSections?.();
     edRenderIndex();
     closeCardEditor(); return;
   }
@@ -4373,7 +4400,7 @@ function cieSave(){
     if(!m){alert('Míssil não encontrado.');return;}
 
     // Root fields — apply to m directly
-    const ROOT = new Set(['badge','badgeClass','nation']);
+    const ROOT = new Set(['badge','badgeClass','nation','img']);
     const ovRoot={};
     ROOT.forEach(k=>{ if(data[k]!==undefined){ m[k]=data[k]; ovRoot[k]=data[k]; } });
 
@@ -4390,7 +4417,10 @@ function cieSave(){
     // Save both root and stats in _edDB
     _edDB[m.name]={...ovRoot,...ovStats};
     edSaveDB?.();
+    // save aircraft carriers
+    if(data.planes) setAircraftList(missileIdFromName(m.name), data.planes);
     cm[cat].fn();
+    refreshAircraftSections?.();
     edRenderIndex();
     closeCardEditor(); return;
   }
@@ -4454,6 +4484,7 @@ function buildCustomMissileCard(c,tabId,idx){
   const irccmHtml=d.irccm?`<div class="mlabel">IRCCM</div>${irccmPill(d.irccm)}`:'';
   const noteHtml=(d.note&&d.note.trim())?`<div class="note-box">${escHtml(d.note)}</div>`:'';
   const counterHtml=(c.counters||[]).filter(Boolean).length?`<div class="mlabel">Como contrariar</div><ul class="counter-list">${(c.counters||[]).map(ct=>`<li>${escHtml(ct)}</li>`).join('')}</ul>`:'';
+  const planesHtml=(c.planes&&c.planes.length)?`<div class="aircraft-section"><span class="aircraft-title-main">✈️ Aviões portadores</span><div class="aircraft-tags">${c.planes.map(p=>`<span class="aircraft-tag">${escHtml(p)}</span>`).join('')}</div></div>`:'';
   const imgHtml=c.img?`<div class="card-img-wrap"><img src="${escHtml(c.img)}" alt="${escHtml(c.name)}" loading="lazy"></div>`:'';
   const customBadge='<span class="mcard-custom-badge">CUSTOM</span>';
   const div=document.createElement('div'); div.className='mcard';
@@ -4465,7 +4496,7 @@ function buildCustomMissileCard(c,tabId,idx){
     </div>
     <div class="mcard-body">
       <div class="mlabel">Estatísticas (in-game)</div>
-      ${statsHtml}${irccmHtml}${noteHtml}${counterHtml}
+      ${statsHtml}${irccmHtml}${noteHtml}${counterHtml}${planesHtml}
       <div>
         <button class="mcard-edit-btn" onclick="openCardEditor('edit','missile','ctab_${tabId}',${idx})">✏️ Editar</button>
         <button class="mcard-del-btn is-custom" onclick="cieDeleteDirect('${tabId}',${idx})">🗑</button>
