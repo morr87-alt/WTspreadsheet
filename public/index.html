@@ -185,7 +185,8 @@ body{
   transition:border-color var(--ease),box-shadow var(--ease);
 }
 .global-search input:focus,.hud-select-wrap select:focus,.ctrl input:focus,.ctrl select:focus,.sbtn input:focus,
-.editor-row select:focus,.editor-row input:focus,.editor-row textarea:focus,.cie-field input:focus,.cie-field textarea:focus,.cie-field select:focus{
+.editor-row select:focus,.editor-row input:focus,.editor-row textarea:focus,.cie-field input:focus,.cie-field textarea:focus,.cie-field select:focus,
+.rg-field input:focus,.rg-field select:focus{
   outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft);
 }
 .global-search-clear{
@@ -609,69 +610,92 @@ body.dark input[type="color"],body[data-theme="night"] input[type="color"]{backg
    ALCANCE TEÓRICO — calculadora dinâmica (lê dados das cards de mísseis)
    ══════════════════════════════════════════════════════════════════ */
 .rg-wrap{display:flex;flex-direction:column;gap:14px}
+
 .rg-stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:2px}
-.rg-stat{flex:1 1 140px;background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:10px 14px}
-.rg-stat .k{font-size:9.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin-bottom:3px}
-.rg-stat .v{font-size:18px;font-weight:800;color:var(--text)}
-.rg-stat .v small{font-size:11px;font-weight:600;color:var(--text-soft)}
+.rg-stat{
+  position:relative;flex:1 1 140px;overflow:hidden;
+  background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius);
+  box-shadow:var(--shadow-sm);padding:10px 14px 10px 18px;
+  transition:transform var(--ease),box-shadow var(--ease),border-color var(--ease);
+}
+.rg-stat::before{content:"";position:absolute;left:0;top:9px;bottom:9px;width:3px;border-radius:99px;background:var(--border-strong)}
+.rg-stat:hover{transform:translateY(-1px);box-shadow:var(--shadow);border-color:var(--border-strong)}
+.rg-stat .k{font-size:9.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.05em;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.rg-stat .v{font-size:18px;font-weight:800;color:var(--text);font-family:var(--font-mono);letter-spacing:-.01em}
+.rg-stat .v small{font-size:11px;font-weight:600;color:var(--text-soft);font-family:var(--font-sans)}
+.rg-stat.accent::before{background:linear-gradient(180deg,var(--accent),var(--accent-2))}
 .rg-stat.accent .v{color:var(--accent-2)}
+.rg-stat.good::before{background:var(--success)}
 .rg-stat.good .v{color:var(--success)}
+.rg-stat.bad::before{background:var(--danger)}
 .rg-stat.bad .v{color:var(--danger)}
 
 .rg-grid{display:grid;grid-template-columns:minmax(280px,360px) 1fr;gap:14px;align-items:start}
 @media (max-width:920px){.rg-grid{grid-template-columns:1fr}}
 
-.rg-card{background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:14px}
-.rg-card h3{font-size:12.5px;font-weight:800;color:var(--text);margin:0 0 10px;display:flex;align-items:center;gap:6px}
-.rg-card h3 .tag{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:var(--radius-pill);background:var(--primary-soft);color:var(--primary)}
+.rg-card{background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:16px}
+.rg-card h3{font-size:12.5px;font-weight:800;color:var(--text);margin:0 0 12px;padding-bottom:10px;border-bottom:1px solid var(--border-soft);display:flex;align-items:center;gap:6px}
+.rg-card h3 .tag{font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:var(--radius-pill);background:var(--primary-soft);color:var(--primary);margin-left:auto;text-transform:uppercase;letter-spacing:.03em}
 
 .rg-field{margin-bottom:10px}
 .rg-field label{display:block;font-size:10.5px;font-weight:700;color:var(--text-soft);margin-bottom:4px}
-.rg-field select,.rg-field input{width:100%;font-size:12px;padding:7px 9px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-soft);color:var(--text);font-family:inherit;height:32px;box-sizing:border-box}
+.rg-field select,.rg-field input{width:100%;font-size:12px;padding:7px 9px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-soft);color:var(--text);font-family:inherit;height:32px;box-sizing:border-box;transition:border-color var(--ease),box-shadow var(--ease)}
+.rg-field select:hover,.rg-field input:hover{border-color:var(--border-strong)}
 .rg-field select[multiple]{height:96px}
 .rg-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .rg-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 
-.rg-advtoggle{font-size:11px;font-weight:700;color:var(--primary);cursor:pointer;background:none;border:none;padding:4px 0;display:flex;align-items:center;gap:5px}
+.rg-advtoggle{font-size:11px;font-weight:700;color:var(--primary);cursor:pointer;background:none;border:none;padding:4px 0;display:flex;align-items:center;gap:5px;transition:gap var(--ease)}
+.rg-advtoggle:hover{gap:8px}
 .rg-adv{display:none;border-top:1px dashed var(--border);margin-top:8px;padding-top:10px}
 .rg-adv.open{display:block}
 
 .rg-presets{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
-.rg-preset{font-size:10.5px;font-weight:700;padding:5px 9px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-soft);color:var(--text-soft);cursor:pointer}
-.rg-preset:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-soft)}
+.rg-preset{font-size:10.5px;font-weight:700;padding:6px 10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-soft);color:var(--text-soft);cursor:pointer;line-height:1.3;transition:all var(--ease)}
+.rg-preset small{display:block;font-weight:600;color:var(--text-faint);font-size:9px;margin-top:1px}
+.rg-preset:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-soft);transform:translateY(-1px)}
+.rg-preset:hover small{color:var(--primary)}
+.rg-preset:active{transform:translateY(0)}
 
 .rg-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.rg-btn{font-size:11.5px;font-weight:800;padding:8px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-soft);color:var(--text);cursor:pointer}
+.rg-btn{font-size:11.5px;font-weight:800;padding:8px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-soft);color:var(--text);cursor:pointer;transition:all var(--ease)}
 .rg-btn.primary{background:var(--accent);border-color:var(--accent-2);color:var(--text-on-accent)}
-.rg-btn:hover{filter:brightness(1.04)}
+.rg-btn:hover{filter:brightness(1.04);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.rg-btn:active{transform:translateY(0)}
 
-.rg-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:12px}
-.rg-sum-cell{background:var(--surface-soft);border:1px solid var(--border-soft);border-radius:var(--radius-sm);padding:9px 11px}
+.rg-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:14px}
+.rg-sum-cell{position:relative;background:var(--surface-soft);border:1px solid var(--border-soft);border-radius:var(--radius-sm);padding:9px 11px 9px 14px;transition:border-color var(--ease),background var(--ease)}
+.rg-sum-cell::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:2px;border-radius:99px;background:var(--border-strong);opacity:.65}
+.rg-sum-cell:hover{border-color:var(--border-strong);background:var(--surface)}
 .rg-sum-cell .k{font-size:9px;color:var(--text-faint);text-transform:uppercase;font-weight:700;letter-spacing:.04em}
-.rg-sum-cell .v{font-size:16px;font-weight:800;color:var(--text);margin-top:2px}
-.rg-sum-cell .v .u{font-size:10.5px;font-weight:600;color:var(--text-soft)}
+.rg-sum-cell .v{font-size:16px;font-weight:800;color:var(--text);margin-top:3px;font-family:var(--font-mono)}
+.rg-sum-cell .v .u{font-size:10.5px;font-weight:600;color:var(--text-soft);font-family:var(--font-sans)}
+.rg-sum-cell.delta-pos::before{background:var(--success)}
 .rg-sum-cell.delta-pos .v{color:var(--success)}
+.rg-sum-cell.delta-neg::before{background:var(--danger)}
 .rg-sum-cell.delta-neg .v{color:var(--danger)}
 
-.rg-chart-wrap{border:1px solid var(--border-soft);border-radius:var(--radius);background:var(--surface);padding:10px;margin-bottom:12px}
-.rg-chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px}
+.rg-chart-wrap{border:1px solid var(--border-soft);border-radius:var(--radius);background:var(--surface-soft);padding:12px;margin-bottom:14px}
+.rg-chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;padding-bottom:8px;border-bottom:1px solid var(--border-soft)}
 .rg-chart-head .t{font-size:12px;font-weight:800;color:var(--text)}
-.rg-chart-legend{display:flex;gap:12px;font-size:10.5px;color:var(--text-soft)}
-.rg-chart-legend span{display:inline-flex;align-items:center;gap:4px}
-.rg-chart-legend i{width:10px;height:3px;border-radius:2px;display:inline-block}
+.rg-chart-legend{display:flex;gap:14px;font-size:10.5px;color:var(--text-soft);font-weight:600}
+.rg-chart-legend span{display:inline-flex;align-items:center;gap:5px}
+.rg-chart-legend i{width:11px;height:3px;border-radius:2px;display:inline-block}
 canvas.rg-canvas{width:100%;height:260px;display:block}
 
 .rg-milestones{display:flex;flex-direction:column;gap:0;border:1px solid var(--border-soft);border-radius:var(--radius);overflow:hidden;background:var(--surface);box-shadow:var(--shadow-sm)}
-.rg-mrow{display:grid;grid-template-columns:90px 1fr 110px 90px 130px;gap:10px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--border-soft);font-size:11.5px}
+.rg-mrow{display:grid;grid-template-columns:64px 1fr 96px 76px 150px;gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border-soft);font-size:11.5px;transition:background var(--ease)}
 .rg-mrow:last-child{border-bottom:none}
-.rg-mrow.head{background:var(--surface-soft);font-weight:800;font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-faint)}
-.rg-mrow .t{font-weight:800;color:var(--text);font-family:var(--font-mono)}
-.rg-bar-track{background:var(--surface-2);border-radius:var(--radius-pill);height:10px;overflow:hidden;position:relative}
-.rg-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:var(--radius-pill)}
-.rg-mrow .dist{font-weight:700;color:var(--text)}
-.rg-mrow .spd{color:var(--text-soft);font-size:11px}
+.rg-mrow:not(.head):hover{background:var(--surface-soft)}
+.rg-mrow.head{background:var(--surface-soft);font-weight:800;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-faint)}
+.rg-mrow .t{font-weight:800;color:var(--text);font-family:var(--font-mono);font-size:11px}
+.rg-bar-track{background:var(--surface-2);border-radius:var(--radius-pill);height:8px;overflow:hidden;position:relative}
+.rg-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:var(--radius-pill);transition:width .3s var(--ease)}
+.rg-mrow .dist{font-weight:700;color:var(--text);font-family:var(--font-mono)}
+.rg-mrow .spd{color:var(--text-soft);font-size:11px;font-family:var(--font-mono)}
 .rg-mrow .phase{display:flex;gap:4px;flex-wrap:wrap}
-.rg-chip{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:var(--radius-pill);white-space:nowrap}
+.rg-chip{font-size:9.5px;font-weight:700;padding:3px 8px 3px 6px;border-radius:var(--radius-pill);white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.rg-chip::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.85;flex-shrink:0}
 .rg-chip.boost{background:var(--warning-soft);color:var(--warning)}
 .rg-chip.coast{background:var(--primary-soft);color:var(--primary)}
 .rg-chip.crit{background:var(--danger-soft);color:var(--danger)}
@@ -679,10 +703,21 @@ canvas.rg-canvas{width:100%;height:260px;display:block}
 .rg-chip.guide{background:var(--purple-soft);color:var(--purple)}
 .rg-chip.now{background:var(--accent-soft);color:var(--accent-2)}
 
-.rg-compare-table{margin-top:12px}
-.rg-note{font-size:10.5px;color:var(--text-faint);line-height:1.5;margin-top:10px;padding:9px 11px;background:var(--surface-soft);border:1px dashed var(--border);border-radius:var(--radius-sm)}
+.rg-compare-table{margin-top:14px}
+.rg-note{font-size:10.5px;color:var(--text-faint);line-height:1.6;margin-top:10px;padding:10px 12px;background:var(--surface-soft);border:1px dashed var(--border);border-radius:var(--radius-sm)}
 .rg-search{margin-bottom:8px}
-.rg-empty{padding:20px;text-align:center;color:var(--text-faint);font-size:12px}
+.rg-empty{padding:34px 20px;text-align:center;color:var(--text-faint);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.rg-empty::before{content:"📡";font-size:24px;opacity:.55}
+
+@media(max-width:640px){
+  .rg-mrow{grid-template-columns:50px 1fr;grid-template-areas:"time bar" "dist spd" "phase phase";row-gap:6px;padding:10px 12px}
+  .rg-mrow.head{display:none}
+  .rg-mrow .t{grid-area:time}
+  .rg-mrow>div:nth-child(2){grid-area:bar}
+  .rg-mrow .dist{grid-area:dist}
+  .rg-mrow .spd{grid-area:spd;text-align:right}
+  .rg-mrow .phase{grid-area:phase}
+}
 
 /* ── WT MAP tab (iframe) ─────────────────────────────────────────── */
 .wtmap-frame-wrap{border:1px solid var(--border-soft);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);background:var(--surface)}
@@ -772,6 +807,7 @@ iframe.wtmap-iframe{width:100%;height:82vh;min-height:560px;border:0;display:blo
 
 <!-- ARM -->
 <div id="tARM" class="tab-pane">
+  <div class="tab-edit-bar"><span class="teb-label">✏️ Modo edição</span><button class="teb-new-btn" onclick="openCardEditor('new','missile','tARM')">➕ Nova card</button><span class="teb-hint">Clica em ✏️ em qualquer card para editar</span></div>
   <div class="sbtn"><input type="text" id="f2s" placeholder="Pesquisar míssil..." oninput="filterGrid('armGrid',armData,'f2s','badge-arm')"></div>
   <div class="mgrid" id="armGrid"></div>
 </div>
@@ -808,10 +844,10 @@ iframe.wtmap-iframe{width:100%;height:82vh;min-height:560px;border:0;display:blo
 <div id="tRange" class="tab-pane">
   <div class="rg-wrap">
     <div class="rg-stats">
-      <div class="rg-stat"><div class="k">Mísseis carregados</div><div class="v" id="rgTotalCount">—</div></div>
-      <div class="rg-stat accent"><div class="k">Míssil selecionado</div><div class="v" id="rgSelName" style="font-size:13px">—</div></div>
-      <div class="rg-stat good"><div class="k">Alcance simulado</div><div class="v" id="rgHeadSim">—</div></div>
-      <div class="rg-stat"><div class="k">Alcance declarado (WT)</div><div class="v" id="rgHeadDecl">—</div></div>
+      <div class="rg-stat"><div class="k">📦 Mísseis carregados</div><div class="v" id="rgTotalCount">—</div></div>
+      <div class="rg-stat accent"><div class="k">🎯 Míssil selecionado</div><div class="v" id="rgSelName" style="font-size:13px">—</div></div>
+      <div class="rg-stat good"><div class="k">📈 Alcance simulado</div><div class="v" id="rgHeadSim">—</div></div>
+      <div class="rg-stat"><div class="k">📋 Alcance declarado (WT)</div><div class="v" id="rgHeadDecl">—</div></div>
     </div>
 
     <div class="rg-grid">
@@ -1243,13 +1279,10 @@ async function serverLoad() {
     // re-save to localStorage as cache
     _saveED(); _saveSK(); _saveCustM(); _saveCustSK();
     saveAircraftData();
-    // re-apply missile overrides (including root fields) to live data
-    const _ROOT_LD = new Set(['badge','badgeClass','nation','img']);
-    [armData,irRearData,irAllData,sarhData,arhData].forEach(arr=>arr.forEach(m=>{
-      const ov=_edDB[m.name]; if(!ov) return;
-      Object.keys(ov).forEach(k=>{ if(ov[k]!==undefined){ if(_ROOT_LD.has(k)) m[k]=ov[k]; else m.s[k]=ov[k]; } });
-    }));
-    seekerData.forEach(sk=>{ const ov=_skDB[sk.type]; if(ov) Object.assign(sk,ov); });
+    // re-apply missile/seeker overrides AND push any custom missiles (with nation/img)
+    // synced from the server into the live arrays — shared with the page-load path
+    // so both stay in sync instead of duplicating (and drifting from) this logic.
+    applyStoredOverrides();
     // rebuild UI with fresh data
     if(typeof rebuildCustomTabs==='function') rebuildCustomTabs();
     if(typeof renderSeekers==='function') renderSeekers();
@@ -2878,6 +2911,8 @@ const MISSILE_FIELDS = [
   {key:'loftAngle',label:'Ângulo Loft'},
   {key:'seekerType',label:'Tipo seeker',select:'seekerType'},
   {key:'note',label:'Nota (note-box)',big:true},
+  {key:'noteEn',label:'Nota (EN) — opcional, usada quando o idioma é English',big:true},
+  {key:'countersEn',label:'Como contrariar (EN) — uma por linha, opcional',big:true,list:true},
 ];
 const SEEKER_FIELDS = [
   {key:'name',label:'Nome'},
@@ -2885,6 +2920,7 @@ const SEEKER_FIELDS = [
   {key:'desc',label:'Descrição',big:true},
   {key:'missiles',label:'Mísseis (um por linha)',list:true},
   {key:'counters',label:'Como contrariar (um por linha)',list:true},
+  {key:'countersEn',label:'Como contrariar (EN) — uma por linha, opcional',list:true},
 ];
 
 function edStatus(msg,ok=true){
@@ -2958,6 +2994,7 @@ function edLoadItem(){
       const src = f.root ? m : s;
       const ovVal = ov[f.key];
       let val = (ovVal!==undefined) ? ovVal : (src[f.key]||'');
+      if(f.list && Array.isArray(val)) val=val.join('\n');
       const row=document.createElement('div');row.className='ed-field-row';
       if(f.select==='badgeClass'){
         row.innerHTML=`<label>${f.label}</label>${buildBadgeClassSelect('edf_'+f.key, val)}`;
@@ -3053,7 +3090,8 @@ function edSave(){
 
     MISSILE_FIELDS.forEach(f=>{
       const el=document.getElementById('edf_'+f.key);if(!el)return;
-      const v=el.tagName==='SELECT'?el.value:(el.value||'').trim();
+      let v=el.tagName==='SELECT'?el.value:(el.value||'').trim();
+      if(f.list){ v=v.split('\n').map(x=>x.trim()).filter(Boolean); }
       if(f.root){
         ovRoot[f.key]=v;
         m[f.key]=v; // apply to live missile root
@@ -3075,8 +3113,10 @@ function edSave(){
     // apply stats to live data (only non-root fields)
     Object.assign(m.s, ovStats);
 
-    // save everything together in _edDB (both root and stats)
-    _edDB[m.name] = {...ovRoot, ...ovStats};
+    // save everything together in _edDB (both root and stats) — merge onto any
+    // previous override instead of replacing it outright, so fields this editor
+    // doesn't expose (e.g. img, set via the card editor) aren't wiped out.
+    _edDB[m.name] = {...(_edDB[m.name]||{}), ...ovRoot, ...ovStats};
     edSaveDB();
     info.fn(); // re-render that grid
     refreshAircraftSections();
@@ -3199,8 +3239,9 @@ function edRenderIndex(){
   });
 }
 
-// Apply saved overrides on page load
-(function applyStoredOverrides(){
+// Apply saved overrides on page load (also re-called by serverLoad() after a sync,
+// so root fields like nation/img and any custom missiles created elsewhere stay in sync)
+function applyStoredOverrides(){
   const ROOT_FIELDS = new Set(['badge','badgeClass','nation','img']);
   // Apply field edits to existing base missiles
   [armData,irRearData,irAllData,sarhData,arhData].forEach(arr=>arr.forEach(m=>{
@@ -3216,15 +3257,20 @@ function edRenderIndex(){
     const ov=_skDB[sk.type];
     if(ov) Object.keys(ov).forEach(k=>{ if(ov[k]!==undefined) sk[k]=ov[k]; });
   });
-  // Load custom missiles created by the user into live arrays
+  // Load (or refresh) custom missiles created by the user into live arrays.
+  // Existing entries are updated in place too, so edits synced from another
+  // device (e.g. a changed image or nation) are picked up on re-sync, not just on first load.
   const _liveArrays={arm:armData,irr:irRearData,ira:irAllData,sarh:sarhData,arh:arhData};
   Object.keys(_custM||{}).forEach(cat=>{
     const arr=_liveArrays[cat]; if(!arr) return;
     (_custM[cat]||[]).forEach(cm=>{
-      if(!arr.find(x=>x.name===cm.name)) arr.push(cm);
+      const existingIdx=arr.findIndex(x=>x.name===cm.name);
+      if(existingIdx===-1) arr.push(cm);
+      else Object.assign(arr[existingIdx], cm);
     });
   });
-})();
+}
+applyStoredOverrides();
 
 // init
 function initFullEditor(){
@@ -3914,6 +3960,10 @@ function skTypeCreate(){
   skTypePreviewUpdate();
 }
 
+// Lightweight language reader for card content (note / counters EN fallback).
+// Independent from the global-search IIFE's own lang() — reads the same <select>.
+function curLang(){ const sel=document.getElementById('hudLangSel'); return sel&&sel.value==='en'?'en':'pt'; }
+
 function buildMCard(m, defaultBadgeClass){
   const d=m.s;
   const missileId=m.name.replace(/[^a-zA-Z0-9]/g,'_');
@@ -3949,8 +3999,11 @@ function buildMCard(m, defaultBadgeClass){
   const irccmHtml=(_irccmVal&&_irccmVal!=='Nenhum'&&_irccmVal!=='—')
     ? `<div class="mlabel">IRCCM / Seeker type</div>${irccmPill(_irccmVal)}`
     : '';
-  const noteHtml=(d.note&&d.note.trim())?`<div class="note-box">${d.note}</div>`:'';
-  const counterHtml=d.counters&&d.counters.filter(Boolean).length?`<div class="mlabel">Como contrariar</div><ul class="counter-list">${d.counters.filter(Boolean).map(c=>`<li>${c}</li>`).join('')}</ul>`:'';
+  const _isEn=curLang()==='en';
+  const _noteTxt=(_isEn && d.noteEn && d.noteEn.trim())?d.noteEn:d.note;
+  const _counterArr=(_isEn && d.countersEn && d.countersEn.filter(Boolean).length)?d.countersEn:d.counters;
+  const noteHtml=(_noteTxt&&_noteTxt.trim())?`<div class="note-box">${_noteTxt}</div>`:'';
+  const counterHtml=_counterArr&&_counterArr.filter(Boolean).length?`<div class="mlabel">${_isEn?'How to counter':'Como contrariar'}</div><ul class="counter-list">${_counterArr.filter(Boolean).map(c=>`<li>${c}</li>`).join('')}</ul>`:'';
   const aircraftHtml=buildAircraftSection(missileId);
   const imgHtml=m.img?`<div class="card-img-wrap"><img src="${escHtml(m.img)}" alt="${escHtml(m.name)}" loading="lazy"></div>`:'';
 
@@ -4046,7 +4099,9 @@ function buildSeekerCard(s, isCustom, idx){
     </div>`:'';
   const statsHtml=(s.stats||[]).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
   const missHtml=(s.missiles||[]).map(m=>`<span class="stag">${m}</span>`).join('');
-  const counterHtml=(s.counters||[]).map(c=>`<li>${c}</li>`).join('');
+  const _isEn=curLang()==='en';
+  const _counterArr=(_isEn && s.countersEn && s.countersEn.filter(Boolean).length)?s.countersEn:s.counters;
+  const counterHtml=(_counterArr||[]).map(c=>`<li>${c}</li>`).join('');
   const customBadge=isCustom?`<span class="scard-custom-badge">CUSTOM</span>`:'';
   const editKey=isCustom?`custom_${idx}`:`base_${idx}`;
 
@@ -4062,7 +4117,7 @@ function buildSeekerCard(s, isCustom, idx){
       ${statsHtml?`<table class="kv">${statsHtml}</table>`:''}
       <div class="mlabel" style="margin-top:8px">Mísseis com este seeker</div>
       <div class="tag-row">${missHtml||'<span style="color:#94a3b8;font-size:11px;font-style:italic">—</span>'}</div>
-      <div class="mlabel" style="margin-top:8px">Como contrariar</div>
+      <div class="mlabel" style="margin-top:8px">${_isEn?'How to counter':'Como contrariar'}</div>
       <ul class="counter-list">${counterHtml||'<li style="color:#94a3b8">—</li>'}</ul>
       ${irccmSection}
       <div>
@@ -4564,6 +4619,8 @@ function cieRenderFields(data){
       <div class="cie-section">📝 Notas & Counters</div>
       <div class="cie-field"><label>Nota</label><textarea id="cieF_note">${escHtml(d.note||'')}</textarea></div>
       <div class="cie-field"><label>Como contrariar (1 por linha)</label><textarea id="cieF_counters">${escHtml((d.counters||[]).join('\n'))}</textarea></div>
+      <div class="cie-field"><label>Nota (EN) — opcional, usada quando o idioma é English</label><textarea id="cieF_noteEn">${escHtml(d.noteEn||'')}</textarea></div>
+      <div class="cie-field"><label>Como contrariar (EN, 1 por linha) — opcional</label><textarea id="cieF_countersEn">${escHtml((d.countersEn||[]).join('\n'))}</textarea></div>
       <div class="cie-field"><label>Nação</label><input id="cieF_nation" value="${escHtml(d.nation||'')}" placeholder="USA / USSR…"></div>
       <div class="cie-section">✈️ Aviões Portadores</div>
       <div class="cie-field"><label>Aviões (um por linha)</label><textarea id="cieF_planes" style="min-height:90px" placeholder="F-16C&#10;F-15C&#10;F/A-18C">${escHtml((d.planes||[]).join('\n'))}</textarea></div>`;
@@ -4591,6 +4648,7 @@ function cieRenderFields(data){
       <div class="cie-section">Mísseis & Counters</div>
       <div class="cie-field"><label>Mísseis (1 por linha)</label><textarea id="cieF_missiles">${escHtml((d.missiles||[]).join('\n'))}</textarea></div>
       <div class="cie-field"><label>Como contrariar (1 por linha)</label><textarea id="cieF_counters">${escHtml((d.counters||[]).join('\n'))}</textarea></div>
+      <div class="cie-field"><label>Como contrariar (EN, 1 por linha) — opcional</label><textarea id="cieF_countersEn">${escHtml((d.countersEn||[]).join('\n'))}</textarea></div>
       <div class="cie-section">🛡️ Tipos IRCCM Incluídos</div>
       <div id="cieIrccmList">${irccmRows}</div>
       <button type="button" onclick="cieAddIrccmRow()" style="font-size:11px;border:1px solid #c7d2fe;background:#eef2ff;color:#3730a3;border-radius:7px;padding:5px 12px;cursor:pointer;font-weight:700;margin-bottom:10px">➕ Adicionar tipo IRCCM</button>`;
@@ -4715,6 +4773,8 @@ function cieCollect(){
       nation: document.getElementById('cieF_nation')?.value.trim()||'',
       note: document.getElementById('cieF_note')?.value.trim()||'',
       counters: (document.getElementById('cieF_counters')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
+      noteEn: document.getElementById('cieF_noteEn')?.value.trim()||'',
+      countersEn: (document.getElementById('cieF_countersEn')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
       planes: (document.getElementById('cieF_planes')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
       s:{
         mass:      document.getElementById('cieF_mass')?.value.trim()||'',
@@ -4737,6 +4797,8 @@ function cieCollect(){
         irccm:     document.getElementById('cieF_irccm')?.value.trim()||'',
         note:      document.getElementById('cieF_note')?.value.trim()||'',
         counters:  (document.getElementById('cieF_counters')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
+        noteEn:    document.getElementById('cieF_noteEn')?.value.trim()||'',
+        countersEn:(document.getElementById('cieF_countersEn')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
       }
     };
   } else {
@@ -4752,6 +4814,7 @@ function cieCollect(){
       stats:    statsLines.map(l=>{const p=l.split('|');return[p[0].trim(),p.slice(1).join('|').trim()]}).filter(([k])=>k),
       missiles: (document.getElementById('cieF_missiles')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
       counters: (document.getElementById('cieF_counters')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
+      countersEn: (document.getElementById('cieF_countersEn')?.value||'').split('\n').map(x=>x.trim()).filter(Boolean),
       irccmTypes: cieCollectIrccmTypes(),
     };
   }
@@ -4814,8 +4877,8 @@ function cieSave(){
     });
     Object.assign(m.s, ovStats);
 
-    // Save both root and stats in _edDB
-    _edDB[m.name]={...ovRoot,...ovStats};
+    // Save both root and stats in _edDB — merged onto any previous override
+    _edDB[m.name]={...(_edDB[m.name]||{}), ...ovRoot,...ovStats};
     edSaveDB?.();
     // save aircraft carriers
     if(data.planes) setAircraftList(missileIdFromName(m.name), data.planes);
@@ -4882,8 +4945,11 @@ function buildCustomMissileCard(c,tabId,idx){
 
   const statsHtml=`<div class="sgrid">${rows.map(([k,v])=>`<div class="sg"><div class="sg-k">${escHtml(String(k))}</div><div class="sg-v">${typeof v==='string'&&!v.startsWith('<')?escHtml(v):v}</div></div>`).join('')}</div>`;
   const irccmHtml=d.irccm?`<div class="mlabel">IRCCM</div>${irccmPill(d.irccm)}`:'';
-  const noteHtml=(d.note&&d.note.trim())?`<div class="note-box">${escHtml(d.note)}</div>`:'';
-  const counterHtml=(c.counters||[]).filter(Boolean).length?`<div class="mlabel">Como contrariar</div><ul class="counter-list">${(c.counters||[]).map(ct=>`<li>${escHtml(ct)}</li>`).join('')}</ul>`:'';
+  const _isEn=curLang()==='en';
+  const _noteTxt=(_isEn && d.noteEn && d.noteEn.trim())?d.noteEn:d.note;
+  const _counterArr=(_isEn && c.countersEn && c.countersEn.filter(Boolean).length)?c.countersEn:c.counters;
+  const noteHtml=(_noteTxt&&_noteTxt.trim())?`<div class="note-box">${escHtml(_noteTxt)}</div>`:'';
+  const counterHtml=(_counterArr||[]).filter(Boolean).length?`<div class="mlabel">${_isEn?'How to counter':'Como contrariar'}</div><ul class="counter-list">${(_counterArr||[]).map(ct=>`<li>${escHtml(ct)}</li>`).join('')}</ul>`:'';
   const planesHtml=(c.planes&&c.planes.length)?`<div class="aircraft-section"><span class="aircraft-title-main">✈️ Aviões portadores</span><div class="aircraft-tags">${c.planes.map(p=>`<span class="aircraft-tag">${escHtml(p)}</span>`).join('')}</div></div>`:'';
   const imgHtml=c.img?`<div class="card-img-wrap"><img src="${escHtml(c.img)}" alt="${escHtml(c.name)}" loading="lazy"></div>`:'';
   const customBadge='<span class="mcard-custom-badge">CUSTOM</span>';
@@ -4908,7 +4974,9 @@ function buildCustomMissileCard(c,tabId,idx){
 function buildCustomSeekerCard(c,tabId,idx){
   const statsHtml=(c.stats||[]).map(([k,v])=>`<tr><td>${escHtml(k)}</td><td>${escHtml(v)}</td></tr>`).join('');
   const missHtml=(c.missiles||[]).map(m=>`<span class="stag">${escHtml(m)}</span>`).join('');
-  const counterHtml=(c.counters||[]).map(ct=>`<li>${escHtml(ct)}</li>`).join('');
+  const _isEn=curLang()==='en';
+  const _counterArr=(_isEn && c.countersEn && c.countersEn.filter(Boolean).length)?c.countersEn:c.counters;
+  const counterHtml=(_counterArr||[]).map(ct=>`<li>${escHtml(ct)}</li>`).join('');
   const imgHtml=c.img?`<div class="card-img-wrap"><img src="${escHtml(c.img)}" alt="${escHtml(c.name||c.type)}" loading="lazy"></div>`:'';
   const div=document.createElement('div'); div.className='scard';
   div.innerHTML=`
@@ -4923,7 +4991,7 @@ function buildCustomSeekerCard(c,tabId,idx){
       <p style="font-size:12px;color:#444;line-height:1.5;margin-bottom:10px">${escHtml(c.desc||'')}</p>
       ${statsHtml?`<table class="kv">${statsHtml}</table>`:''}
       <div class="mlabel">Mísseis</div><div class="tag-row">${missHtml||'<span style="color:#94a3b8;font-size:11px">—</span>'}</div>
-      <div class="mlabel">Como contrariar</div><ul class="counter-list">${counterHtml||'<li style="color:#94a3b8">—</li>'}</ul>
+      <div class="mlabel">${_isEn?'How to counter':'Como contrariar'}</div><ul class="counter-list">${counterHtml||'<li style="color:#94a3b8">—</li>'}</ul>
       <div>
         <button class="scard-edit-btn" onclick="openCardEditor('edit','seeker','ctab_${tabId}',${idx})">✏️ Editar</button>
         <button class="scard-del-btn is-custom" onclick="cieDeleteDirect('${tabId}',${idx})">🗑</button>
@@ -4959,6 +5027,14 @@ tmRender();
 renderSeekerTypeManager();
 renderIRCCMManager();
 renderBCManager();
+// Re-render card grids on language switch, so EN note/counters (when filled in)
+// show immediately instead of only after the next edit/reload.
+document.getElementById('hudLangSel')?.addEventListener('change', function(){
+  try{ const cm=edCatMap(); cm.arm.fn(); cm.irr.fn(); cm.ira.fn(); cm.sarh.fn(); cm.arh.fn(); }catch(e){}
+  try{ renderSeekers(); }catch(e){}
+  try{ if(typeof rebuildCustomTabs==='function') rebuildCustomTabs(); }catch(e){}
+});
+
 serverLoad();
 
 
@@ -5223,7 +5299,15 @@ serverLoad();
 //    nessas cards (massa, velocidade, burn time, alcance...) passa
 //    a alimentar automaticamente esta calculadora.
 // ════════════════════════════════════════════════════════════════
-function safeArr(name){ try{ return (typeof window[name]!=='undefined' && Array.isArray(window[name])) ? window[name] : []; }catch(e){ return []; } }
+function safeArr(name){
+  try{
+    // `armData`/`irRearData`/etc. são declarados com `const` no script principal,
+    // por isso NÃO ficam disponíveis em window[name] — têm de ser lidos por
+    // referência léxica direta (mesmo truque usado no motor de pesquisa global).
+    const v=Function('try{return (typeof '+name+'!==\"undefined\")?'+name+':null}catch(e){return null}')();
+    return Array.isArray(v) ? v : [];
+  }catch(e){ return []; }
+}
 
 function buildMissileList(){
   const groups=[
