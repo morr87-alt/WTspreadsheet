@@ -1,0 +1,4189 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>War Thunder Air/Heli Tactical Data</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101214;
+      --panel: #181c20;
+      --panel-soft: #20262c;
+      --line: #343c44;
+      --text: #f4f7f8;
+      --muted: #9ba8b2;
+      --accent: #69c0ac;
+      --accent-strong: #8fd8c9;
+      --danger: #f28b82;
+      --warning: #f2c36b;
+      --ok: #a8d08d;
+      --shadow: 0 16px 50px rgba(0, 0, 0, .32);
+      --header-bg: rgba(16, 18, 20, .88);
+      --input-bg: #11161a;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body[data-theme="light"] {
+      color-scheme: light;
+      --bg: #eef2f4;
+      --panel: #ffffff;
+      --panel-soft: #f5f7f8;
+      --line: #ccd5dc;
+      --text: #172027;
+      --muted: #5f6f7a;
+      --accent: #247f70;
+      --accent-strong: #176a5d;
+      --shadow: 0 16px 40px rgba(23, 32, 39, .12);
+      --header-bg: rgba(255, 255, 255, .9);
+      --input-bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(105, 192, 172, .08), transparent 260px),
+        var(--bg);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button,
+    select {
+      color: var(--text);
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px clamp(16px, 3vw, 34px);
+      border-bottom: 1px solid var(--line);
+      background: var(--header-bg);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .brand {
+      min-width: 0;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(20px, 2vw, 30px);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex: 0 0 auto;
+      min-width: 0;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-controls select {
+      width: auto;
+      min-height: 36px;
+      max-width: 150px;
+      padding: 7px 28px 7px 9px;
+      font-size: 13px;
+    }
+
+    .status {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 36px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      color: var(--muted);
+      max-width: min(620px, 48vw);
+      overflow-wrap: anywhere;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--muted);
+      flex: 0 0 auto;
+    }
+
+    .status.ok .dot,
+    .pill.ok::before {
+      background: var(--ok);
+      box-shadow: 0 0 0 4px rgba(168, 208, 141, .14);
+    }
+
+    .status.error .dot,
+    .pill.error::before {
+      background: var(--danger);
+      box-shadow: 0 0 0 4px rgba(242, 139, 130, .14);
+    }
+
+    .status.warn .dot,
+    .pill.warn::before {
+      background: var(--warning);
+      box-shadow: 0 0 0 4px rgba(242, 195, 107, .14);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(320px, 1fr) minmax(320px, 380px) 660px;
+      align-items: start;
+      gap: 14px;
+      justify-content: space-between;
+      padding: 14px 8px 28px;
+      min-height: 0;
+    }
+
+    .tools,
+    .workspace {
+      min-width: 0;
+      background: rgba(24, 28, 32, .94);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .tools {
+      align-self: start;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: sticky;
+      top: 92px;
+      max-height: calc(100vh - 112px);
+      overflow-y: auto;
+    }
+
+    .section {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section:last-child {
+      border-bottom: 0;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .url-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+    }
+
+    input[type="url"],
+    input[type="search"],
+    select {
+      width: 100%;
+      min-height: 42px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      background: var(--input-bg);
+      outline: none;
+    }
+
+    input[type="url"]:focus,
+    input[type="search"]:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(105, 192, 172, .15);
+    }
+
+    .small {
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .actions.three {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .button {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      background: #222a31;
+      cursor: pointer;
+      text-decoration: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .button:hover {
+      border-color: #60707d;
+      background: #28323a;
+    }
+
+    .button.primary {
+      border-color: rgba(105, 192, 172, .55);
+      background: #1d3d38;
+      color: #edfffb;
+    }
+
+    .button.primary:hover {
+      background: #245148;
+    }
+
+    .button:disabled {
+      opacity: .48;
+      cursor: not-allowed;
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+    }
+
+    .option-row {
+      display: grid;
+      grid-template-columns: 1fr minmax(104px, auto);
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .connection-section {
+      display: grid;
+      grid-template-columns: minmax(420px, 1fr) minmax(330px, 440px);
+      align-items: end;
+      gap: 12px 14px;
+      padding: 14px 16px 16px;
+    }
+
+    .connection-section .section-title {
+      grid-column: 1 / -1;
+      margin-bottom: 0;
+    }
+
+    .connection-section > .field {
+      grid-column: 1 / 2;
+      min-width: 0;
+    }
+
+    .connection-section > .actions.three {
+      grid-column: 2 / 3;
+      margin-top: 0;
+      align-self: end;
+    }
+
+    .connection-section > .refresh-options {
+      grid-column: 1 / 2;
+      margin-top: 0;
+      grid-template-columns: minmax(0, 1fr) 104px;
+    }
+
+    .connection-section > .vehicle-options {
+      grid-column: 2 / 3;
+      margin-top: 0;
+      grid-template-columns: 1fr;
+      align-self: end;
+    }
+
+    .connection-section > .vehicle-options .field {
+      gap: 6px;
+    }
+
+    .connection-section .url-row input,
+    .connection-section .url-row .button,
+    .connection-section .toggle,
+    .connection-section select,
+    .connection-section .actions .button {
+      min-height: 40px;
+    }
+
+    .connection-section .field > .small {
+      margin-top: -2px;
+    }
+
+    .toggle {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #11161a;
+      color: var(--text);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .toggle input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 9px;
+    }
+
+    .summary-section {
+      padding: 18px 16px;
+    }
+
+    .summary-metrics {
+      grid-template-columns: repeat(8, minmax(112px, 1fr));
+      grid-auto-rows: minmax(88px, auto);
+      align-items: stretch;
+    }
+
+    .summary-metrics .metric {
+      min-height: 88px;
+    }
+
+    .summary-metrics .metric.primary {
+      min-height: 94px;
+    }
+
+    .summary-metrics .engine-temp-card strong {
+      font-size: 18px;
+    }
+
+    .summary-metrics .metric strong {
+      white-space: nowrap;
+      overflow-wrap: normal;
+      word-break: keep-all;
+    }
+
+    .summary-metrics .metric[data-slot="ias"] { grid-column: 1; grid-row: 1; }
+    .summary-metrics .metric[data-slot="altitude"] { grid-column: 2; grid-row: 1; }
+    .summary-metrics .metric[data-slot="climbRate"] { grid-column: 3; grid-row: 1; }
+    .summary-metrics .metric[data-slot="heading"] { grid-column: 4; grid-row: 1; }
+    .summary-metrics .metric[data-slot="mach"] { grid-column: 5; grid-row: 1; }
+    .summary-metrics .metric[data-slot="attitude"] { grid-column: 6; grid-row: 1; }
+    .summary-metrics .metric[data-slot="load"] { grid-column: 7; grid-row: 1; }
+    .summary-metrics .metric[data-slot="gear"] { grid-column: 3; grid-row: 4; }
+    .summary-metrics .metric[data-slot="fuel"] { grid-column: 4; grid-row: 4; }
+
+    .summary-metrics .metric[data-engine-main="1"] { grid-column: 1; grid-row: 2; }
+    .summary-metrics .metric[data-engine-extra="2"] { grid-column: 2; grid-row: 2; }
+    .summary-metrics .metric[data-engine-extra="3"] { grid-column: 3; grid-row: 2; }
+    .summary-metrics .metric[data-engine-extra="4"] { grid-column: 4; grid-row: 2; }
+    .summary-metrics .metric[data-engine-extra="5"] { grid-column: 5; grid-row: 2; }
+    .summary-metrics .metric[data-engine-extra="6"] { grid-column: 6; grid-row: 2; }
+    .summary-metrics .metric[data-engine-extra="7"] { grid-column: 7; grid-row: 2; }
+    .summary-metrics .metric[data-engine-extra="8"] { grid-column: 8; grid-row: 2; }
+
+    .summary-metrics .metric[data-engine-temp="1"] { grid-column: 1; grid-row: 3; }
+    .summary-metrics .metric[data-engine-temp="2"] { grid-column: 2; grid-row: 3; }
+    .summary-metrics .metric[data-engine-temp="3"] { grid-column: 3; grid-row: 3; }
+    .summary-metrics .metric[data-engine-temp="4"] { grid-column: 4; grid-row: 3; }
+    .summary-metrics .metric[data-engine-temp="5"] { grid-column: 5; grid-row: 3; }
+    .summary-metrics .metric[data-engine-temp="6"] { grid-column: 6; grid-row: 3; }
+    .summary-metrics .metric[data-engine-temp="7"] { grid-column: 7; grid-row: 3; }
+    .summary-metrics .metric[data-engine-temp="8"] { grid-column: 8; grid-row: 3; }
+
+    .summary-metrics .metric[data-slot="flaps"] { grid-column: 1; grid-row: 4; }
+    .summary-metrics .metric[data-slot="airbrake"] { grid-column: 2; grid-row: 4; }
+    .summary-metrics .metric[data-slot="bombBay"] { grid-column: 5; grid-row: 4; }
+    .summary-metrics .metric[data-slot="chaff"] { grid-column: 6; grid-row: 4; }
+    .summary-metrics .metric[data-slot="flares"] { grid-column: 7; grid-row: 4; }
+
+    .metric {
+      min-height: 76px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric.primary {
+      min-height: 88px;
+      background:
+        linear-gradient(180deg, rgba(105, 192, 172, .12), rgba(32, 38, 44, .98)),
+        var(--panel-soft);
+      border-color: rgba(105, 192, 172, .42);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 20px;
+      line-height: 1.1;
+      overflow-wrap: anywhere;
+    }
+
+    .metric.primary strong {
+      font-size: 26px;
+    }
+
+    .metric small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .metric[data-alert]:not([data-alert=""])::after {
+      content: attr(data-alert);
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      max-width: 72px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      line-height: 1.25;
+      text-transform: uppercase;
+      background: rgba(10, 13, 16, .58);
+    }
+
+    .metric.alert-active {
+      border-color: rgba(105, 192, 172, .72);
+      background:
+        linear-gradient(180deg, rgba(105, 192, 172, .14), rgba(32, 38, 44, .98)),
+        var(--panel-soft);
+    }
+
+    .metric.alert-warn {
+      border-color: rgba(242, 195, 107, .86);
+      background:
+        linear-gradient(180deg, rgba(242, 195, 107, .18), rgba(32, 38, 44, .98)),
+        var(--panel-soft);
+    }
+
+    .metric.alert-danger {
+      border-color: rgba(242, 139, 130, .92);
+      background:
+        linear-gradient(180deg, rgba(242, 139, 130, .20), rgba(32, 38, 44, .98)),
+        var(--panel-soft);
+    }
+
+    .sparkline {
+      width: 100%;
+      height: 96px;
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0b0f12;
+    }
+
+    .endpoint-list,
+    .log-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .endpoint-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #11161a;
+    }
+
+    .endpoint-row strong {
+      display: block;
+      font-size: 13px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .endpoint-row span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 28px;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #161c20;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pill::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .log-list {
+      max-height: 150px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .log-item {
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #11161a;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .technical-section details {
+      display: grid;
+      gap: 12px;
+    }
+
+    .technical-section summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 14px;
+      list-style: none;
+    }
+
+    .technical-section summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .technical-section summary::after {
+      content: "+";
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #11161a;
+      color: var(--muted);
+      flex: 0 0 auto;
+    }
+
+    .technical-section details[open] summary::after {
+      content: "-";
+    }
+
+    .technical-body {
+      display: grid;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-rows: minmax(0, 1fr);
+      align-self: start;
+      justify-self: end;
+      width: 660px;
+      overflow: hidden;
+      min-height: auto;
+    }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      background: #15191d;
+      overflow-x: auto;
+    }
+
+    .tab {
+      min-height: 38px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #20262c;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tab[aria-selected="true"] {
+      color: var(--text);
+      border-color: rgba(105, 192, 172, .55);
+      background: #1d3d38;
+    }
+
+    .view {
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .view[hidden] {
+      display: none;
+    }
+
+    .map-shell {
+      display: grid;
+      grid-template-rows: auto auto;
+      min-height: auto;
+    }
+
+    .map-bar,
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      background: #11161a;
+    }
+
+    .map-title {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .map-title strong {
+      color: var(--text);
+      font-size: 15px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .map-actions,
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .map-actions .button {
+      width: 40px;
+      min-width: 40px;
+      padding: 0;
+    }
+
+    .battle-feed-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 8px;
+      padding: 8px;
+      border-top: 1px solid var(--line);
+      background: #11161a;
+    }
+
+    .battle-feed-column {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #11161a;
+    }
+
+    .battle-feed-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line);
+      background: #15191d;
+    }
+
+    .battle-feed-title {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .battle-feed-title strong {
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.2;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .battle-feed-title span {
+      color: var(--muted);
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .battle-feed-list {
+      height: 190px;
+      max-height: 190px;
+      overflow-y: auto;
+      padding: 8px 10px;
+      background: #172018;
+      font-family: Consolas, "SFMono-Regular", Menlo, Monaco, monospace;
+      color: #f1e767;
+    }
+
+    .battle-feed-list.chat-only {
+      background: #17201f;
+      color: #d9f8ff;
+    }
+
+    .battle-feed-row {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr);
+      gap: 7px;
+      align-items: baseline;
+      min-height: 18px;
+      font-size: 12px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .battle-feed-time {
+      color: rgba(241, 231, 103, .72);
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .battle-feed-row.chat {
+      color: #d9f8ff;
+    }
+
+    .battle-feed-row.event {
+      color: #f1e767;
+    }
+
+    .battle-feed-row.damage {
+      color: #ffe66d;
+    }
+
+    .battle-feed-row.enemy {
+      color: #ffb7a8;
+    }
+
+    .battle-feed-empty {
+      min-height: 72px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 13px;
+      text-align: center;
+      padding: 12px;
+    }
+
+    .battle-feed-clear {
+      min-height: 30px;
+      padding: 4px 10px;
+      font-size: 12px;
+    }
+
+    .feed-section {
+      padding: 18px 16px 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .feed-section .section-title {
+      width: min(100%, 1168px);
+      margin: 0 auto 10px;
+    }
+
+    .feed-section-panel {
+      width: min(100%, 1168px);
+      margin: 0 auto;
+      padding: 0;
+      border-top: 0;
+      background: transparent;
+      gap: 10px;
+    }
+
+    .feed-section-panel .battle-feed-column {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      min-height: 0;
+      background: rgba(17, 22, 26, .96);
+    }
+
+    .feed-section-panel .battle-feed-list {
+      height: 230px;
+      max-height: 230px;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    @media (max-width: 760px) {
+      .battle-feed-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    .feed-panel {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #15191d;
+      overflow: hidden;
+    }
+
+    .feed-panel h2 {
+      margin: 0;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      color: var(--text);
+      background: #11161a;
+      font-size: 12px;
+      line-height: 1.2;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .feed-list {
+      display: grid;
+      gap: 6px;
+      min-height: 92px;
+      max-height: 210px;
+      overflow-y: auto;
+      padding: 10px;
+    }
+
+    .feed-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px;
+      align-items: baseline;
+      color: #d8e0e4;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .feed-time {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .feed-empty {
+      display: grid;
+      place-items: center;
+      min-height: 52px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .chat-list {
+      max-height: 154px;
+    }
+
+    .map-frame-shell {
+      --map-frame-width: 650px;
+      --map-frame-height: 650px;
+      width: var(--map-frame-width);
+      max-width: 100%;
+      height: var(--map-frame-height);
+      max-height: calc(100vh - 235px);
+      min-height: 520px;
+      overflow: hidden;
+      padding: 0;
+      background: #303030;
+    }
+
+    .map-frame {
+      width: 650px;
+      height: 650px;
+      border: 0;
+      background: #303030;
+      display: block;
+    }
+
+    .empty-map {
+      display: grid;
+      place-items: center;
+      min-height: 650px;
+      color: var(--muted);
+      text-align: center;
+      padding: 30px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255,255,255,.03) 1px, transparent 1px),
+        #090c0f;
+      background-size: 42px 42px;
+    }
+
+    .empty-map strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      min-height: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      color: var(--muted);
+      background: #15191d;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    td {
+      color: #d8e0e4;
+      overflow-wrap: anywhere;
+    }
+
+    tbody tr:hover td {
+      background: rgba(105, 192, 172, .06);
+    }
+
+    .empty-row {
+      color: var(--muted);
+      text-align: center;
+      padding: 30px 12px;
+    }
+
+    .raw-layout {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      min-height: 100%;
+    }
+
+    pre {
+      margin: 0;
+      min-height: 420px;
+      padding: 16px;
+      overflow: auto;
+      color: #d8e0e4;
+      background: #0b0f12;
+      font-size: 12px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .note {
+      margin: 0;
+      padding: 12px 14px;
+      color: var(--muted);
+      background: #11161a;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    body[data-theme="light"] .tools,
+    body[data-theme="light"] .workspace,
+    body[data-theme="light"] .metric,
+    body[data-theme="light"] .status,
+    body[data-theme="light"] .toggle,
+    body[data-theme="light"] .feed-panel {
+      background: var(--panel);
+    }
+
+    body[data-theme="light"] .battle-feed-panel,
+    body[data-theme="light"] .battle-feed-column,
+    body[data-theme="light"] .battle-feed-header {
+      background: var(--panel);
+    }
+
+    body[data-theme="light"] .battle-feed-list {
+      background: #f5f7f8;
+      color: #394045;
+    }
+
+    body[data-theme="light"] .battle-feed-row.chat,
+    body[data-theme="light"] .battle-feed-row.event,
+    body[data-theme="light"] .battle-feed-row.damage,
+    body[data-theme="light"] .battle-feed-row.enemy {
+      color: #394045;
+    }
+
+    body[data-theme="light"] .battle-feed-time {
+      color: #7a858e;
+    }
+
+    body[data-theme="light"] .metric.primary {
+      background:
+        linear-gradient(180deg, rgba(36, 127, 112, .12), rgba(245, 247, 248, .98)),
+        var(--panel-soft);
+    }
+
+    body[data-theme="light"] .map-bar,
+    body[data-theme="light"] .table-toolbar,
+    body[data-theme="light"] .tabs,
+    body[data-theme="light"] .note,
+    body[data-theme="light"] pre {
+      background: #f7fafb;
+    }
+
+    body[data-theme="light"] .empty-map {
+      background:
+        linear-gradient(90deg, rgba(23,32,39,.06) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(23,32,39,.06) 1px, transparent 1px),
+        #f7fafb;
+    }
+
+    @media (max-width: 1380px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .status {
+        width: 100%;
+        max-width: none;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .header-actions .status {
+        flex: 1 1 auto;
+        width: auto;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .connection-section {
+        grid-template-columns: 1fr;
+      }
+
+      .connection-section .section-title,
+      .connection-section > .field,
+      .connection-section > .actions.three,
+      .connection-section > .refresh-options,
+      .connection-section > .vehicle-options {
+        grid-column: 1 / -1;
+      }
+
+      .tools {
+        position: static;
+        max-height: none;
+      }
+
+      .workspace {
+        justify-self: stretch;
+        width: 100%;
+        min-height: 68vh;
+      }
+    }
+
+
+
+    @media (max-width: 900px) {
+      .summary-metrics {
+        grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      }
+
+      .summary-metrics .metric {
+        grid-column: auto !important;
+        grid-row: auto !important;
+      }
+
+      .feed-section-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .feed-section-panel .battle-feed-list {
+        height: 190px;
+        max-height: 190px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .actions,
+      .actions.three,
+      .url-row,
+      .option-row,
+      .connection-section > .refresh-options,
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .map-bar,
+      .table-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .map-actions,
+      .toolbar-actions {
+        width: 100%;
+      }
+
+      .map-actions .button,
+      .toolbar-actions .button {
+        flex: 1;
+      }
+
+      .map-frame-shell {
+        height: min(520px, calc(100vw - 44px));
+        min-height: 360px;
+      }
+    }
+
+    .feed-section {
+      width: 100%;
+      max-width: none;
+      margin: 0 !important;
+      padding: 0 !important;
+      align-self: start;
+      position: sticky;
+      top: 92px;
+      max-height: calc(100vh - 112px);
+      overflow: hidden;
+      border: 1px solid var(--line) !important;
+      border-radius: 8px;
+      background: rgba(24, 28, 32, .94);
+      box-shadow: var(--shadow);
+    }
+
+    .feed-section .section-title {
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 14px 14px 10px !important;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .feed-section-panel {
+      width: 100% !important;
+      margin: 0 auto !important;
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 14px !important;
+      padding: 14px !important;
+      background: transparent !important;
+      border-top: 0 !important;
+    }
+
+    .feed-section-panel .battle-feed-column {
+      height: min(330px, calc((100vh - 240px) / 2)) !important;
+      min-height: 220px !important;
+      max-height: 330px !important;
+      display: grid !important;
+      grid-template-rows: auto minmax(0, 1fr) !important;
+      overflow: hidden !important;
+    }
+
+    .feed-section-panel .battle-feed-list {
+      height: auto !important;
+      max-height: none !important;
+      min-height: 0 !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      overscroll-behavior: contain;
+    }
+
+    @media (max-width: 900px) {
+      .feed-section-panel {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    @media (max-width: 1380px) {
+      .feed-section {
+        position: static;
+        max-height: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <h1>War Thunder Tactical Data</h1>
+        <p class="subtitle">Consola local para mapa, telemetria e objetos recebidos do servidor do jogo.</p>
+      </div>
+      <div class="header-actions">
+        <div class="header-controls" aria-label="Preferências">
+          <select id="languageSelect" aria-label="Idioma">
+            <option value="pt" selected>PT</option>
+            <option value="en">EN</option>
+          </select>
+          <select id="themeMode" aria-label="Tema">
+            <option value="dark" selected data-i18n="themeDark">Noite</option>
+            <option value="light" data-i18n="themeLight">Dia</option>
+          </select>
+        </div>
+        <div id="status" class="status" role="status" aria-live="polite">
+          <span class="dot"></span>
+          <span>Pronto para ligar ao War Thunder.</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <aside class="tools" aria-label="Gestão da ligação">
+        <section class="section connection-section">
+          <div class="section-title">
+            <span data-i18n="connection">Ligação</span>
+            <span class="small">localhost:8111</span>
+          </div>
+          <div class="field">
+            <label for="baseUrl" data-i18n="server">Servidor</label>
+            <div class="url-row">
+              <input id="baseUrl" type="url" spellcheck="false" value="http://127.0.0.1:8111/">
+              <button id="connectButton" class="button primary" type="button" title="Ligar aos dados">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M7 17 17 7m0 0H8m9 0v9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span data-i18n="connect">Ligar</span>
+              </button>
+            </div>
+            <span class="small" data-i18n="localHint">Usa o endereço local do War Thunder no teu PC.</span>
+          </div>
+
+          <div class="actions three">
+            <button id="refreshButton" class="button" type="button" title="Actualizar agora">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span data-i18n="refresh">Atualizar</span>
+            </button>
+            <button id="openMapButton" class="button" type="button" title="Abrir mapa no painel">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Zm6-3v15m6-12v15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span data-i18n="map">Mapa</span>
+            </button>
+            <button id="clearButton" class="button" type="button" title="Limpar dados">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M3 6h18M8 6V4h8v2m-6 5v6m4-6v6M6 6l1 14h10l1-14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span data-i18n="clear">Limpar</span>
+            </button>
+          </div>
+
+          <div class="option-row refresh-options">
+            <label class="toggle" for="autoRefresh">
+              <input id="autoRefresh" type="checkbox" checked>
+              <span data-i18n="autoRefresh">Automático</span>
+            </label>
+            <select id="refreshRate" aria-label="Intervalo de actualização">
+              <option value="500">0,5 s</option>
+              <option value="1000" selected>1 s</option>
+              <option value="2000">2 s</option>
+              <option value="5000">5 s</option>
+            </select>
+          </div>
+
+          <div class="option-row vehicle-options">
+            <div class="field">
+              <label for="vehicleMode" data-i18n="vehicleMode">Tipo de veículo</label>
+              <select id="vehicleMode" aria-label="Tipo de veículo">
+                <option value="air" selected data-i18n="vehicleAir">Avião</option>
+                <option value="heli" data-i18n="vehicleHeli">Helicóptero</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="section summary-section">
+          <div class="section-title">
+            <span data-i18n="summary">Resumo</span>
+            <span id="lastUpdated" class="small">Sem dados</span>
+          </div>
+          <div class="metrics summary-metrics">
+            <div class="metric primary" data-modes="air heli" data-slot="ias">
+              <span data-label-key="ias">IAS</span>
+              <strong id="metricSpeed">--</strong>
+              <small id="metricSpeedSource">Velocidade indicada</small>
+            </div>
+            <div class="metric primary" data-modes="air heli" data-slot="altitude">
+              <span data-label-key="alt">ALT</span>
+              <strong id="metricAltitude">--</strong>
+              <small id="metricAltitudeSource">Altitude barométrica</small>
+            </div>
+            <div class="metric primary" data-modes="air heli" data-slot="climbRate">
+              <span data-label-key="climbRate">Subida</span>
+              <strong id="metricClimbRate">--</strong>
+              <small id="metricClimbRateDetail">Velocidade vertical</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-slot="heading">
+              <span data-label-key="heading">Rumo</span>
+              <strong id="metricHeading">--</strong>
+              <small id="metricHeadingSource">Compass</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-engine-main="1">
+              <span data-label-key="engine">Motor</span>
+              <strong id="metricEngine">--</strong>
+              <small id="metricFuel">Combustível --</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-engine-extra="2" hidden>
+              <span id="metricEngine2Label">Motor 2</span>
+              <strong id="metricEngine2">--</strong>
+              <small id="metricEngine2Detail">--</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-engine-extra="3" hidden>
+              <span id="metricEngine3Label">Motor 3</span>
+              <strong id="metricEngine3">--</strong>
+              <small id="metricEngine3Detail">--</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-engine-extra="4" hidden>
+              <span id="metricEngine4Label">Motor 4</span>
+              <strong id="metricEngine4">--</strong>
+              <small id="metricEngine4Detail">--</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-engine-extra="5" hidden>
+              <span id="metricEngine5Label">Motor 5</span>
+              <strong id="metricEngine5">--</strong>
+              <small id="metricEngine5Detail">--</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-engine-extra="6" hidden>
+              <span id="metricEngine6Label">Motor 6</span>
+              <strong id="metricEngine6">--</strong>
+              <small id="metricEngine6Detail">--</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-engine-extra="7" hidden>
+              <span id="metricEngine7Label">Motor 7</span>
+              <strong id="metricEngine7">--</strong>
+              <small id="metricEngine7Detail">--</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-engine-extra="8" hidden>
+              <span id="metricEngine8Label">Motor 8</span>
+              <strong id="metricEngine8">--</strong>
+              <small id="metricEngine8Detail">--</small>
+            </div>
+            <div class="metric" data-modes="air" data-slot="mach">
+              <span data-label-key="mach">Mach</span>
+              <strong id="metricClimb">--</strong>
+              <small id="metricMach">Vario --</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-slot="attitude">
+              <span data-label-key="attitude">Atitude</span>
+              <strong id="metricAttitude">--</strong>
+              <small id="metricAoA">AoA --</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-slot="load">
+              <span data-label-key="load">Carga</span>
+              <strong id="metricLoad">--</strong>
+              <small id="metricAoS">AoS --</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-slot="fuel">
+              <span data-label-key="fuel">Combustível</span>
+              <strong id="metricConfig">--</strong>
+              <small id="metricTemp">Massa / percentagem</small>
+            </div>
+            <div class="metric engine-temp-card" data-modes="air heli" data-engine-temp="1">
+              <span id="metricTemp1Label">Temp. M1</span>
+              <strong id="metricTemps">--</strong>
+              <small id="metricTempsDetail">Óleo / água</small>
+            </div>
+            <div class="metric engine-temp-card" data-modes="air heli" data-engine-temp="2" hidden>
+              <span id="metricTemp2Label">Temp. M2</span>
+              <strong id="metricTemp2">--</strong>
+              <small id="metricTemp2Detail">Óleo / água</small>
+            </div>
+            <div class="metric engine-temp-card" data-modes="air heli" data-engine-temp="3" hidden>
+              <span id="metricTemp3Label">Temp. M3</span>
+              <strong id="metricTemp3">--</strong>
+              <small id="metricTemp3Detail">Óleo / água</small>
+            </div>
+            <div class="metric engine-temp-card" data-modes="air heli" data-engine-temp="4" hidden>
+              <span id="metricTemp4Label">Temp. M4</span>
+              <strong id="metricTemp4">--</strong>
+              <small id="metricTemp4Detail">Óleo / água</small>
+            </div>
+            <div class="metric engine-temp-card" data-modes="air heli" data-engine-temp="5" hidden>
+              <span id="metricTemp5Label">Temp. M5</span>
+              <strong id="metricTemp5">--</strong>
+              <small id="metricTemp5Detail">Óleo / água</small>
+            </div>
+            <div class="metric engine-temp-card" data-modes="air heli" data-engine-temp="6" hidden>
+              <span id="metricTemp6Label">Temp. M6</span>
+              <strong id="metricTemp6">--</strong>
+              <small id="metricTemp6Detail">Óleo / água</small>
+            </div>
+            <div class="metric engine-temp-card" data-modes="air heli" data-engine-temp="7" hidden>
+              <span id="metricTemp7Label">Temp. M7</span>
+              <strong id="metricTemp7">--</strong>
+              <small id="metricTemp7Detail">Óleo / água</small>
+            </div>
+            <div class="metric engine-temp-card" data-modes="air heli" data-engine-temp="8" hidden>
+              <span id="metricTemp8Label">Temp. M8</span>
+              <strong id="metricTemp8">--</strong>
+              <small id="metricTemp8Detail">Óleo / água</small>
+            </div>
+            <div class="metric" data-modes="air" data-slot="gear">
+              <span data-label-key="gear">Trem</span>
+              <strong id="metricGear">--</strong>
+              <small id="metricGearDetail">Landing gear</small>
+            </div>
+            <div class="metric" data-modes="air" data-slot="flaps">
+              <span data-label-key="flaps">Flaps</span>
+              <strong id="metricFlaps">--</strong>
+              <small id="metricFlapsDetail">Configuração</small>
+            </div>
+            <div class="metric" data-modes="air" data-slot="airbrake">
+              <span data-label-key="airbrake">Airbrake</span>
+              <strong id="metricAirbrake">--</strong>
+              <small id="metricAirbrakeDetail">Travão aerodinâmico</small>
+            </div>
+            <div class="metric" data-modes="air" data-slot="bombBay">
+              <span data-label-key="bombBay">Bomb bay</span>
+              <strong id="metricBombBay">--</strong>
+              <small id="metricBombBayDetail">Bomb bay doors</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-slot="chaff">
+              <span data-label-key="chaff">Chaff</span>
+              <strong id="metricChaff">--</strong>
+              <small id="metricChaffDetail">Contramedidas</small>
+            </div>
+            <div class="metric" data-modes="air heli" data-slot="flares">
+              <span data-label-key="flares">Flares</span>
+              <strong id="metricFlares">--</strong>
+              <small id="metricFlaresDetail">Contramedidas</small>
+            </div>
+          </div>
+        </section>
+      </aside>
+
+          <section class="section feed-section" aria-label="Feed e chat do jogo">
+            <div class="section-title">
+              <span data-i18n="communications">Comunicações</span>
+              <span class="small" data-i18n="feedReady">A aguardar gamechat / hudmsg</span>
+            </div>
+            <div class="battle-feed-panel feed-section-panel">
+              <article class="battle-feed-column" aria-label="Feed de eventos do jogo">
+                <div class="battle-feed-header">
+                  <div class="battle-feed-title">
+                    <strong data-i18n="battleFeed">Feed do jogo</strong>
+                    <span id="battleFeedStatus">hudmsg</span>
+                  </div>
+                  <button id="clearBattleFeedButton" class="button battle-feed-clear" type="button" data-i18n="clearFeed">Limpar feed</button>
+                </div>
+                <div id="battleFeedList" class="battle-feed-list" aria-live="polite">
+                  <div class="battle-feed-empty">Sem eventos recebidos.</div>
+                </div>
+              </article>
+
+              <article class="battle-feed-column" aria-label="Chat do jogo">
+                <div class="battle-feed-header">
+                  <div class="battle-feed-title">
+                    <strong data-i18n="gamechat">Chat</strong>
+                    <span id="gameChatFeedStatus">gamechat</span>
+                  </div>
+                </div>
+                <div id="gameChatFeedList" class="battle-feed-list chat-only" aria-live="polite">
+                  <div class="battle-feed-empty">Sem mensagens recebidas.</div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+      <section class="workspace" aria-label="Dados do War Thunder">
+        <section id="mapView" class="view">
+          <div class="map-shell">
+            <div class="map-bar">
+              <div class="map-title">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Zm6-3v15m6-12v15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <strong id="mapTitle">http://127.0.0.1:8111/</strong>
+              </div>
+              <div class="map-actions">
+                <button id="reloadMapButton" class="button" type="button" title="Recarregar mapa">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <a id="externalLink" class="button" href="http://127.0.0.1:8111/" target="_blank" rel="noopener" title="Abrir em nova janela">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M14 3h7v7m0-7-9 9m7 3v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+            <div id="mapContainer" class="empty-map">
+              <div>
+                <strong>Mapa ainda fechado</strong>
+                <span>Liga aos dados ou usa o botão Mapa.</span>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <section id="telemetryView" class="view" hidden>
+          <p class="note">Telemetria combinada dos endpoints <strong>state</strong>, <strong>indicators</strong>, <strong>mission</strong> e <strong>map_info.json</strong>.</p>
+          <div class="table-toolbar">
+            <input id="telemetrySearch" type="search" placeholder="Filtrar telemetria">
+            <div class="toolbar-actions">
+              <button id="copyButton" class="button" type="button" title="Copiar snapshot JSON">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M8 8h11v13H8V8Zm-3 8H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Copiar
+              </button>
+              <button id="exportButton" class="button" type="button" title="Exportar snapshot JSON">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Exportar
+              </button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fonte</th>
+                  <th>Campo</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody id="telemetryTable"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="objectsView" class="view" hidden>
+          <p class="note">Objetos recebidos de <strong>map_obj.json</strong>. A tabela adapta-se aos campos que o War Thunder enviar.</p>
+          <div class="table-toolbar">
+            <input id="objectSearch" type="search" placeholder="Filtrar objetos">
+            <div class="toolbar-actions">
+              <span id="objectCount" class="pill">0 objetos</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead id="objectsHead"></thead>
+              <tbody id="objectsTable"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="rawView" class="view raw-layout" hidden>
+          <div class="table-toolbar">
+            <select id="rawEndpoint" aria-label="Escolher JSON">
+              <option value="snapshot">Snapshot completo</option>
+              <option value="state">state</option>
+              <option value="indicators">indicators</option>
+              <option value="mapInfo">map_info.json</option>
+              <option value="mapObjects">map_obj.json</option>
+              <option value="mission">mission.json</option>
+            </select>
+            <div class="toolbar-actions">
+              <button id="refreshRawButton" class="button" type="button" title="Actualizar JSON">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Actualizar
+              </button>
+            </div>
+          </div>
+          <pre id="rawJson">{}</pre>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const DEFAULT_BASE_URL = "http://127.0.0.1:8111/";
+    const MAX_HISTORY = 120;
+    const ENDPOINTS = [
+      { id: "state", label: "Estado", path: "state" },
+      { id: "indicators", label: "Indicadores", path: "indicators" },
+      { id: "mapInfo", label: "Mapa", path: "map_info.json" },
+      { id: "mapObjects", label: "Objetos", path: "map_obj.json" },
+      { id: "mission", label: "Missão", path: "mission.json" }
+    ];
+
+    const $ = (id) => document.getElementById(id);
+
+    const els = {
+      status: $("status"),
+      baseUrl: $("baseUrl"),
+      connectButton: $("connectButton"),
+      refreshButton: $("refreshButton"),
+      openMapButton: $("openMapButton"),
+      clearButton: $("clearButton"),
+      autoRefresh: $("autoRefresh"),
+      refreshRate: $("refreshRate"),
+      languageSelect: $("languageSelect"),
+      themeMode: $("themeMode"),
+      vehicleMode: $("vehicleMode"),
+      lastUpdated: $("lastUpdated"),
+      metricSpeed: $("metricSpeed"),
+      metricSpeedSource: $("metricSpeedSource"),
+      metricAltitude: $("metricAltitude"),
+      metricAltitudeSource: $("metricAltitudeSource"),
+      metricClimbRate: $("metricClimbRate"),
+      metricClimbRateDetail: $("metricClimbRateDetail"),
+      metricHeading: $("metricHeading"),
+      metricHeadingSource: $("metricHeadingSource"),
+      metricEngine: $("metricEngine"),
+      metricFuel: $("metricFuel"),
+      metricEngine2Label: $("metricEngine2Label"),
+      metricEngine2: $("metricEngine2"),
+      metricEngine2Detail: $("metricEngine2Detail"),
+      metricEngine3Label: $("metricEngine3Label"),
+      metricEngine3: $("metricEngine3"),
+      metricEngine3Detail: $("metricEngine3Detail"),
+      metricEngine4Label: $("metricEngine4Label"),
+      metricEngine4: $("metricEngine4"),
+      metricEngine4Detail: $("metricEngine4Detail"),
+      metricEngine5Label: $("metricEngine5Label"),
+      metricEngine5: $("metricEngine5"),
+      metricEngine5Detail: $("metricEngine5Detail"),
+      metricEngine6Label: $("metricEngine6Label"),
+      metricEngine6: $("metricEngine6"),
+      metricEngine6Detail: $("metricEngine6Detail"),
+      metricEngine7Label: $("metricEngine7Label"),
+      metricEngine7: $("metricEngine7"),
+      metricEngine7Detail: $("metricEngine7Detail"),
+      metricEngine8Label: $("metricEngine8Label"),
+      metricEngine8: $("metricEngine8"),
+      metricEngine8Detail: $("metricEngine8Detail"),
+      metricClimb: $("metricClimb"),
+      metricMach: $("metricMach"),
+      metricAttitude: $("metricAttitude"),
+      metricAoA: $("metricAoA"),
+      metricLoad: $("metricLoad"),
+      metricAoS: $("metricAoS"),
+      metricConfig: $("metricConfig"),
+      metricTemp: $("metricTemp"),
+      metricTemp1Label: $("metricTemp1Label"),
+      metricTemps: $("metricTemps"),
+      metricTempsDetail: $("metricTempsDetail"),
+      metricTemp2Label: $("metricTemp2Label"),
+      metricTemp2: $("metricTemp2"),
+      metricTemp2Detail: $("metricTemp2Detail"),
+      metricTemp3Label: $("metricTemp3Label"),
+      metricTemp3: $("metricTemp3"),
+      metricTemp3Detail: $("metricTemp3Detail"),
+      metricTemp4Label: $("metricTemp4Label"),
+      metricTemp4: $("metricTemp4"),
+      metricTemp4Detail: $("metricTemp4Detail"),
+      metricTemp5Label: $("metricTemp5Label"),
+      metricTemp5: $("metricTemp5"),
+      metricTemp5Detail: $("metricTemp5Detail"),
+      metricTemp6Label: $("metricTemp6Label"),
+      metricTemp6: $("metricTemp6"),
+      metricTemp6Detail: $("metricTemp6Detail"),
+      metricTemp7Label: $("metricTemp7Label"),
+      metricTemp7: $("metricTemp7"),
+      metricTemp7Detail: $("metricTemp7Detail"),
+      metricTemp8Label: $("metricTemp8Label"),
+      metricTemp8: $("metricTemp8"),
+      metricTemp8Detail: $("metricTemp8Detail"),
+      metricGear: $("metricGear"),
+      metricGearDetail: $("metricGearDetail"),
+      metricFlaps: $("metricFlaps"),
+      metricFlapsDetail: $("metricFlapsDetail"),
+      metricAirbrake: $("metricAirbrake"),
+      metricAirbrakeDetail: $("metricAirbrakeDetail"),
+      metricBombBay: $("metricBombBay"),
+      metricBombBayDetail: $("metricBombBayDetail"),
+      metricChaff: $("metricChaff"),
+      metricChaffDetail: $("metricChaffDetail"),
+      metricFlares: $("metricFlares"),
+      metricFlaresDetail: $("metricFlaresDetail"),
+      historyCount: $("historyCount"),
+      historyCanvas: $("historyCanvas"),
+      endpointSummary: $("endpointSummary"),
+      endpointList: $("endpointList"),
+      logList: $("logList"),
+      mapTitle: $("mapTitle"),
+      mapContainer: $("mapContainer"),
+      battleFeedList: $("battleFeedList"),
+      battleFeedStatus: $("battleFeedStatus"),
+      gameChatFeedList: $("gameChatFeedList"),
+      gameChatFeedStatus: $("gameChatFeedStatus"),
+      clearBattleFeedButton: $("clearBattleFeedButton"),
+      reloadMapButton: $("reloadMapButton"),
+      externalLink: $("externalLink"),
+      telemetrySearch: $("telemetrySearch"),
+      telemetryTable: $("telemetryTable"),
+      objectSearch: $("objectSearch"),
+      objectCount: $("objectCount"),
+      objectsHead: $("objectsHead"),
+      objectsTable: $("objectsTable"),
+      copyButton: $("copyButton"),
+      exportButton: $("exportButton"),
+      rawEndpoint: $("rawEndpoint"),
+      rawJson: $("rawJson"),
+      refreshRawButton: $("refreshRawButton"),
+      killFeedList: $("killFeedList"),
+      gameChatList: $("gameChatList")
+    };
+
+    let currentBaseUrl = DEFAULT_BASE_URL;
+    let currentLanguage = "pt";
+    let store = {};
+    let history = [];
+    let feedState = {
+      seen: new Set(),
+      kill: [],
+      chat: [],
+      objectKeys: new Set(),
+      missionSignature: ""
+    };
+    let battleFeedState = {
+      seen: new Set(),
+      entries: [],
+      lastChatId: 0,
+      lastHudEvt: 0,
+      lastHudDmg: 0,
+      status: ""
+    };
+    let refreshTimer = null;
+    let isRefreshing = false;
+    let lastRefreshStarted = 0;
+
+    const I18N = {
+      pt: {
+        autoRefresh: "Automático",
+        language: "Idioma",
+        vehicleMode: "Tipo de veículo",
+        vehicleAuto: "Automático",
+        vehicleAir: "Avião",
+        vehicleHeli: "Helicóptero",
+        themeDark: "Noite",
+        themeLight: "Dia",
+        connection: "Ligação",
+        server: "Servidor",
+        connect: "Ligar",
+        refresh: "Atualizar",
+        map: "Mapa",
+        clear: "Limpar",
+        localHint: "Usa o endereço local do War Thunder no teu PC.",
+        summary: "Resumo",
+        communications: "Comunicações",
+        noData: "Sem dados",
+        speed: "Velocidade",
+        ias: "IAS",
+        altitude: "Altitude",
+        alt: "ALT",
+        iasDetail: "Velocidade indicada",
+        altDetail: "Altitude barométrica",
+        climbRate: "Subida",
+        climbRateDetail: "Velocidade vertical",
+        ascending: "A subir",
+        descending: "A descer",
+        levelFlight: "Nivelado",
+        eta: "ETA",
+        hudFuel: "HUD",
+        fuelBurn: "Consumo",
+        fuelLow: "FUEL",
+        wepActive: "WEP",
+        hot: "TEMP",
+        active: "ATIVO",
+        highG: "G ALTO",
+        gearSpeed: "TREM",
+        flapsSpeed: "FLAPS",
+        fastDescent: "DESCIDA",
+        heading: "Rumo",
+        engine: "Motor",
+        engines: "motores",
+        throttleShort: "Acel.",
+        engineTempShort: "Motor",
+        mach: "Mach",
+        attitude: "Atitude",
+        load: "Carga",
+        fuel: "Combustível",
+        temperature: "Temperatura",
+        gear: "Trem",
+        flaps: "Flaps",
+        airbrake: "Airbrake",
+        bombBay: "Bomb bay",
+        chaff: "Chaff",
+        flares: "Flares",
+        countermeasures: "Contramedidas",
+        open: "Aberto",
+        closed: "Fechado",
+        objects: "Objetos",
+        vehicle: "Viatura",
+        aircraft: "Aeronave",
+        helicopterMode: "Modo helicóptero",
+        notExposed: "Não exposto pela API",
+        collective: "Coletivo",
+        rotor: "Rotor",
+        throttle: "Acelerador",
+        verticalSpeed: "Velocidade vertical",
+        source: "Fonte",
+        compass: "Compass",
+        thrust: "Empuxo",
+        climb: "Vario",
+        massPercent: "Massa / percentagem",
+        oilWater: "Óleo / água",
+        oil: "Óleo",
+        water: "Água",
+        engineTemp: "Temp. motor",
+        gearPosition: "Posição do trem",
+        noGearData: "Sem dados do trem",
+        flapsExtension: "Extensão dos flaps",
+        noFlapsData: "Sem dados dos flaps",
+        airbrakeDetail: "Travão aerodinâmico",
+        noAirbrakeData: "Sem dados do airbrake",
+        ready: "Pronto para ligar ao War Thunder.",
+        invalidAddress: "Endereço inválido.",
+        reading: "A ler dados do War Thunder...",
+        connected: "Ligado.",
+        partial: "Leitura parcial.",
+        noEndpointData: "Sem dados. Confirma o jogo, o endereço e possível bloqueio CORS do browser.",
+        updated: "endpoints lidos",
+        mapOpened: "Mapa aberto no painel.",
+        mapClosedTitle: "Mapa ainda fechado",
+        mapClosedBody: "Liga aos dados ou usa o botão Mapa.",
+        cleared: "Dados limpos.",
+        battleFeed: "Feed do jogo",
+        clearFeed: "Limpar feed",
+        feedReady: "A aguardar gamechat / hudmsg",
+        feedUnavailable: "Feed indisponível",
+        feedNoEvents: "Sem eventos recebidos.",
+        feedNoChat: "Sem mensagens recebidas.",
+        feedOk: "feed OK",
+        gamechat: "Chat",
+        hudEvents: "Eventos",
+        hudDamage: "Danos"
+      },
+      en: {
+        autoRefresh: "Automatic",
+        language: "Language",
+        vehicleMode: "Vehicle type",
+        vehicleAuto: "Automatic",
+        vehicleAir: "Aircraft",
+        vehicleHeli: "Helicopter",
+        themeDark: "Night",
+        themeLight: "Day",
+        connection: "Connection",
+        server: "Server",
+        connect: "Connect",
+        refresh: "Refresh",
+        map: "Map",
+        clear: "Clear",
+        localHint: "Use the local War Thunder address on your PC.",
+        summary: "Summary",
+        communications: "Communications",
+        noData: "No data",
+        speed: "Speed",
+        ias: "IAS",
+        altitude: "Altitude",
+        alt: "ALT",
+        iasDetail: "Indicated airspeed",
+        altDetail: "Barometric altitude",
+        climbRate: "Climb",
+        climbRateDetail: "Vertical speed",
+        ascending: "Climbing",
+        descending: "Descending",
+        levelFlight: "Level",
+        eta: "ETA",
+        hudFuel: "HUD",
+        fuelBurn: "Burn",
+        fuelLow: "FUEL",
+        wepActive: "WEP",
+        hot: "TEMP",
+        active: "ACTIVE",
+        highG: "HIGH G",
+        gearSpeed: "GEAR",
+        flapsSpeed: "FLAPS",
+        fastDescent: "DESCENT",
+        heading: "Heading",
+        engine: "Engine",
+        engines: "engines",
+        throttleShort: "Thr.",
+        engineTempShort: "Engine",
+        mach: "Mach",
+        attitude: "Attitude",
+        load: "Load",
+        fuel: "Fuel",
+        temperature: "Temperature",
+        gear: "Gear",
+        flaps: "Flaps",
+        airbrake: "Airbrake",
+        bombBay: "Bomb bay",
+        chaff: "Chaff",
+        flares: "Flares",
+        countermeasures: "Countermeasures",
+        open: "Open",
+        closed: "Closed",
+        objects: "Objects",
+        vehicle: "Vehicle",
+        aircraft: "Aircraft",
+        helicopterMode: "Helicopter mode",
+        notExposed: "Not exposed by API",
+        collective: "Collective",
+        rotor: "Rotor",
+        throttle: "Throttle",
+        verticalSpeed: "Vertical speed",
+        source: "Source",
+        compass: "Compass",
+        thrust: "Thrust",
+        climb: "Climb",
+        massPercent: "Mass / percentage",
+        oilWater: "Oil / water",
+        oil: "Oil",
+        water: "Water",
+        engineTemp: "Engine temp",
+        gearPosition: "Gear position",
+        noGearData: "No gear data",
+        flapsExtension: "Flaps extension",
+        noFlapsData: "No flaps data",
+        airbrakeDetail: "Airbrake",
+        noAirbrakeData: "No airbrake data",
+        ready: "Ready to connect to War Thunder.",
+        invalidAddress: "Invalid address.",
+        reading: "Reading War Thunder data...",
+        connected: "Connected.",
+        partial: "Partial read.",
+        noEndpointData: "No data. Check the game, address, and possible browser CORS blocking.",
+        updated: "endpoints read",
+        mapOpened: "Map opened in panel.",
+        mapClosedTitle: "Map not opened yet",
+        mapClosedBody: "Connect to data or use the Map button.",
+        cleared: "Data cleared.",
+        battleFeed: "Game feed",
+        clearFeed: "Clear feed",
+        feedReady: "Waiting for gamechat / hudmsg",
+        feedUnavailable: "Feed unavailable",
+        feedNoEvents: "No events received.",
+        feedNoChat: "No messages received.",
+        feedOk: "feed OK",
+        gamechat: "Chat",
+        hudEvents: "Events",
+        hudDamage: "Damage"
+      }
+    };
+
+    function t(key) {
+      return I18N[currentLanguage]?.[key] || I18N.pt[key] || key;
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang = currentLanguage === "en" ? "en" : "pt-PT";
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        node.textContent = t(node.dataset.i18n);
+      });
+      document.querySelectorAll("[data-label-key]").forEach((node) => {
+        node.textContent = t(node.dataset.labelKey);
+      });
+      renderSummary();
+    }
+
+    function applyTheme() {
+      document.body.dataset.theme = els.themeMode?.value || "dark";
+    }
+
+    function setStatus(message, type = "") {
+      els.status.className = `status ${type}`.trim();
+      els.status.querySelector("span:last-child").textContent = message;
+    }
+
+    function addLog(message, type = "") {
+      if (!els.logList) return;
+
+      const item = document.createElement("div");
+      item.className = "log-item";
+      const time = new Date().toLocaleTimeString("pt-PT", { hour12: false });
+      item.textContent = `[${time}] ${message}`;
+      if (type === "error") item.style.borderColor = "rgba(242, 139, 130, .48)";
+      if (type === "ok") item.style.borderColor = "rgba(168, 208, 141, .48)";
+      els.logList.prepend(item);
+
+      while (els.logList.children.length > 8) {
+        els.logList.lastElementChild.remove();
+      }
+    }
+
+    function normaliseBaseUrl(value) {
+      const text = String(value || "").trim() || DEFAULT_BASE_URL;
+      const withProtocol = /^https?:\/\//i.test(text) ? text : `http://${text}`;
+      const url = new URL(withProtocol);
+      url.hash = "";
+      if (!url.pathname.endsWith("/")) {
+        url.pathname = `${url.pathname}/`;
+      }
+      return url.href;
+    }
+
+    function endpointUrl(endpoint) {
+      return new URL(endpoint.path, currentBaseUrl).href;
+    }
+
+    function isObject(value) {
+      return value && typeof value === "object" && !Array.isArray(value);
+    }
+
+    function normaliseKey(key) {
+      return String(key).toLowerCase().replace(/[^a-z0-9]+/g, "");
+    }
+
+    function getField(source, names) {
+      if (!source || typeof source !== "object") return undefined;
+
+      for (const name of names) {
+        if (Object.prototype.hasOwnProperty.call(source, name)) return source[name];
+      }
+
+      const lookup = new Map(
+        Object.keys(source).map((key) => [normaliseKey(key), source[key]])
+      );
+
+      for (const name of names) {
+        const value = lookup.get(normaliseKey(name));
+        if (value !== undefined) return value;
+      }
+
+      return undefined;
+    }
+
+    function toNumber(value) {
+      if (typeof value === "number" && Number.isFinite(value)) return value;
+      if (typeof value === "string") {
+        if (value.includes(":")) return null;
+        const cleaned = value.replace(",", ".");
+        const parsed = Number(cleaned);
+        if (Number.isFinite(parsed)) return parsed;
+        const match = cleaned.match(/-?\d+(?:\.\d+)?/);
+        if (!match) return null;
+        const extracted = Number(match[0]);
+        return Number.isFinite(extracted) ? extracted : null;
+      }
+      return null;
+    }
+
+    function firstNumberField(source, names) {
+      const value = getField(source, names);
+      const number = toNumber(value);
+      return number === null ? undefined : number;
+    }
+
+    function firstNumberFromSources(sources, names) {
+      for (const source of sources) {
+        const value = firstNumberField(source, names);
+        if (value !== undefined) return value;
+      }
+      return undefined;
+    }
+
+    function firstFieldFromSources(sources, names) {
+      for (const source of sources) {
+        const value = getField(source, names);
+        if (value !== undefined && value !== null && value !== "") return value;
+      }
+      return undefined;
+    }
+
+    function sumMatchingFields(source, pattern) {
+      if (!isObject(source)) return undefined;
+
+      const values = Object.entries(source)
+        .filter(([key]) => pattern.test(key))
+        .map(([, value]) => toNumber(value))
+        .filter((value) => value !== null);
+
+      if (!values.length) return undefined;
+      return values.reduce((total, value) => total + value, 0);
+    }
+
+    function maxMatchingFields(source, pattern) {
+      if (!isObject(source)) return undefined;
+
+      const values = Object.entries(source)
+        .filter(([key]) => pattern.test(key))
+        .map(([, value]) => toNumber(value))
+        .filter((value) => value !== null);
+
+      return values.length ? Math.max(...values) : undefined;
+    }
+
+    function percentOf(value, total) {
+      const number = toNumber(value);
+      const max = toNumber(total);
+      if (number === null || max === null || max === 0) return undefined;
+      return (number / max) * 100;
+    }
+
+    function invertAngle(value) {
+      const number = toNumber(value);
+      return number === null ? undefined : -number;
+    }
+
+    function formatNumber(value, unit = "", digits = 0) {
+      const num = toNumber(value);
+      if (num === null) return value === undefined || value === null || value === "" ? "--" : String(value);
+      const formatted = new Intl.NumberFormat("pt-PT", {
+        maximumFractionDigits: digits,
+        minimumFractionDigits: digits
+      }).format(num);
+      return unit ? `${formatted} ${unit}` : formatted;
+    }
+
+    function compactValue(value) {
+      if (value === undefined || value === null || value === "") return "--";
+      if (typeof value === "number") return formatNumber(value, "", Number.isInteger(value) ? 0 : 2);
+      if (typeof value === "boolean") return value ? "sim" : "não";
+      if (typeof value === "string") return value;
+      return JSON.stringify(value);
+    }
+
+    function safeJsonText(value) {
+      return JSON.stringify(value, null, 2);
+    }
+
+    function getEndpoint(id) {
+      return store[id] || null;
+    }
+
+    function getEndpointData(id) {
+      return getEndpoint(id)?.data;
+    }
+
+    function getSnapshot() {
+      return {
+        baseUrl: currentBaseUrl,
+        updatedAt: new Date().toISOString(),
+        endpoints: Object.fromEntries(
+          ENDPOINTS.map((endpoint) => [
+            endpoint.id,
+            {
+              label: endpoint.label,
+              path: endpoint.path,
+              status: store[endpoint.id]?.status || "pending",
+              latencyMs: store[endpoint.id]?.latencyMs ?? null,
+              error: store[endpoint.id]?.error || null,
+              data: store[endpoint.id]?.data ?? null
+            }
+          ])
+        )
+      };
+    }
+
+    function flattenData(value, prefix = "", rows = [], depth = 0) {
+      if (depth > 4) {
+        rows.push({ key: prefix || "valor", value: compactValue(value) });
+        return rows;
+      }
+
+      if (Array.isArray(value)) {
+        if (!value.length) {
+          rows.push({ key: prefix || "lista", value: "[]" });
+          return rows;
+        }
+
+        value.slice(0, 80).forEach((item, index) => {
+          flattenData(item, `${prefix}[${index}]`, rows, depth + 1);
+        });
+
+        if (value.length > 80) {
+          rows.push({ key: `${prefix}.restantes`, value: `${value.length - 80} itens` });
+        }
+        return rows;
+      }
+
+      if (isObject(value)) {
+        const entries = Object.entries(value);
+        if (!entries.length) {
+          rows.push({ key: prefix || "objeto", value: "{}" });
+          return rows;
+        }
+
+        entries.forEach(([key, child]) => {
+          flattenData(child, prefix ? `${prefix}.${key}` : key, rows, depth + 1);
+        });
+        return rows;
+      }
+
+      rows.push({ key: prefix || "valor", value: compactValue(value) });
+      return rows;
+    }
+
+    function getMapObjects() {
+      const data = getEndpointData("mapObjects");
+      if (Array.isArray(data)) return data;
+      if (Array.isArray(data?.objects)) return data.objects;
+      if (Array.isArray(data?.map_objects)) return data.map_objects;
+      if (Array.isArray(data?.items)) return data.items;
+      return [];
+    }
+
+    function objectLabel(object) {
+      if (!isObject(object)) return compactValue(object);
+      return getField(object, ["name", "type", "icon", "id", "team"]) || JSON.stringify(object).slice(0, 80);
+    }
+
+    function objectKey(object) {
+      if (!isObject(object)) return String(object);
+      const id = getField(object, ["id", "name", "type"]);
+      const x = getField(object, ["x", "sx", "dx"]);
+      const y = getField(object, ["y", "sy", "dy"]);
+      return `${compactValue(id)}|${compactValue(x)}|${compactValue(y)}|${JSON.stringify(object).slice(0, 80)}`;
+    }
+
+    function objectBreakdown(objects) {
+      const counts = new Map();
+      objects.forEach((object) => {
+        const label = isObject(object)
+          ? compactValue(getField(object, ["type", "icon", "team", "color"]) || "objeto")
+          : "objeto";
+        counts.set(label, (counts.get(label) || 0) + 1);
+      });
+      return [...counts.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([label, count]) => `${label}: ${count}`)
+        .join(" / ");
+    }
+
+    function averageLatency() {
+      const latencies = Object.values(store)
+        .map((entry) => entry?.latencyMs)
+        .filter((value) => Number.isFinite(value));
+      if (!latencies.length) return undefined;
+      return latencies.reduce((total, value) => total + value, 0) / latencies.length;
+    }
+
+    function missionSummary(mission) {
+      if (!isObject(mission)) return { title: "--", detail: "Sem dados de missão" };
+      const title = getField(mission, ["name", "mission", "title", "chapter", "map"]) || "Missão ativa";
+      const detail = getField(mission, ["status", "objective", "task", "type", "difficulty", "weather"]) || "Dados recebidos";
+      return { title: compactValue(title), detail: compactValue(detail) };
+    }
+
+    function indexedNumberField(state, indicators, index, patterns) {
+      const names = patterns.flatMap((pattern) => [
+        pattern.replace("{n}", index),
+        pattern.replace("{n}", String(index)).replace(/\s+/g, "_"),
+        pattern.replace("{n}", String(index)).replace(/\s+/g, "")
+      ]);
+      return firstNumberField(state, names) ?? firstNumberField(indicators, names);
+    }
+
+    function plausibleTemperature(value, min = -80, max = 260) {
+      const number = toNumber(value);
+      if (number === null) return undefined;
+      return number >= min && number <= max ? number : undefined;
+    }
+
+    function splitWaterOrEngineTemperature(value) {
+      const number = toNumber(value);
+      if (number === null) return {};
+      if (number >= -80 && number <= 260) return { waterTemp: number };
+      if (number > 260 && number <= 1200) return { engineTemp: number };
+      return {};
+    }
+
+    function firstPatternNumber(source, patterns, rejectPatterns = []) {
+      if (!isObject(source)) return undefined;
+      for (const [key, value] of Object.entries(source)) {
+        if (rejectPatterns.some((pattern) => pattern.test(key))) continue;
+        if (!patterns.some((pattern) => pattern.test(key))) continue;
+        const number = toNumber(value);
+        if (number !== null) return number;
+      }
+      return undefined;
+    }
+
+    function sumPatternNumbers(source, patterns, rejectPatterns = []) {
+      if (!isObject(source)) return undefined;
+      const values = Object.entries(source)
+        .filter(([key]) => patterns.some((pattern) => pattern.test(key)))
+        .filter(([key]) => !rejectPatterns.some((pattern) => pattern.test(key)))
+        .map(([, value]) => toNumber(value))
+        .filter((value) => value !== null);
+      return values.length ? values.reduce((total, value) => total + value, 0) : undefined;
+    }
+
+    function collectNumberEntries(value, path = "", rows = [], depth = 0) {
+      if (depth > 5 || value === undefined || value === null) return rows;
+
+      const number = toNumber(value);
+      if (number !== null) {
+        rows.push({ path, value: number });
+        return rows;
+      }
+
+      if (Array.isArray(value)) {
+        value.forEach((item, index) => collectNumberEntries(item, `${path} ${index}`, rows, depth + 1));
+        return rows;
+      }
+
+      if (isObject(value)) {
+        Object.entries(value).forEach(([key, item]) => {
+          collectNumberEntries(item, `${path} ${key}`.trim(), rows, depth + 1);
+        });
+      }
+
+      return rows;
+    }
+
+    function firstNestedPatternNumber(source, patterns, rejectPatterns = []) {
+      const entry = collectNumberEntries(source)
+        .find(({ path }) => patterns.some((pattern) => pattern.test(path))
+          && !rejectPatterns.some((pattern) => pattern.test(path)));
+      return entry?.value;
+    }
+
+    function collectTextEntries(value, path = "", rows = [], depth = 0) {
+      if (depth > 5 || value === undefined || value === null) return rows;
+
+      if (typeof value === "string") {
+        rows.push({ path, value });
+        return rows;
+      }
+
+      if (Array.isArray(value)) {
+        value.forEach((item, index) => collectTextEntries(item, `${path} ${index}`, rows, depth + 1));
+        return rows;
+      }
+
+      if (isObject(value)) {
+        Object.entries(value).forEach(([key, item]) => {
+          collectTextEntries(item, `${path} ${key}`.trim(), rows, depth + 1);
+        });
+      }
+
+      return rows;
+    }
+
+    function firstCountermeasureFromText(source, kind) {
+      const labels = kind === "chaff"
+        ? "(?:CHFF|CHAFF|CHAFFS|DIPOLE|DIPOLES)"
+        : "(?:FLR|FLARE|FLARES)";
+      const pattern = new RegExp(`(?:^|\\b)${labels}\\b\\s*[:=\\-]?\\s*(\\d+)`, "i");
+      for (const entry of collectTextEntries(source)) {
+        const match = entry.value.match(pattern);
+        if (match) return Number(match[1]);
+      }
+      return undefined;
+    }
+
+    function firstCountermeasureFromPairs(source, kind, depth = 0) {
+      if (depth > 5 || source === undefined || source === null) return undefined;
+
+      const patterns = kind === "chaff"
+        ? [/^CHFF$/i, /^CHAFFS?$/i, /^DIPOLES?$/i]
+        : [/^FLR$/i, /^FLARES?$/i];
+
+      if (Array.isArray(source)) {
+        if (source.length >= 2 && typeof source[0] === "string" && patterns.some((pattern) => pattern.test(source[0].trim()))) {
+          const number = toNumber(source[1]);
+          if (number !== null) return number;
+        }
+        for (const item of source) {
+          const value = firstCountermeasureFromPairs(item, kind, depth + 1);
+          if (value !== undefined) return value;
+        }
+        return undefined;
+      }
+
+      if (isObject(source)) {
+        const entries = Object.entries(source);
+        for (let index = 0; index < entries.length - 1; index += 1) {
+          const [, current] = entries[index];
+          const [, next] = entries[index + 1];
+          if (typeof current === "string" && patterns.some((pattern) => pattern.test(current.trim()))) {
+            const number = toNumber(next);
+            if (number !== null) return number;
+          }
+        }
+        for (const child of Object.values(source)) {
+          const value = firstCountermeasureFromPairs(child, kind, depth + 1);
+          if (value !== undefined) return value;
+        }
+      }
+
+      return undefined;
+    }
+
+    function firstLabelledNumber(source, patterns, rejectPatterns = []) {
+      if (!source || typeof source !== "object") return undefined;
+
+      if (Array.isArray(source)) {
+        for (const item of source) {
+          const value = firstLabelledNumber(item, patterns, rejectPatterns);
+          if (value !== undefined) return value;
+        }
+        return undefined;
+      }
+
+      if (!isObject(source)) return undefined;
+
+      const label = [
+        getField(source, ["label", "name", "title", "key", "id", "type"]),
+        getField(source, ["text", "caption", "captionText"])
+      ].filter(Boolean).map(String).join(" ");
+      const rejected = rejectPatterns.some((pattern) => pattern.test(label));
+      const matched = patterns.some((pattern) => pattern.test(label));
+      if (matched && !rejected) {
+        const value = firstNumberField(source, ["value", "count", "amount", "qty", "quantity", "remaining", "text"]);
+        if (value !== undefined) return value;
+      }
+
+      for (const child of Object.values(source)) {
+        const value = firstLabelledNumber(child, patterns, rejectPatterns);
+        if (value !== undefined) return value;
+      }
+
+      return undefined;
+    }
+
+    function countermeasureCount(state, indicators, kind) {
+      const patterns = kind === "chaff"
+        ? [/chaff/i, /\bchff\b/i, /dipole/i, /counter.*measure.*chaff/i, /\bcm\b.*chaff/i]
+        : [/flare/i, /\bflr\b/i, /counter.*measure.*flare/i, /\bcm\b.*flare/i];
+      const rejects = [/spent/i, /used/i, /total/i, /max/i, /capacity/i, /salvo/i, /series/i, /period/i, /interval/i, /time/i];
+      const names = kind === "chaff"
+        ? [
+          "chaff", "chaff, pcs", "chaff count", "chaff remaining", "chaffs", "chaffs, pcs", "chaffs remaining",
+          "CHFF", "CHFF, pcs", "chff", "chff, pcs",
+          "dipole", "dipole, pcs", "dipoles", "dipoles, pcs", "dipoles remaining",
+          "countermeasure chaff", "countermeasure chaff count", "countermeasures chaff", "countermeasures chaff count",
+          "cm chaff", "cms chaff", "countermeasures, chaff"
+        ]
+        : [
+          "flare", "flare, pcs", "flare count", "flare remaining", "flares", "flares, pcs", "flares remaining",
+          "FLR", "FLR, pcs", "flr", "flr, pcs",
+          "countermeasure flare", "countermeasure flare count", "countermeasure flares", "countermeasures flares",
+          "countermeasures flare count", "countermeasures flares count", "cm flare", "cm flares", "cms flare", "cms flares",
+          "countermeasures, flare", "countermeasures, flares"
+        ];
+
+      return firstNumberField(state, names)
+        ?? firstNumberField(indicators, names)
+        ?? firstPatternNumber(state, patterns, rejects)
+        ?? firstPatternNumber(indicators, patterns, rejects)
+        ?? firstNestedPatternNumber(state, patterns, rejects)
+        ?? firstNestedPatternNumber(indicators, patterns, rejects)
+        ?? firstLabelledNumber(state, patterns, rejects)
+        ?? firstLabelledNumber(indicators, patterns, rejects)
+        ?? firstCountermeasureFromPairs(state, kind)
+        ?? firstCountermeasureFromPairs(indicators, kind)
+        ?? firstCountermeasureFromText(state, kind)
+        ?? firstCountermeasureFromText(indicators, kind)
+        ?? sumPatternNumbers(state, patterns, rejects)
+        ?? sumPatternNumbers(indicators, patterns, rejects);
+    }
+
+    function extractEngineReadings(state, indicators, summary) {
+      return [1, 2, 3, 4, 5, 6, 7, 8].map((index) => {
+        const rpm = index === 1
+          ? summary.rpm
+          : indexedNumberField(state, indicators, index, [
+            "RPM {n}",
+            "RPM {n}, rpm",
+            "RPM {n}, %",
+            "rpm {n}",
+            "engine {n} rpm",
+            "engine {n}, rpm",
+            "engine {n} RPM"
+          ]);
+        const throttle = index === 1
+          ? summary.throttle
+          : indexedNumberField(state, indicators, index, [
+            "throttle {n}",
+            "throttle {n}, %",
+            "engine {n} throttle",
+            "engine {n} throttle, %"
+          ]);
+        const oilTemp = plausibleTemperature(indexedNumberField(state, indicators, index, [
+          "oil temp {n}, C",
+          "oil temperature {n}",
+          "engine {n} oil temp",
+          "engine {n} oil temperature",
+          "oil temp {n}",
+          "oil {n}",
+          "OIL{n}"
+        ]));
+        const rawWaterTemp = indexedNumberField(state, indicators, index, [
+          "water temp {n}, C",
+          "water temperature {n}",
+          "engine {n} water temp",
+          "engine {n} water temperature",
+          "water temp {n}"
+        ]);
+        const rawEngineTemp = indexedNumberField(state, indicators, index, [
+          "engine temp {n}, C",
+          "engine temperature {n}",
+          "engine {n} temp",
+          "engine {n} temperature",
+          "engn {n}",
+          "ENGN{n}",
+          "egt {n}",
+          "EGT{n}",
+          "exhaust temp {n}, C",
+          "exhaust temperature {n}"
+        ]);
+        const splitTemp = splitWaterOrEngineTemperature(rawWaterTemp);
+        const engineTemp = plausibleTemperature(rawEngineTemp, -80, 1200) ?? splitTemp.engineTemp;
+        const waterTemp = splitTemp.waterTemp;
+        return { index, rpm, throttle, oilTemp, waterTemp, engineTemp };
+      }).filter((engine) => engine.index === 1
+        || engine.rpm !== undefined
+        || engine.throttle !== undefined
+        || engine.oilTemp !== undefined
+        || engine.waterTemp !== undefined
+        || engine.engineTemp !== undefined);
+    }
+
+    function engineCountHintFromVehicle(vehicle) {
+      const text = String(vehicle || "").toLowerCase().replace(/[^a-z0-9]+/g, "_");
+      if (!text) return undefined;
+
+      // Known single-engine jets where the API can expose duplicate channels that are not real engines.
+      if (/(^|_)(jas_?39|gripen|f_?16|mirage_?2000|mig_?21|mig_?23|mig_?27|f_?104|f_?100|f_?8|hunter|lightning|draken|viggen|saab_?35|saab_?37|a_?7|harrier|yak_?38|yak_?141|kfir)(_|$)/.test(text)) {
+        return 1;
+      }
+
+      // Explicit multi-engine aircraft. This is used only to decide how many cards to show;
+      // temperatures are still taken only from real indexed ENGN/OIL/WATER fields.
+      if (/(^|_)b_?52/.test(text)) return 8;
+      if (/(^|_)(b_?29|tu_?4|tu_?95|b_?17|b_?24|lancaster|pe_?8)(_|$)/.test(text)) return 4;
+      if (/(^|_)(su_?30|su_?27|su_?33|su_?34|su_?24|su_?25|su_?39|mig_?29|mig_?31|f_?14|f_?15|f_?4|f_?111|tornado|a_?10|b_?57|canberra|il_?28|yak_?28|buccaneer|phantom|tomcat|eagle|fulcrum|flanker|frogfoot)(_|$)/.test(text)) {
+        return 2;
+      }
+
+      return undefined;
+    }
+
+    function engineHasReading(engine) {
+      return !!engine && (
+        engine.rpm !== undefined
+        || engine.throttle !== undefined
+        || engine.oilTemp !== undefined
+        || engine.waterTemp !== undefined
+        || engine.engineTemp !== undefined
+      );
+    }
+
+    function detectedEngineCountFromReadings(engines) {
+      const visibleIndexes = (engines || [])
+        .filter((engine) => engineHasReading(engine))
+        .map((engine) => engine.index)
+        .filter((index) => Number.isFinite(index));
+      return Math.max(1, ...visibleIndexes);
+    }
+
+    function engineDisplayCount(summary) {
+      const hint = engineCountHintFromVehicle(summary?.vehicle);
+      if (hint !== undefined) return Math.max(1, Math.min(8, hint));
+      return Math.max(1, Math.min(8, detectedEngineCountFromReadings(summary?.engines || [])));
+    }
+
+    function sharedEngineValueForDisplay(engine, firstEngine, count, index, field) {
+      if (engine?.[field] !== undefined) return engine[field];
+      if (index > 1 && count > 1 && firstEngine?.[field] !== undefined) return firstEngine[field];
+      return undefined;
+    }
+
+    function textFromEvent(value) {
+      if (typeof value === "string") return value.trim();
+      if (typeof value === "number" || typeof value === "boolean") return compactValue(value);
+      if (isObject(value)) {
+        const actor = getField(value, ["killer", "attacker", "player", "from", "sender", "author", "name"]);
+        const target = getField(value, ["victim", "target", "destroyed", "to", "message", "text"]);
+        if (actor || target) return [actor, target].filter(Boolean).map(compactValue).join(" -> ");
+      }
+      return "";
+    }
+
+    function collectTextEvents(value, path = "", rows = [], depth = 0) {
+      if (depth > 5 || value === undefined || value === null) return rows;
+
+      const eventKey = /(chat|message|radio|log|event|kill|killer|victim|destroy|death|frag|score)/i.test(path);
+      if (eventKey) {
+        const text = textFromEvent(value);
+        if (text && text.length > 1) rows.push({ path, text });
+      }
+
+      if (Array.isArray(value)) {
+        value.slice(0, 120).forEach((item, index) => collectTextEvents(item, `${path}[${index}]`, rows, depth + 1));
+        return rows;
+      }
+
+      if (isObject(value)) {
+        Object.entries(value).forEach(([key, child]) => {
+          collectTextEvents(child, path ? `${path}.${key}` : key, rows, depth + 1);
+        });
+      }
+
+      return rows;
+    }
+
+    function addFeedEntry(kind, text, source = "Jogo") {
+      const clean = String(text || "").replace(/\s+/g, " ").trim();
+      if (!clean) return;
+      const key = `${kind}:${source}:${clean}`;
+      if (feedState.seen.has(key)) return;
+
+      feedState.seen.add(key);
+      const entry = {
+        at: Date.now(),
+        source,
+        text: clean
+      };
+      feedState[kind].unshift(entry);
+      feedState[kind] = feedState[kind].slice(0, 30);
+    }
+
+    function updateGameFeeds() {
+      ENDPOINTS.forEach((endpoint) => {
+        const data = getEndpointData(endpoint.id);
+        if (data === undefined || data === null) return;
+        collectTextEvents(data).forEach((event) => {
+          const text = `${event.text}`;
+          const source = endpoint.label;
+          if (/(kill|killer|victim|destroy|death|frag|crash|shot down|abat|destru|elimin)/i.test(`${event.path} ${text}`)) {
+            addFeedEntry("kill", text, source);
+          } else if (/(chat|message|radio|team|squad|system)/i.test(event.path)) {
+            addFeedEntry("chat", text, source);
+          }
+        });
+      });
+
+      const objects = getMapObjects();
+      const nextKeys = new Set(objects.map(objectKey));
+      if (feedState.objectKeys.size) {
+        objects.forEach((object) => {
+          const key = objectKey(object);
+          if (!feedState.objectKeys.has(key)) {
+            addFeedEntry("chat", `Novo contacto no mapa: ${objectLabel(object)}`, "Mapa");
+          }
+        });
+        feedState.objectKeys.forEach((key) => {
+          if (!nextKeys.has(key)) {
+            addFeedEntry("kill", `Contacto saiu do mapa: ${key.split("|")[0] || "objeto"}`, "Mapa");
+          }
+        });
+      }
+      feedState.objectKeys = nextKeys;
+
+      const mission = getEndpointData("mission");
+      const signature = safeJsonText(mission ?? {}).slice(0, 260);
+      if (signature && signature !== "{}" && feedState.missionSignature && signature !== feedState.missionSignature) {
+        addFeedEntry("chat", "Dados de missão alterados.", "Missão");
+      }
+      if (signature && signature !== "{}") feedState.missionSignature = signature;
+    }
+
+    function renderFeedList(container, entries, emptyText) {
+      container.innerHTML = "";
+      if (!entries.length) {
+        const empty = document.createElement("div");
+        empty.className = "feed-empty";
+        empty.textContent = emptyText;
+        container.appendChild(empty);
+        return;
+      }
+
+      entries.slice(0, 12).forEach((entry) => {
+        const row = document.createElement("div");
+        row.className = "feed-row";
+        const time = document.createElement("span");
+        time.className = "feed-time";
+        time.textContent = new Date(entry.at).toLocaleTimeString("pt-PT", { hour12: false });
+        const text = document.createElement("span");
+        text.textContent = `${entry.source}: ${entry.text}`;
+        row.append(time, text);
+        container.appendChild(row);
+      });
+    }
+
+    function renderGameFeeds() {
+      if (!els.killFeedList || !els.gameChatList) return;
+
+      renderFeedList(
+        els.killFeedList,
+        feedState.kill,
+        "Sem kill feed explícito no endpoint local. Serão mostradas alterações reais do mapa quando existirem."
+      );
+      renderFeedList(
+        els.gameChatList,
+        feedState.chat,
+        "Sem chat exposto pelo endpoint local. Serão mostrados eventos de missão/mapa quando existirem."
+      );
+    }
+
+    function battleFeedUrl(path) {
+      return new URL(path, currentBaseUrl).href;
+    }
+
+    async function fetchBattleFeedPath(path, signal) {
+      const response = await fetch(battleFeedUrl(path), {
+        cache: "no-store",
+        signal,
+        headers: { Accept: "application/json,text/plain,*/*" }
+      });
+      const text = await response.text();
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText || "erro HTTP"}`);
+      try {
+        return JSON.parse(text);
+      } catch {
+        return text;
+      }
+    }
+
+    function feedItemsFromPayload(payload) {
+      if (Array.isArray(payload)) return payload;
+      if (Array.isArray(payload?.messages)) return payload.messages;
+      if (Array.isArray(payload?.chat)) return payload.chat;
+      if (Array.isArray(payload?.items)) return payload.items;
+      if (typeof payload === "string") {
+        return payload
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .map((msg, index) => ({ id: index, msg }));
+      }
+      return [];
+    }
+
+    function feedItemId(item) {
+      const id = isObject(item) ? getField(item, ["id", "eventId", "evtId", "dmgId"]) : undefined;
+      const number = toNumber(id);
+      return number === null ? undefined : number;
+    }
+
+    function maxFeedId(items) {
+      const ids = items.map(feedItemId).filter((value) => Number.isFinite(value));
+      return ids.length ? Math.max(...ids) : undefined;
+    }
+
+    function battleFeedText(item) {
+      if (typeof item === "string") return item.trim();
+      if (!isObject(item)) return compactValue(item);
+
+      const msg = getField(item, ["msg", "message", "text", "body", "event"]);
+      const sender = getField(item, ["sender", "author", "player", "name"]);
+      const mode = getField(item, ["mode", "channel"]);
+      const parts = [];
+      if (sender) parts.push(`${compactValue(sender)}:`);
+      if (msg) parts.push(compactValue(msg));
+      if (!parts.length) parts.push(compactValue(item));
+      const suffix = mode ? ` [${compactValue(mode)}]` : "";
+      return `${parts.join(" ")}${suffix}`.trim();
+    }
+
+    function addBattleFeedEntry(kind, item, source) {
+      const text = battleFeedText(item).replace(/\s+/g, " ").trim();
+      if (!text || text === "{}" || text === "[]") return false;
+
+      const id = feedItemId(item);
+      const enemy = isObject(item) && getField(item, ["enemy"]) === true;
+      const key = `${kind}:${source}:${id ?? ""}:${text}`;
+      if (battleFeedState.seen.has(key)) return false;
+
+      battleFeedState.seen.add(key);
+      battleFeedState.entries.push({
+        at: Date.now(),
+        id,
+        kind,
+        source,
+        enemy,
+        text
+      });
+
+      if (battleFeedState.entries.length > 160) {
+        const excess = battleFeedState.entries.length - 160;
+        battleFeedState.entries.splice(0, excess);
+      }
+      if (battleFeedState.seen.size > 500) {
+        battleFeedState.seen = new Set(battleFeedState.entries.map((entry) => `${entry.kind}:${entry.source}:${entry.id ?? ""}:${entry.text}`));
+      }
+      return true;
+    }
+
+    function processGamechatPayload(payload) {
+      const items = feedItemsFromPayload(payload);
+      let added = 0;
+      items.forEach((item) => {
+        if (addBattleFeedEntry("chat", item, t("gamechat"))) added += 1;
+      });
+      const maxId = maxFeedId(items);
+      if (maxId !== undefined) battleFeedState.lastChatId = Math.max(battleFeedState.lastChatId, maxId);
+      return added;
+    }
+
+    function processHudmsgPayload(payload) {
+      const eventItems = Array.isArray(payload?.events) ? payload.events : [];
+      const damageItems = Array.isArray(payload?.damage) ? payload.damage : [];
+      let added = 0;
+
+      eventItems.forEach((item) => {
+        if (addBattleFeedEntry("event", item, t("hudEvents"))) added += 1;
+      });
+      damageItems.forEach((item) => {
+        if (addBattleFeedEntry("damage", item, t("hudDamage"))) added += 1;
+      });
+
+      const maxEvt = maxFeedId(eventItems);
+      const maxDmg = maxFeedId(damageItems);
+      if (maxEvt !== undefined) battleFeedState.lastHudEvt = Math.max(battleFeedState.lastHudEvt, maxEvt);
+      if (maxDmg !== undefined) battleFeedState.lastHudDmg = Math.max(battleFeedState.lastHudDmg, maxDmg);
+      return added;
+    }
+
+    async function refreshBattleFeed() {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 1800);
+      try {
+        const chatPath = `gamechat?lastId=${encodeURIComponent(battleFeedState.lastChatId)}`;
+        const hudPath = `hudmsg?lastEvt=${encodeURIComponent(battleFeedState.lastHudEvt)}&lastDmg=${encodeURIComponent(battleFeedState.lastHudDmg)}`;
+        const [chatResult, hudResult] = await Promise.allSettled([
+          fetchBattleFeedPath(chatPath, controller.signal),
+          fetchBattleFeedPath(hudPath, controller.signal)
+        ]);
+
+        let ok = 0;
+        let added = 0;
+        if (chatResult.status === "fulfilled") {
+          ok += 1;
+          added += processGamechatPayload(chatResult.value);
+        }
+        if (hudResult.status === "fulfilled") {
+          ok += 1;
+          added += processHudmsgPayload(hudResult.value);
+        }
+
+        battleFeedState.status = ok
+          ? `${ok}/2 ${t("feedOk")}${added ? ` · +${added}` : ""}`
+          : t("feedUnavailable");
+      } catch {
+        battleFeedState.status = t("feedUnavailable");
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+
+    function renderBattleFeedEntries(container, entries, emptyText) {
+      if (!container) return;
+      container.innerHTML = "";
+
+      if (!entries.length) {
+        const empty = document.createElement("div");
+        empty.className = "battle-feed-empty";
+        empty.textContent = emptyText;
+        container.appendChild(empty);
+        return;
+      }
+
+      entries.slice(-80).forEach((entry) => {
+        const row = document.createElement("div");
+        row.className = `battle-feed-row ${entry.kind}${entry.enemy ? " enemy" : ""}`;
+
+        const time = document.createElement("span");
+        time.className = "battle-feed-time";
+        time.textContent = new Date(entry.at).toLocaleTimeString(currentLanguage === "en" ? "en-GB" : "pt-PT", { hour12: false }).slice(0, 5);
+
+        const text = document.createElement("span");
+        text.textContent = entry.text;
+
+        row.append(time, text);
+        container.appendChild(row);
+      });
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function renderBattleFeed() {
+      if (!els.battleFeedList) return;
+
+      const chatEntries = battleFeedState.entries.filter((entry) => entry.kind === "chat");
+      const eventEntries = battleFeedState.entries.filter((entry) => entry.kind !== "chat");
+      const total = battleFeedState.entries.length;
+      const eventCount = eventEntries.length;
+      const chatCount = chatEntries.length;
+
+      if (els.battleFeedStatus) {
+        els.battleFeedStatus.textContent = battleFeedState.status
+          ? `${battleFeedState.status} · ${eventCount} eventos`
+          : t("feedReady");
+      }
+      if (els.gameChatFeedStatus) {
+        els.gameChatFeedStatus.textContent = `${chatCount} ${currentLanguage === "en" ? "messages" : "mensagens"} · ${total} total`;
+      }
+
+      renderBattleFeedEntries(els.battleFeedList, eventEntries, t("feedNoEvents"));
+      renderBattleFeedEntries(els.gameChatFeedList, chatEntries, t("feedNoChat"));
+    }
+
+    function clearBattleFeed() {
+      battleFeedState = {
+        seen: new Set(),
+        entries: [],
+        lastChatId: battleFeedState.lastChatId,
+        lastHudEvt: battleFeedState.lastHudEvt,
+        lastHudDmg: battleFeedState.lastHudDmg,
+        status: t("feedReady")
+      };
+      renderBattleFeed();
+    }
+
+    async function fetchEndpoint(endpoint, signal) {
+      const started = performance.now();
+      const response = await fetch(endpointUrl(endpoint), {
+        cache: "no-store",
+        signal,
+        headers: { Accept: "application/json,text/plain,*/*" }
+      });
+      const text = await response.text();
+      const latencyMs = Math.round(performance.now() - started);
+
+      if (!response.ok) {
+        throw new Error(`${response.status} ${response.statusText || "erro HTTP"}`);
+      }
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = text;
+      }
+
+      return { data, latencyMs, bytes: text.length };
+    }
+
+    async function refreshData() {
+      if (isRefreshing) return;
+
+      try {
+        currentBaseUrl = normaliseBaseUrl(els.baseUrl.value);
+      } catch {
+        setStatus(t("invalidAddress"), "error");
+        addLog(t("invalidAddress"), "error");
+        return;
+      }
+
+      isRefreshing = true;
+      lastRefreshStarted = Date.now();
+      updateBaseUrlUi();
+      setStatus(t("reading"));
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3500);
+
+      const results = await Promise.allSettled(
+        ENDPOINTS.map(async (endpoint) => {
+          const result = await fetchEndpoint(endpoint, controller.signal);
+          return { endpoint, result };
+        })
+      );
+
+      clearTimeout(timeout);
+
+      let okCount = 0;
+      results.forEach((entry, index) => {
+        const endpoint = ENDPOINTS[index];
+        if (entry.status === "fulfilled") {
+          okCount += 1;
+          store[endpoint.id] = {
+            status: "ok",
+            label: endpoint.label,
+            path: endpoint.path,
+            data: entry.value.result.data,
+            latencyMs: entry.value.result.latencyMs,
+            bytes: entry.value.result.bytes,
+            updatedAt: Date.now(),
+            error: ""
+          };
+        } else {
+          const rawMessage = entry.reason?.message || "";
+          const message = entry.reason?.name === "AbortError"
+            ? "tempo esgotado"
+            : /failed to fetch|load failed|networkerror/i.test(rawMessage)
+              ? "falha de ligação ou bloqueio CORS"
+              : (rawMessage || "falha na leitura");
+
+          store[endpoint.id] = {
+            status: "error",
+            label: endpoint.label,
+            path: endpoint.path,
+            data: store[endpoint.id]?.data ?? null,
+            latencyMs: null,
+            bytes: store[endpoint.id]?.bytes ?? 0,
+            updatedAt: Date.now(),
+            error: message
+          };
+        }
+      });
+
+      if (okCount === ENDPOINTS.length) {
+        setStatus(`${t("connected")} ${okCount}/${ENDPOINTS.length} ${t("updated")}.`, "ok");
+      } else if (okCount > 0) {
+        setStatus(`${t("partial")} ${okCount}/${ENDPOINTS.length} ${t("updated")}.`, "warn");
+      } else {
+        setStatus(t("noEndpointData"), "error");
+      }
+
+      addLog(`${okCount}/${ENDPOINTS.length} endpoints actualizados em ${Date.now() - lastRefreshStarted} ms.`, okCount ? "ok" : "error");
+      await refreshBattleFeed();
+      pushHistory();
+      renderAll();
+      isRefreshing = false;
+      scheduleRefresh();
+    }
+
+    function scheduleRefresh() {
+      clearTimeout(refreshTimer);
+      if (!els.autoRefresh.checked) return;
+      refreshTimer = setTimeout(refreshData, Number(els.refreshRate.value));
+    }
+
+    function updateBaseUrlUi() {
+      els.baseUrl.value = currentBaseUrl;
+      els.mapTitle.textContent = currentBaseUrl;
+      els.externalLink.href = currentBaseUrl;
+    }
+
+    function showMapMessage(title, message) {
+      els.mapContainer.className = "empty-map";
+      els.mapContainer.innerHTML = "";
+
+      const wrapper = document.createElement("div");
+      const strong = document.createElement("strong");
+      const span = document.createElement("span");
+
+      strong.textContent = title;
+      span.textContent = message;
+      wrapper.append(strong, span);
+      els.mapContainer.appendChild(wrapper);
+    }
+
+    function openMap() {
+      try {
+        currentBaseUrl = normaliseBaseUrl(els.baseUrl.value);
+      } catch {
+        setStatus(t("invalidAddress"), "error");
+        return;
+      }
+
+      updateBaseUrlUi();
+      els.mapContainer.className = "map-frame-shell";
+      els.mapContainer.innerHTML = "";
+
+      const iframe = document.createElement("iframe");
+      iframe.className = "map-frame";
+      iframe.title = "War Thunder Tactical Map";
+      iframe.src = currentBaseUrl;
+      iframe.referrerPolicy = "no-referrer";
+      iframe.setAttribute("scrolling", "no");
+      els.mapContainer.appendChild(iframe);
+      setStatus(t("mapOpened"), "ok");
+    }
+
+    function reloadMap() {
+      const iframe = els.mapContainer.querySelector("iframe");
+      if (iframe) {
+        iframe.src = currentBaseUrl;
+      } else {
+        openMap();
+      }
+    }
+
+    function extractSummary() {
+      const state = getEndpointData("state") || {};
+      const indicators = getEndpointData("indicators") || {};
+      const mission = getEndpointData("mission") || {};
+
+      const ias = firstNumberFromSources([indicators, state], ["IAS", "IAS, km/h", "ias", "ias, km/h"]);
+      const tas = firstNumberFromSources([indicators, state], ["TAS", "TAS, km/h", "tas", "tas, km/h"]);
+      const spd = firstNumberFromSources([indicators, state], [
+        "SPD", "SPD, km/h", "spd", "spd, km/h",
+        "speed, km/h", "speed km/h", "speed_kmh", "speed_kph"
+      ]);
+      const speedMs = firstNumberFromSources([indicators, state], ["speed, m/s", "speed m/s", "speed_ms"]);
+      const rawSpeed = firstNumberField(indicators, ["speed"]) ?? firstNumberField(state, ["speed"]);
+      const speed = ias ?? spd ?? tas ?? (speedMs === undefined ? rawSpeed : speedMs * 3.6);
+      const speedSource = ias !== undefined
+        ? "IAS"
+        : spd !== undefined
+          ? "SPD"
+          : tas !== undefined
+            ? "TAS"
+            : speedMs !== undefined
+              ? "speed m/s"
+              : "speed";
+      const hudAltitude = firstNumberFromSources([indicators, state], ["ALT", "ALT, m", "alt", "alt, m"]);
+      const ralt = firstNumberFromSources([indicators, state], [
+        "RALT", "RALT, m", "ralt", "ralt, m",
+        "radar altitude", "radar altitude, m",
+        "radio altitude", "radio altitude, m",
+        "height over ground", "height over ground, m",
+        "ground altitude", "ground altitude, m",
+        "Hradar", "Hradar, m"
+      ]);
+      const altitude = hudAltitude
+        ?? firstNumberField(indicators, ["altitude", "altitude, m"])
+        ?? firstNumberField(state, ["H, m", "H", "altitude"])
+        ?? firstNumberField(indicators, ["altitude_10k", "altitude1_10k"]);
+      const altitudeSource = hudAltitude !== undefined ? "ALT" : firstNumberField(state, ["H, m", "H"]) !== undefined ? "H" : "indicators";
+      const heading = firstNumberField(indicators, ["compass", "compass1", "heading", "azimuth"])
+        ?? firstNumberField(state, ["compass", "heading"]);
+      const throttleRaw = firstFieldFromSources([indicators, state], [
+        "THR", "THR, %", "thr", "thr, %",
+        "throttle", "throttle, %", "throttle 1", "throttle 1, %"
+      ]);
+      const throttle = toNumber(throttleRaw) ?? firstNumberFromSources([indicators, state], [
+        "THR", "THR, %", "thr", "thr, %",
+        "throttle", "throttle, %", "throttle 1", "throttle 1, %"
+      ]);
+      const throttleMode = /wep/i.test(String(throttleRaw || "")) ? "WEP" : "";
+      const rpm = firstNumberField(state, ["RPM 1", "RPM 1, rpm", "rpm", "rpm 1"])
+        ?? firstNumberField(indicators, ["rpm", "rpm1"]);
+      const rotorRpm = firstNumberField(state, ["rotor rpm", "rotor RPM", "main rotor rpm", "main rotor RPM", "rotor_rpm"])
+        ?? firstNumberField(indicators, ["rotor rpm", "rotor RPM", "main rotor rpm", "rotor_rpm"]);
+      const thrust = sumMatchingFields(state, /^thrust \d+, kgs$/i)
+        ?? firstNumberField(state, ["thrust 1, kgs", "thrust"]);
+      const fuel = firstNumberField(state, ["Mfuel, kg", "Mfuel", "fuel, kg", "fuel"])
+        ?? firstNumberField(indicators, ["fuel", "fuel1"]);
+      const fuelMax = firstNumberField(state, ["Mfuel0, kg", "Mfuel0"]);
+      const fuelPercent = percentOf(fuel, fuelMax);
+      const fuelTime = getField(indicators, ["FUEL", "fuel time", "fuel_time", "fuel remaining", "fuel_remaining"])
+        ?? getField(state, ["FUEL", "fuel time", "fuel_time", "fuel remaining", "fuel_remaining"]);
+      const vehicle = getField(indicators, ["type", "aircraft", "vehicle"])
+        ?? getField(mission, ["vehicle", "player", "unit"]);
+      const climb = firstNumberField(state, ["Vy, m/s", "Vy", "vertical speed", "climb", "climb rate"])
+        ?? firstNumberField(indicators, ["vario"]);
+      const mach = firstNumberFromSources([indicators, state], ["MACH", "M", "mach"]);
+      const rawPitch = firstNumberField(indicators, ["aviahorizon_pitch", "pitch"])
+        ?? firstNumberField(state, ["pitch, deg", "pitch", "theta, deg", "theta"]);
+      const rawRoll = firstNumberField(indicators, ["aviahorizon_roll", "roll", "bank"])
+        ?? firstNumberField(state, ["roll, deg", "roll", "bank, deg", "bank"]);
+      const pitch = invertAngle(rawPitch);
+      const roll = invertAngle(rawRoll);
+      const aoa = firstNumberField(state, ["AoA, deg", "AoA", "AOA"]);
+      const aos = firstNumberField(state, ["AoS, deg", "AoS", "AOS"]);
+      const load = firstNumberField(state, ["Ny", "Ny, g", "load factor", "overload"]);
+      const gear = firstNumberField(state, ["gear, %", "gear", "gears"])
+        ?? firstNumberField(indicators, ["gear", "gears"]);
+      const collective = firstNumberField(state, [
+        "collective, %",
+        "collective",
+        "collective 1, %",
+        "collective 1",
+        "collective pitch, %",
+        "collective pitch",
+        "collective pitch, deg",
+        "collective pitch 1, %",
+        "prop pitch, %",
+        "prop pitch 1, %"
+      ]) ?? firstNumberField(indicators, [
+        "collective",
+        "collective, %",
+        "collective 1",
+        "collective pitch",
+        "collective pitch, %",
+        "collective pitch, deg",
+        "prop pitch",
+        "prop pitch, %"
+      ]);
+      const flaps = firstNumberField(state, ["flaps, %", "flaps"])
+        ?? firstNumberField(indicators, ["flaps"]);
+      const airbrake = firstNumberField(state, ["airbrake, %", "airbrake", "air brake, %", "air brake"])
+        ?? firstNumberField(indicators, ["airbrake", "air brake", "airbrake, %", "air brake, %"]);
+      const bombBayDoors = firstNumberField(state, [
+        "bomb bay doors, %",
+        "bomb bay doors",
+        "bombbay doors, %",
+        "bombbay doors",
+        "bomb bay, %",
+        "bomb bay",
+        "bay doors, %",
+        "bay doors",
+        "weapon bay doors, %",
+        "weapon bay doors"
+      ]) ?? firstNumberField(indicators, [
+        "bomb bay doors",
+        "bomb bay doors, %",
+        "bombbay doors",
+        "bombbay doors, %",
+        "bomb bay",
+        "bay doors",
+        "weapon bay doors",
+        "weapon bay doors, %"
+      ]);
+      const bombBayState = getField(state, ["bomb bay state", "bomb bay doors state", "bombbay state", "bay doors state"])
+        ?? getField(indicators, ["bomb bay state", "bomb bay doors state", "bombbay state", "bay doors state"]);
+      const chaff = countermeasureCount(state, indicators, "chaff");
+      const flares = countermeasureCount(state, indicators, "flares");
+      const oilTemp = plausibleTemperature(maxMatchingFields(state, /^oil temp \d+, C$/i)
+        ?? firstNumberField(indicators, ["oil_temperature", "oil temperature", "OIL1", "oil1"]));
+      const rawWaterTemp = maxMatchingFields(state, /^water temp \d+, C$/i);
+      const splitTemp = splitWaterOrEngineTemperature(rawWaterTemp);
+      const engineTemp = plausibleTemperature(maxMatchingFields(state, /^engine temp \d+, C$/i)
+        ?? maxMatchingFields(state, /^engn\d+$/i)
+        ?? firstNumberField(indicators, ["engine_temperature", "engine temperature", "engine temp", "ENGN1", "engn1"]), -80, 1200)
+        ?? splitTemp.engineTemp;
+      const waterTemp = splitTemp.waterTemp;
+      const baseSummary = {
+        rpm,
+        throttle
+      };
+      const engines = extractEngineReadings(state, indicators, baseSummary);
+
+      return {
+        speed,
+        speedSource,
+        ias,
+        tas,
+        spd,
+        altitude,
+        ralt,
+        altitudeSource,
+        heading,
+        throttle,
+        throttleMode,
+        rpm,
+        engines,
+        rotorRpm,
+        thrust,
+        fuel,
+        fuelMax,
+        fuelPercent,
+        fuelTime,
+        vehicle,
+        climb,
+        mach,
+        pitch,
+        roll,
+        aoa,
+        aos,
+        load,
+        gear,
+        collective,
+        flaps,
+        airbrake,
+        bombBayDoors,
+        bombBayState,
+        chaff,
+        flares,
+        oilTemp,
+        waterTemp,
+        engineTemp
+      };
+    }
+
+    function selectedVehicleMode(summary) {
+      const mode = els.vehicleMode?.value || "air";
+      return mode === "heli" ? "heli" : "air";
+    }
+
+    function applyVehicleMode(mode) {
+      document.querySelectorAll(".metric[data-modes]").forEach((metric) => {
+        const modes = metric.dataset.modes.split(/\s+/);
+        metric.hidden = !modes.includes(mode);
+      });
+    }
+
+    function setMetricLabel(element, labelKey) {
+      const metric = element?.closest(".metric");
+      const label = metric?.querySelector("[data-label-key]");
+      if (label) label.textContent = t(labelKey);
+    }
+
+    function setMetricVisible(element, visible) {
+      const metric = element?.closest(".metric");
+      if (metric) metric.hidden = !visible;
+    }
+
+    function cleanVehicleName(value) {
+      const text = compactValue(value);
+      if (text === "--") return text;
+      return text.split(/[\\/]/).pop().replace(/_/g, " ");
+    }
+
+    function engineDetail(engine) {
+      return `${t("engineTempShort")} ${engine?.engineTemp === undefined ? "--" : formatNumber(engine.engineTemp, "°C", 0)}`;
+    }
+
+    function engineCardTemperature(engine) {
+      if (!engine || engine.engineTemp === undefined) return "";
+      return `${t("engineTempShort")} ${formatNumber(engine.engineTemp, "°C", 0)}`;
+    }
+
+    function engineTemperatureDetail(engine, short = false) {
+      return [
+        engine.oilTemp === undefined ? "" : `${t("oil")} ${formatNumber(engine.oilTemp, "°C", 0)}`,
+        engine.waterTemp === undefined ? "" : `${t("water")} ${formatNumber(engine.waterTemp, "°C", 0)}`,
+        engine.engineTemp === undefined ? "" : `${t(short ? "engineTempShort" : "engineTemp")} ${formatNumber(engine.engineTemp, "°C", 0)}`
+      ].filter(Boolean).join(" / ");
+    }
+
+    function oilWaterTemperatureDetail(engine) {
+      return [
+        engine.oilTemp === undefined ? "" : `${t("oil")} ${formatNumber(engine.oilTemp, "°C", 0)}`,
+        engine.waterTemp === undefined ? "" : `${t("water")} ${formatNumber(engine.waterTemp, "°C", 0)}`
+      ].filter(Boolean).join(" / ");
+    }
+
+    function engineTemperatureSummary(summary) {
+      const engines = (summary.engines || [])
+        .filter((engine) => engine.oilTemp !== undefined || engine.waterTemp !== undefined);
+
+      if (!engines.length) {
+        const fallbackTemps = oilWaterTemperatureDetail(summary);
+        return {
+          title: fallbackTemps || "--",
+          detail: t("oilWater")
+        };
+      }
+
+      if (engines.length > 1) {
+        return {
+          title: `${engines.length} ${t("engines")}`,
+          detail: engines
+            .map((engine) => `M${engine.index} ${oilWaterTemperatureDetail(engine)}`)
+            .join(" / ")
+        };
+      }
+
+      const formatEngineTemp = (engine) => {
+        const temps = oilWaterTemperatureDetail(engine);
+        return `M${engine.index} ${temps}`;
+      };
+
+      return {
+        title: formatEngineTemp(engines[0]),
+        detail: engines.slice(1).map(formatEngineTemp).join(" / ") || t("oilWater")
+      };
+    }
+
+    function formatDoorState(percent, state) {
+      if (percent !== undefined) return formatNumber(percent, "%", 0);
+      if (typeof state === "boolean") return state ? t("open") : t("closed");
+      if (typeof state === "string") {
+        const text = state.toLowerCase();
+        if (/open|opened|aberto|aberta/i.test(text)) return t("open");
+        if (/closed|fechado|fechada/i.test(text)) return t("closed");
+        return state;
+      }
+      return "--";
+    }
+
+    function hasTelemetryValue(value) {
+      return value !== undefined && value !== null && value !== "";
+    }
+
+    function formatSignedNumber(value, unit = "", digits = 1) {
+      const number = toNumber(value);
+      if (number === null) return "--";
+      const sign = number > 0 ? "+" : "";
+      return `${sign}${formatNumber(number, unit, digits)}`;
+    }
+
+    function verticalSpeedDetail(value) {
+      const number = toNumber(value);
+      if (number === null) return t("climbRateDetail");
+      if (number > 1) return t("ascending");
+      if (number < -1) return t("descending");
+      return t("levelFlight");
+    }
+
+    function formatDuration(seconds) {
+      const value = toNumber(seconds);
+      if (value === null || value <= 0) return "--";
+      const rounded = Math.round(value);
+      const hours = Math.floor(rounded / 3600);
+      const minutes = Math.floor((rounded % 3600) / 60);
+      if (hours > 0) return `${hours} h ${minutes.toString().padStart(2, "0")} min`;
+      if (minutes > 0) return `${minutes} min`;
+      return `${Math.max(1, rounded)} s`;
+    }
+
+    function fuelEnduranceEstimate(summary) {
+      const currentFuel = toNumber(summary.fuel);
+      if (currentFuel === null || currentFuel <= 0) return null;
+
+      const samples = history
+        .filter((entry) => Number.isFinite(entry.fuel) && Number.isFinite(entry.at))
+        .slice(-90);
+      if (samples.length < 4) return null;
+
+      const latest = samples[samples.length - 1];
+      const oldest = [...samples]
+        .reverse()
+        .find((entry) => (latest.at - entry.at) >= 10000 && entry.fuel > latest.fuel);
+      if (!oldest) return null;
+
+      const deltaSeconds = (latest.at - oldest.at) / 1000;
+      const burned = oldest.fuel - latest.fuel;
+      if (deltaSeconds < 10 || burned <= 0) return null;
+
+      const rateKgPerSecond = burned / deltaSeconds;
+      if (!Number.isFinite(rateKgPerSecond) || rateKgPerSecond <= 0) return null;
+
+      const seconds = latest.fuel / rateKgPerSecond;
+      if (!Number.isFinite(seconds) || seconds <= 0 || seconds > 36 * 3600) return null;
+
+      return { seconds, rateKgPerSecond };
+    }
+
+    function fuelTimeText(value) {
+      if (typeof value !== "string") return "";
+      const text = value.trim();
+      return /\d+\s*:\s*\d+/.test(text) ? text : "";
+    }
+
+    function fuelTitle(summary) {
+      const mass = formatNumber(summary.fuel, "kg", 0);
+      if (mass !== "--") return mass;
+      const time = fuelTimeText(summary.fuelTime);
+      return time || "--";
+    }
+
+    function fuelDetail(summary) {
+      const parts = [];
+      const percent = formatNumber(summary.fuelPercent, "%", 0);
+      const hudTime = fuelTimeText(summary.fuelTime);
+      const estimate = fuelEnduranceEstimate(summary);
+
+      if (percent !== "--") parts.push(percent);
+      if (estimate) parts.push(`${t("eta")} ${formatDuration(estimate.seconds)}`);
+      if (hudTime) parts.push(`${t("hudFuel")} ${hudTime}`);
+
+      return parts.join(" / ") || t("massPercent");
+    }
+
+    function cardForMetric(element) {
+      return element?.closest(".metric") || null;
+    }
+
+    function setCardAlert(target, level = "", label = "") {
+      const card = target instanceof Element ? target : cardForMetric(target);
+      if (!card) return;
+      card.classList.remove("alert-active", "alert-warn", "alert-danger");
+      card.dataset.alert = "";
+      if (!level) return;
+      card.classList.add(`alert-${level}`);
+      card.dataset.alert = label || "!";
+    }
+
+    function clearMetricAlerts() {
+      document.querySelectorAll(".metric").forEach((card) => {
+        card.classList.remove("alert-active", "alert-warn", "alert-danger");
+        card.dataset.alert = "";
+      });
+    }
+
+    function alertLevelFromTemperature(engine) {
+      if (!engine) return "";
+      const engineTemp = toNumber(engine.engineTemp);
+      const oilTemp = toNumber(engine.oilTemp);
+      const waterTemp = toNumber(engine.waterTemp);
+      if ((engineTemp !== null && engineTemp >= 950) || (oilTemp !== null && oilTemp >= 130) || (waterTemp !== null && waterTemp >= 125)) return "danger";
+      if ((engineTemp !== null && engineTemp >= 850) || (oilTemp !== null && oilTemp >= 110) || (waterTemp !== null && waterTemp >= 110)) return "warn";
+      return "";
+    }
+
+    function applyVisualAlerts(summary, mode) {
+      clearMetricAlerts();
+
+      const ias = toNumber(summary.ias ?? summary.speed);
+      const load = Math.abs(toNumber(summary.load) ?? 0);
+      const fuelPercent = toNumber(summary.fuelPercent);
+      const gear = toNumber(summary.gear);
+      const flaps = toNumber(summary.flaps);
+      const airbrake = toNumber(summary.airbrake);
+      const climb = toNumber(summary.climb);
+      const endurance = fuelEnduranceEstimate(summary);
+
+      if (load >= 9) setCardAlert(els.metricLoad, "danger", t("highG"));
+      else if (load >= 6) setCardAlert(els.metricLoad, "warn", t("highG"));
+
+      if (climb !== null && climb <= -50) setCardAlert(els.metricClimbRate, "warn", t("fastDescent"));
+
+      if ((fuelPercent !== null && fuelPercent <= 10) || (endurance && endurance.seconds <= 300)) {
+        setCardAlert(els.metricConfig, "danger", t("fuelLow"));
+      } else if ((fuelPercent !== null && fuelPercent <= 20) || (endurance && endurance.seconds <= 600)) {
+        setCardAlert(els.metricConfig, "warn", t("fuelLow"));
+      }
+
+      if (mode === "air") {
+        if (gear !== null && gear > 5 && ias !== null && ias >= 500) setCardAlert(els.metricGear, "danger", t("gearSpeed"));
+        else if (gear !== null && gear > 5 && ias !== null && ias >= 350) setCardAlert(els.metricGear, "warn", t("gearSpeed"));
+        else if (gear !== null && gear > 5) setCardAlert(els.metricGear, "active", t("active"));
+
+        if (flaps !== null && flaps > 1 && ias !== null && ias >= 450) setCardAlert(els.metricFlaps, "danger", t("flapsSpeed"));
+        else if (flaps !== null && flaps > 1 && ias !== null && ias >= 300) setCardAlert(els.metricFlaps, "warn", t("flapsSpeed"));
+        else if (flaps !== null && flaps > 1) setCardAlert(els.metricFlaps, "active", t("active"));
+
+        if (airbrake !== null && airbrake > 1) setCardAlert(els.metricAirbrake, "active", t("active"));
+      }
+
+      if ((summary.throttleMode && /WEP/i.test(summary.throttleMode)) || (toNumber(summary.throttle) ?? 0) > 100) {
+        setCardAlert(els.metricEngine, "warn", t("wepActive"));
+      }
+
+      (summary.engines || []).forEach((engine) => {
+        const level = alertLevelFromTemperature(engine);
+        if (!level) return;
+        const label = t("hot");
+        if (engine.index === 1) {
+          setCardAlert(els.metricEngine, level, label);
+          setCardAlert(document.querySelector('[data-engine-temp="1"]'), level, label);
+        } else {
+          setCardAlert(document.querySelector(`[data-engine-extra="${engine.index}"]`), level, label);
+          setCardAlert(document.querySelector(`[data-engine-temp="${engine.index}"]`), level, label);
+        }
+      });
+    }
+
+    function renderCountermeasures(summary) {
+      setMetricVisible(els.metricChaff, hasTelemetryValue(summary.chaff));
+      els.metricChaff.textContent = formatNumber(summary.chaff, "", 0);
+      els.metricChaffDetail.textContent = t("countermeasures");
+      setMetricVisible(els.metricFlares, hasTelemetryValue(summary.flares));
+      els.metricFlares.textContent = formatNumber(summary.flares, "", 0);
+      els.metricFlaresDetail.textContent = t("countermeasures");
+    }
+
+    function renderFlightBase(summary) {
+      els.metricSpeed.textContent = formatNumber(summary.ias, "km/h", 0);
+      els.metricSpeedSource.textContent = t("iasDetail");
+      els.metricAltitude.textContent = formatNumber(summary.altitude, "m", 0);
+      els.metricAltitudeSource.textContent = t("altDetail");
+      els.metricClimbRate.textContent = formatSignedNumber(summary.climb, "m/s", 1);
+      els.metricClimbRateDetail.textContent = verticalSpeedDetail(summary.climb);
+      els.metricHeading.textContent = formatNumber(summary.heading, "°", 0);
+      els.metricHeadingSource.textContent = summary.vehicle ? cleanVehicleName(summary.vehicle) : t("compass");
+      els.metricAttitude.textContent = `${formatNumber(summary.roll, "°", 0)} / ${formatNumber(summary.pitch, "°", 0)}`;
+      els.metricAoA.textContent = `Roll / Pitch - AoA ${formatNumber(summary.aoa, "°", 1)}`;
+      els.metricLoad.textContent = formatNumber(summary.load, "G", 2);
+      els.metricAoS.textContent = `AoS ${formatNumber(summary.aos, "°", 1)}`;
+      els.metricConfig.textContent = fuelTitle(summary);
+      els.metricTemp.textContent = fuelDetail(summary);
+      renderCountermeasures(summary);
+    }
+
+    function renderAirSummary(summary) {
+      const temps = engineTemperatureSummary(summary);
+
+      renderFlightBase(summary);
+      setMetricLabel(els.metricEngine, "engine");
+
+      els.metricClimb.textContent = formatNumber(summary.mach, "", 2);
+      els.metricMach.textContent = "MACH";
+
+      els.metricGear.textContent = formatNumber(summary.gear, "%", 0);
+      els.metricGearDetail.textContent = summary.gear === undefined ? t("noGearData") : t("gearPosition");
+      els.metricFlaps.textContent = formatNumber(summary.flaps, "%", 0);
+      els.metricFlapsDetail.textContent = summary.flaps === undefined ? t("noFlapsData") : t("flapsExtension");
+      els.metricAirbrake.textContent = formatNumber(summary.airbrake, "%", 0);
+      els.metricAirbrakeDetail.textContent = summary.airbrake === undefined ? t("noAirbrakeData") : t("airbrakeDetail");
+      setMetricVisible(els.metricBombBay, hasTelemetryValue(summary.bombBayDoors) || hasTelemetryValue(summary.bombBayState));
+      els.metricBombBay.textContent = formatDoorState(summary.bombBayDoors, summary.bombBayState);
+      els.metricBombBayDetail.textContent = "Bomb bay doors";
+    }
+
+    function shouldShowEngineCard(engine, index, summary) {
+      if (index === 1) return true;
+      return index <= engineDisplayCount(summary);
+    }
+
+    function oilWaterTitle(engine) {
+      if (!engine) return "--";
+      if (engine.oilTemp !== undefined) return `${t("oil")} ${formatNumber(engine.oilTemp, "°C", 0)}`;
+      if (engine.waterTemp !== undefined) return `${t("water")} ${formatNumber(engine.waterTemp, "°C", 0)}`;
+      return "--";
+    }
+
+    function oilWaterDetailForCard(engine) {
+      if (!engine) return t("oilWater");
+      if (engine.oilTemp !== undefined && engine.waterTemp !== undefined) {
+        return `${t("water")} ${formatNumber(engine.waterTemp, "°C", 0)}`;
+      }
+      if (engine.oilTemp !== undefined) return `${t("water")} --`;
+      if (engine.waterTemp !== undefined) return `${t("oil")} --`;
+      return t("oilWater");
+    }
+
+    function renderEngineTemperatureCards(summary, mode) {
+      const engines = summary.engines || [];
+      const modeAllowsTemperatures = mode === "air" || mode === "heli";
+
+      [1, 2, 3, 4, 5, 6, 7, 8].forEach((index) => {
+        const engine = engines.find((item) => item.index === index);
+        const card = document.querySelector(`[data-engine-temp="${index}"]`);
+        const label = index === 1 ? els.metricTemp1Label : els[`metricTemp${index}Label`];
+        const value = index === 1 ? els.metricTemps : els[`metricTemp${index}`];
+        const detail = index === 1 ? els.metricTempsDetail : els[`metricTemp${index}Detail`];
+        if (!card || !label || !value || !detail) return;
+
+        const visible = modeAllowsTemperatures && shouldShowEngineCard(engine, index, summary);
+        card.hidden = !visible;
+        if (!visible) return;
+
+        label.textContent = `Temp. M${index}`;
+        value.textContent = oilWaterTitle(engine);
+        detail.textContent = oilWaterDetailForCard(engine);
+      });
+    }
+
+    function updateSummaryFeedDock(summary) {
+      // Feed/chat são uma secção própria, separada do resumo.
+    }
+
+    function renderEngineCards(summary, mode) {
+      const engines = summary.engines || [];
+      const first = engines.find((engine) => engine.index === 1) || engines[0] || { index: 1 };
+      const count = engineDisplayCount(summary);
+      const hasMultiple = count > 1;
+
+      if (mode !== "heli") {
+        setMetricLabel(els.metricEngine, "engine");
+        const label = els.metricEngine.closest(".metric")?.querySelector("[data-label-key]");
+        if (label) label.textContent = hasMultiple ? `${t("engine")} 1` : t("engine");
+        const mainRpm = first.rpm;
+        const mainThrottle = first.throttle ?? summary.throttle;
+        els.metricEngine.textContent = mainRpm === undefined
+          ? formatNumber(mainThrottle, "%", 0)
+          : formatNumber(mainRpm, "rpm", 0);
+        els.metricFuel.textContent = engineDetail(first);
+      }
+
+      [2, 3, 4, 5, 6, 7, 8].forEach((index) => {
+        const engine = engines.find((item) => item.index === index) || { index };
+        const card = document.querySelector(`[data-engine-extra="${index}"]`);
+        const label = els[`metricEngine${index}Label`];
+        const value = els[`metricEngine${index}`];
+        const detail = els[`metricEngine${index}Detail`];
+        if (!card || !label || !value || !detail) return;
+
+        const visible = shouldShowEngineCard(engine, index, summary);
+        card.hidden = !visible;
+        if (!visible) return;
+
+        const rpm = sharedEngineValueForDisplay(engine, first, count, index, "rpm");
+        const throttle = sharedEngineValueForDisplay(engine, first, count, index, "throttle");
+        label.textContent = `${t("engine")} ${index}`;
+        value.textContent = rpm === undefined
+          ? formatNumber(throttle, "%", 0)
+          : formatNumber(rpm, "rpm", 0);
+        detail.textContent = engineDetail(engine);
+      });
+    }
+
+    function renderHelicopterSummary(summary) {
+      const rotor = summary.rotorRpm ?? summary.rpm;
+      const temps = engineTemperatureSummary(summary);
+
+      renderFlightBase(summary);
+
+      setMetricLabel(els.metricHeading, "heading");
+      els.metricHeadingSource.textContent = summary.vehicle
+        ? `${t("aircraft")} ${cleanVehicleName(summary.vehicle)}`
+        : t("helicopterMode");
+
+      setMetricLabel(els.metricEngine, "engine");
+      els.metricEngine.textContent = rotor === undefined ? "--" : formatNumber(rotor, "rpm", 0);
+      els.metricFuel.textContent = `${t("rotor")} / ${t("throttle")} ${formatNumber(summary.throttle, "%", 0)}`;
+
+      setMetricLabel(els.metricLoad, "load");
+      els.metricLoad.textContent = formatNumber(summary.load, "G", 2);
+      els.metricAoS.textContent = `AoA ${formatNumber(summary.aoa, "°", 1)} / AoS ${formatNumber(summary.aos, "°", 1)}`;
+
+      setMetricLabel(els.metricConfig, "collective");
+      els.metricConfig.textContent = formatNumber(summary.collective, "%", 0);
+      els.metricTemp.textContent = [
+        summary.collective === undefined ? "" : t("collective"),
+        fuelTitle(summary) === "--" ? "" : `${t("fuel")} ${fuelTitle(summary)}`
+      ].filter(Boolean).join(" / ") || t("notExposed");
+
+
+    }
+
+    function pushHistory() {
+      const summary = extractSummary();
+      const speed = toNumber(summary.speed);
+      const altitude = toNumber(summary.altitude);
+      const fuel = toNumber(summary.fuel);
+      const climb = toNumber(summary.climb);
+      const load = toNumber(summary.load);
+
+      if (speed === null && altitude === null && fuel === null) return;
+
+      history.push({
+        at: Date.now(),
+        speed,
+        altitude,
+        fuel,
+        climb,
+        load
+      });
+
+      if (history.length > MAX_HISTORY) {
+        history = history.slice(history.length - MAX_HISTORY);
+      }
+    }
+
+    function renderSummary() {
+      const summary = extractSummary();
+      const mode = selectedVehicleMode(summary);
+
+      applyVehicleMode(mode);
+      document.querySelectorAll("[data-label-key]").forEach((node) => {
+        node.textContent = t(node.dataset.labelKey);
+      });
+
+      if (mode === "heli") {
+        renderHelicopterSummary(summary);
+      } else {
+        renderAirSummary(summary);
+      }
+
+      renderEngineCards(summary, mode);
+      renderEngineTemperatureCards(summary, mode);
+      updateSummaryFeedDock(summary);
+      applyVisualAlerts(summary, mode);
+
+      const latest = Math.max(0, ...Object.values(store).map((entry) => entry.updatedAt || 0));
+      els.lastUpdated.textContent = latest
+        ? new Date(latest).toLocaleTimeString("pt-PT", { hour12: false })
+        : t("noData");
+    }
+
+    function renderHistory() {
+      if (!els.historyCanvas || !els.historyCount) return;
+
+      const canvas = els.historyCanvas;
+      const ctx = canvas.getContext("2d");
+      const width = canvas.width;
+      const height = canvas.height;
+      const padding = 18;
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#0b0f12";
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.strokeStyle = "rgba(255,255,255,.08)";
+      ctx.lineWidth = 1;
+      for (let i = 1; i < 4; i += 1) {
+        const y = (height / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      const drawLine = (key, color) => {
+        const points = history
+          .map((entry, index) => ({ index, value: entry[key] }))
+          .filter((point) => point.value !== null && Number.isFinite(point.value));
+
+        if (points.length < 2) return;
+
+        const max = Math.max(...points.map((point) => point.value));
+        const min = Math.min(...points.map((point) => point.value));
+        const range = Math.max(1, max - min);
+
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+
+        points.forEach((point, pointIndex) => {
+          const x = padding + (point.index / Math.max(1, MAX_HISTORY - 1)) * (width - padding * 2);
+          const y = height - padding - ((point.value - min) / range) * (height - padding * 2);
+          if (pointIndex === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+
+        ctx.stroke();
+      };
+
+      drawLine("altitude", "#f2c36b");
+      drawLine("speed", "#69c0ac");
+
+      ctx.fillStyle = "#9ba8b2";
+      ctx.font = "22px Segoe UI, sans-serif";
+      if (!history.length) {
+        ctx.fillText("Sem histórico", padding, height / 2);
+      } else {
+        ctx.fillText("verde: velocidade  amarelo: altitude", padding, height - 12);
+      }
+
+      els.historyCount.textContent = `${history.length} amostras`;
+    }
+
+    function renderEndpoints() {
+      if (!els.endpointList || !els.endpointSummary) return;
+
+      els.endpointList.innerHTML = "";
+      const okCount = ENDPOINTS.filter((endpoint) => store[endpoint.id]?.status === "ok").length;
+      els.endpointSummary.textContent = `${okCount}/${ENDPOINTS.length} OK`;
+
+      ENDPOINTS.forEach((endpoint) => {
+        const entry = store[endpoint.id];
+        const row = document.createElement("div");
+        row.className = "endpoint-row";
+
+        const text = document.createElement("div");
+        const title = document.createElement("strong");
+        const detail = document.createElement("span");
+        title.textContent = endpoint.label;
+
+        if (!entry) {
+          detail.textContent = endpoint.path;
+        } else if (entry.status === "ok") {
+          detail.textContent = `${endpoint.path} - ${entry.latencyMs} ms - ${entry.bytes} bytes`;
+        } else {
+          detail.textContent = `${endpoint.path} - ${entry.error}`;
+        }
+
+        const pill = document.createElement("span");
+        pill.className = `pill ${entry?.status === "ok" ? "ok" : entry ? "error" : ""}`.trim();
+        pill.textContent = entry?.status === "ok" ? "OK" : entry ? "Erro" : "Pendente";
+
+        text.append(title, detail);
+        row.append(text, pill);
+        els.endpointList.appendChild(row);
+      });
+    }
+
+    function renderTelemetry() {
+      const filter = els.telemetrySearch.value.trim().toLowerCase();
+      const rows = [];
+
+      ENDPOINTS
+        .filter((endpoint) => endpoint.id !== "mapObjects")
+        .forEach((endpoint) => {
+          const data = getEndpointData(endpoint.id);
+          if (data === undefined || data === null) return;
+          flattenData(data).forEach((item) => {
+            rows.push({
+              source: endpoint.label,
+              key: item.key,
+              value: item.value
+            });
+          });
+        });
+
+      const filtered = rows.filter((row) => {
+        if (!filter) return true;
+        return `${row.source} ${row.key} ${row.value}`.toLowerCase().includes(filter);
+      });
+
+      els.telemetryTable.innerHTML = "";
+      if (!filtered.length) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.className = "empty-row";
+        td.colSpan = 3;
+        td.textContent = rows.length ? "Sem resultados para o filtro." : "Ainda não há telemetria.";
+        tr.appendChild(td);
+        els.telemetryTable.appendChild(tr);
+        return;
+      }
+
+      filtered.slice(0, 800).forEach((row) => {
+        const tr = document.createElement("tr");
+        [row.source, row.key, row.value].forEach((value) => {
+          const td = document.createElement("td");
+          td.textContent = compactValue(value);
+          tr.appendChild(td);
+        });
+        els.telemetryTable.appendChild(tr);
+      });
+    }
+
+    function getObjectColumns(objects) {
+      const preferred = ["type", "icon", "name", "team", "color", "x", "y", "sx", "sy", "dx", "dy"];
+      const seen = new Set();
+      objects.forEach((object) => {
+        if (!isObject(object)) return;
+        Object.keys(object).forEach((key) => seen.add(key));
+      });
+
+      const preferredPresent = preferred.filter((key) => seen.has(key));
+      const extra = [...seen].filter((key) => !preferred.includes(key)).slice(0, 8);
+      return [...preferredPresent, ...extra];
+    }
+
+    function renderObjects() {
+      const filter = els.objectSearch.value.trim().toLowerCase();
+      const objects = getMapObjects();
+      const filtered = objects.filter((object) => {
+        if (!filter) return true;
+        return JSON.stringify(object).toLowerCase().includes(filter);
+      });
+      const columns = getObjectColumns(filtered);
+
+      els.objectCount.textContent = `${filtered.length} objetos`;
+      els.objectsHead.innerHTML = "";
+      els.objectsTable.innerHTML = "";
+
+      if (!filtered.length || !columns.length) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.className = "empty-row";
+        td.colSpan = 1;
+        td.textContent = objects.length ? "Sem resultados para o filtro." : "Ainda não há objetos do mapa.";
+        tr.appendChild(td);
+        els.objectsTable.appendChild(tr);
+        return;
+      }
+
+      const headRow = document.createElement("tr");
+      columns.forEach((column) => {
+        const th = document.createElement("th");
+        th.textContent = column;
+        headRow.appendChild(th);
+      });
+      els.objectsHead.appendChild(headRow);
+
+      filtered.slice(0, 600).forEach((object) => {
+        const tr = document.createElement("tr");
+        columns.forEach((column) => {
+          const td = document.createElement("td");
+          td.textContent = compactValue(object[column]);
+          tr.appendChild(td);
+        });
+        els.objectsTable.appendChild(tr);
+      });
+    }
+
+    function renderRaw() {
+      const selected = els.rawEndpoint.value;
+      const value = selected === "snapshot" ? getSnapshot() : getEndpointData(selected);
+      els.rawJson.textContent = safeJsonText(value ?? {});
+    }
+
+    function renderAll() {
+      renderSummary();
+      renderBattleFeed();
+      renderHistory();
+      renderEndpoints();
+      renderTelemetry();
+      renderObjects();
+      renderRaw();
+    }
+
+    function clearData() {
+      store = {};
+      history = [];
+      feedState = {
+        seen: new Set(),
+        kill: [],
+        chat: [],
+        objectKeys: new Set(),
+        missionSignature: ""
+      };
+      battleFeedState = {
+        seen: new Set(),
+        entries: [],
+        lastChatId: 0,
+        lastHudEvt: 0,
+        lastHudDmg: 0,
+        status: t("feedReady")
+      };
+      clearTimeout(refreshTimer);
+      showMapMessage(t("cleared"), t("mapClosedBody"));
+      setStatus(t("cleared"), "warn");
+      addLog(t("cleared"));
+      renderAll();
+      scheduleRefresh();
+    }
+
+    async function copySnapshot() {
+      const text = safeJsonText(getSnapshot());
+      try {
+        await navigator.clipboard.writeText(text);
+        setStatus("Snapshot copiado.", "ok");
+        addLog("Snapshot copiado para a área de transferência.", "ok");
+      } catch {
+        setStatus("Não consegui copiar automaticamente.", "error");
+        addLog("Falha ao copiar snapshot.", "error");
+      }
+    }
+
+    function exportSnapshot() {
+      const text = safeJsonText(getSnapshot());
+      const blob = new Blob([text], { type: "application/json" });
+      const link = document.createElement("a");
+      const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+      link.href = URL.createObjectURL(blob);
+      link.download = `war-thunder-snapshot-${stamp}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      addLog("Snapshot exportado.", "ok");
+    }
+
+    function switchView(viewId) {
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.setAttribute("aria-selected", String(tab.dataset.view === viewId));
+      });
+
+      document.querySelectorAll(".view").forEach((view) => {
+        view.hidden = view.id !== viewId;
+      });
+    }
+
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => switchView(tab.dataset.view));
+    });
+
+    els.connectButton.addEventListener("click", () => {
+      openMap();
+      refreshData();
+    });
+    els.refreshButton.addEventListener("click", refreshData);
+    els.refreshRawButton.addEventListener("click", refreshData);
+    els.openMapButton.addEventListener("click", openMap);
+    els.reloadMapButton.addEventListener("click", reloadMap);
+    els.clearButton.addEventListener("click", clearData);
+    if (els.clearBattleFeedButton) els.clearBattleFeedButton.addEventListener("click", clearBattleFeed);
+    els.copyButton.addEventListener("click", copySnapshot);
+    els.exportButton.addEventListener("click", exportSnapshot);
+
+    els.autoRefresh.addEventListener("change", () => {
+      addLog(els.autoRefresh.checked ? "Auto-refresh activo." : "Auto-refresh pausado.");
+      scheduleRefresh();
+    });
+
+    els.languageSelect.addEventListener("change", () => {
+      currentLanguage = els.languageSelect.value;
+      applyLanguage();
+      setStatus(t("ready"));
+      if (!els.mapContainer.querySelector("iframe")) {
+        showMapMessage(t("mapClosedTitle"), t("mapClosedBody"));
+      }
+    });
+
+    els.themeMode.addEventListener("change", applyTheme);
+
+    els.vehicleMode.addEventListener("change", renderSummary);
+
+    els.refreshRate.addEventListener("change", scheduleRefresh);
+    els.telemetrySearch.addEventListener("input", renderTelemetry);
+    els.objectSearch.addEventListener("input", renderObjects);
+    els.rawEndpoint.addEventListener("change", renderRaw);
+
+    els.baseUrl.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        openMap();
+        refreshData();
+      }
+    });
+
+    updateBaseUrlUi();
+    currentLanguage = els.languageSelect.value;
+    applyTheme();
+    applyLanguage();
+    renderAll();
+    setStatus(t("ready"));
+    addLog("Página pronta.");
+    showMapMessage(t("mapClosedTitle"), t("mapClosedBody"));
+  </script>
+</body>
+</html>
