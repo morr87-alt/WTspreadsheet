@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>War Thunder Air/Heli Tactical Data</title>
+  <title>WT MAP - War Thunder Tactical Data</title>
   <style>
     :root {
       color-scheme: dark;
@@ -429,35 +429,37 @@
     .summary-metrics .metric[data-slot="altitude"] { grid-column: 2; grid-row: 1; }
     .summary-metrics .metric[data-slot="climbRate"] { grid-column: 3; grid-row: 1; }
     .summary-metrics .metric[data-slot="heading"] { grid-column: 4; grid-row: 1; }
-    .summary-metrics .metric[data-slot="mach"] { grid-column: 5; grid-row: 1; }
-    .summary-metrics .metric[data-slot="attitude"] { grid-column: 6; grid-row: 1; }
-    .summary-metrics .metric[data-slot="load"] { grid-column: 7; grid-row: 1; }
-    .summary-metrics .metric[data-slot="gear"] { grid-column: 3; grid-row: 4; }
-    .summary-metrics .metric[data-slot="fuel"] { grid-column: 4; grid-row: 4; }
 
-    .summary-metrics .metric[data-engine-main="1"] { grid-column: 1; grid-row: 2; }
-    .summary-metrics .metric[data-engine-extra="2"] { grid-column: 2; grid-row: 2; }
-    .summary-metrics .metric[data-engine-extra="3"] { grid-column: 3; grid-row: 2; }
-    .summary-metrics .metric[data-engine-extra="4"] { grid-column: 4; grid-row: 2; }
-    .summary-metrics .metric[data-engine-extra="5"] { grid-column: 5; grid-row: 2; }
-    .summary-metrics .metric[data-engine-extra="6"] { grid-column: 6; grid-row: 2; }
-    .summary-metrics .metric[data-engine-extra="7"] { grid-column: 7; grid-row: 2; }
-    .summary-metrics .metric[data-engine-extra="8"] { grid-column: 8; grid-row: 2; }
+    .summary-metrics .metric[data-slot="mach"] { grid-column: 1; grid-row: 2; }
+    .summary-metrics .metric[data-slot="attitude"] { grid-column: 2; grid-row: 2; }
+    .summary-metrics .metric[data-slot="load"] { grid-column: 3; grid-row: 2; }
 
-    .summary-metrics .metric[data-engine-temp="1"] { grid-column: 1; grid-row: 3; }
-    .summary-metrics .metric[data-engine-temp="2"] { grid-column: 2; grid-row: 3; }
-    .summary-metrics .metric[data-engine-temp="3"] { grid-column: 3; grid-row: 3; }
-    .summary-metrics .metric[data-engine-temp="4"] { grid-column: 4; grid-row: 3; }
-    .summary-metrics .metric[data-engine-temp="5"] { grid-column: 5; grid-row: 3; }
-    .summary-metrics .metric[data-engine-temp="6"] { grid-column: 6; grid-row: 3; }
-    .summary-metrics .metric[data-engine-temp="7"] { grid-column: 7; grid-row: 3; }
-    .summary-metrics .metric[data-engine-temp="8"] { grid-column: 8; grid-row: 3; }
+    .summary-metrics .metric[data-engine-main="1"] { grid-column: 1; grid-row: 3; }
+    .summary-metrics .metric[data-engine-extra="2"] { grid-column: 2; grid-row: 3; }
+    .summary-metrics .metric[data-engine-extra="3"] { grid-column: 3; grid-row: 3; }
+    .summary-metrics .metric[data-engine-extra="4"] { grid-column: 4; grid-row: 3; }
+    .summary-metrics .metric[data-engine-extra="5"] { grid-column: 5; grid-row: 3; }
+    .summary-metrics .metric[data-engine-extra="6"] { grid-column: 6; grid-row: 3; }
+    .summary-metrics .metric[data-engine-extra="7"] { grid-column: 7; grid-row: 3; }
+    .summary-metrics .metric[data-engine-extra="8"] { grid-column: 8; grid-row: 3; }
 
-    .summary-metrics .metric[data-slot="flaps"] { grid-column: 1; grid-row: 4; }
-    .summary-metrics .metric[data-slot="airbrake"] { grid-column: 2; grid-row: 4; }
-    .summary-metrics .metric[data-slot="bombBay"] { grid-column: 5; grid-row: 4; }
-    .summary-metrics .metric[data-slot="chaff"] { grid-column: 6; grid-row: 4; }
-    .summary-metrics .metric[data-slot="flares"] { grid-column: 7; grid-row: 4; }
+    .summary-metrics .metric[data-engine-temp="1"] { grid-column: 1; grid-row: 4; }
+    .summary-metrics .metric[data-engine-temp="2"] { grid-column: 2; grid-row: 4; }
+    .summary-metrics .metric[data-engine-temp="3"] { grid-column: 3; grid-row: 4; }
+    .summary-metrics .metric[data-engine-temp="4"] { grid-column: 4; grid-row: 4; }
+    .summary-metrics .metric[data-engine-temp="5"] { grid-column: 5; grid-row: 4; }
+    .summary-metrics .metric[data-engine-temp="6"] { grid-column: 6; grid-row: 4; }
+    .summary-metrics .metric[data-engine-temp="7"] { grid-column: 7; grid-row: 4; }
+    .summary-metrics .metric[data-engine-temp="8"] { grid-column: 8; grid-row: 4; }
+
+    .summary-metrics .metric[data-slot="flaps"] { grid-column: 1; grid-row: 5; }
+    .summary-metrics .metric[data-slot="airbrake"] { grid-column: 2; grid-row: 5; }
+    .summary-metrics .metric[data-slot="gear"] { grid-column: 3; grid-row: 5; }
+    .summary-metrics .metric[data-slot="fuel"] { grid-column: 4; grid-row: 5; }
+
+    .summary-metrics .metric[data-slot="bombBay"] { grid-column: 1; grid-row: 6; }
+    .summary-metrics .metric[data-slot="chaff"] { grid-column: 2; grid-row: 6; }
+    .summary-metrics .metric[data-slot="flares"] { grid-column: 3; grid-row: 6; }
 
     .metric {
       min-height: 68px;
@@ -860,16 +862,26 @@
       color: #d9f8ff;
     }
 
-    .battle-feed-row.event {
-      color: #f1e767;
-    }
-
-    .battle-feed-row.damage {
+    .battle-feed-row.event,
+    .battle-feed-row.damage,
+    .battle-feed-row.enemy,
+    .battle-feed-row.alert {
       color: #ffe66d;
     }
 
-    .battle-feed-row.enemy {
-      color: #ffb7a8;
+    .battle-feed-row.event .battle-feed-time,
+    .battle-feed-row.damage .battle-feed-time,
+    .battle-feed-row.enemy .battle-feed-time,
+    .battle-feed-row.alert .battle-feed-time {
+      color: #ffd84d;
+    }
+
+    .battle-feed-row.destroyed {
+      color: #ff6b6b;
+    }
+
+    .battle-feed-row.destroyed .battle-feed-time {
+      color: #ff8a8a;
     }
 
     .battle-feed-row.chat.team {
@@ -1949,7 +1961,6 @@ main{min-height:0!important;padding-bottom:18px!important;}
               <label for="vehicleMode" data-i18n="vehicleMode">Tipo de veículo</label>
               <select id="vehicleMode" aria-label="Tipo de veículo">
                 <option value="air" selected data-i18n="vehicleAir">Avião</option>
-                <option value="heli" data-i18n="vehicleHeli">Helicóptero</option>
               </select>
             </div>
           </div>
@@ -2799,6 +2810,15 @@ main{min-height:0!important;padding-bottom:18px!important;}
       return JSON.stringify(value, null, 2);
     }
 
+    function cleanWarThunderMarkup(value) {
+      return String(value ?? "")
+        .replace(/<\/?color(?:=[^>]*)?>/gi, "")
+        .replace(/<\/?(?:b|i|u|font)(?:=[^>]*)?>/gi, "")
+        .replace(/\s+([,.;:!?])/g, "$1")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
     function getEndpoint(id) {
       return store[id] || null;
     }
@@ -3429,18 +3449,18 @@ main{min-height:0!important;padding-bottom:18px!important;}
     }
 
     function battleFeedText(item) {
-      if (typeof item === "string") return item.trim();
+      if (typeof item === "string") return cleanWarThunderMarkup(item);
       if (!isObject(item)) return compactValue(item);
 
       const msg = getField(item, ["msg", "message", "text", "body", "event"]);
       const sender = getField(item, ["sender", "author", "player", "name"]);
       const mode = getField(item, ["mode", "channel"]);
       const parts = [];
-      if (sender) parts.push(`${compactValue(sender)}:`);
-      if (msg) parts.push(compactValue(msg));
+      if (sender) parts.push(`${cleanWarThunderMarkup(compactValue(sender))}:`);
+      if (msg) parts.push(cleanWarThunderMarkup(compactValue(msg)));
       if (!parts.length) parts.push(compactValue(item));
-      const suffix = mode ? ` [${compactValue(mode)}]` : "";
-      return `${parts.join(" ")}${suffix}`.trim();
+      const suffix = mode ? ` [${cleanWarThunderMarkup(compactValue(mode))}]` : "";
+      return cleanWarThunderMarkup(`${parts.join(" ")}${suffix}`);
     }
 
     function detectChatChannel(text) {
@@ -3452,13 +3472,14 @@ main{min-height:0!important;padding-bottom:18px!important;}
 
     function detectBattleFeedTone(text) {
       const value = String(text || "").toLowerCase();
-      if (/(net_player_|disconnect|disconnected|disconnect_from_game|connected|joined( the)? game|left( the)? game|from the game|server|session|lobby|achievement|award|awarded|shadow strike streak|has disconnected|player disconnect|mission complete|mission failed|objective|spawned|respawn)/i.test(value)) return "system";
-      if (/(overheat|overheated|overheating|engine hot|temperature warning|temp warning|set afire|on fire|fire warning|engine fire)/i.test(value)) return "alert";
+      if (/(net_player_|disconnect|disconnected|disconnect_from_game|connected|joined( the)? game|left( the)? game|from the game|server|session|lobby|achievement|award|awarded|shadow strike streak|has disconnected|player disconnect|mission complete|mission failed|objective|spawned|respawn|has achieved|achieved)/i.test(value)) return "system";
+      if (/\b(destroyed|shot down|killed|eliminated)\b/i.test(value)) return "destroyed";
+      if (/(critical(?:ly)? damaged|critically damaged|set afire|on fire|fire warning|engine fire|overheat|overheated|overheating|engine hot|temperature warning|temp warning)/i.test(value)) return "alert";
       return "";
     }
 
     function addBattleFeedEntry(kind, item, source) {
-      const text = battleFeedText(item).replace(/\s+/g, " ").trim();
+      const text = cleanWarThunderMarkup(battleFeedText(item)).replace(/\s+/g, " ").trim();
       if (!text || text === "{}" || text === "[]") return false;
 
       const id = feedItemId(item);
@@ -3573,7 +3594,7 @@ main{min-height:0!important;padding-bottom:18px!important;}
         time.textContent = new Date(entry.at).toLocaleTimeString(currentLanguage === "en" ? "en-GB" : "pt-PT", { hour12: false }).slice(0, 5);
 
         const text = document.createElement("span");
-        text.textContent = entry.text;
+        text.textContent = cleanWarThunderMarkup(entry.text);
 
         row.append(time, text);
         container.appendChild(row);
@@ -3960,8 +3981,7 @@ main{min-height:0!important;padding-bottom:18px!important;}
     }
 
     function selectedVehicleMode(summary) {
-      const mode = els.vehicleMode?.value || "air";
-      return mode === "heli" ? "heli" : "air";
+      return "air";
     }
 
     function applyVehicleMode(mode) {
@@ -4809,19 +4829,115 @@ main{min-height:0!important;padding-bottom:18px!important;}
       applyTheme();
     };
 
-    // Sync language from the parent dashboard (index). Mirrors __WT_PARENT_APPLY_THEME.
-    window.__WT_PARENT_APPLY_LANG = function(lang) {
-      const v = lang === "en" ? "en" : "pt";
-      if (els.languageSelect) {
-        els.languageSelect.value = v;
-      }
-      currentLanguage = v;
-      document.body.dataset.embedded = "true";
+    window.__WT_PARENT_APPLY_LANGUAGE = function(lang) {
+      currentLanguage = lang === "en" ? "en" : "pt";
+      if (els.languageSelect) els.languageSelect.value = currentLanguage;
       applyLanguage();
       setStatus(t("ready"));
       if (!els.mapContainer.querySelector("iframe")) {
         showMapMessage(t("mapClosedTitle"), t("mapClosedBody"));
       }
+      renderAll();
+      const en = currentLanguage === "en";
+      const staticText = {
+        "Consola local para mapa, telemetria e objetos recebidos do servidor do jogo.": "Local console for map, telemetry and objects received from the game server.",
+        "Preferências": "Preferences",
+        "Gestão da ligação": "Connection management",
+        "Ligar aos dados": "Connect to data",
+        "Abrir mapa externo": "Open external map",
+        "Recarregar mapa": "Reload map",
+        "Pronto para ligar ao War Thunder.": "Ready to connect to War Thunder.",
+        "A aguardar gamechat / hudmsg": "Waiting for gamechat / hudmsg",
+        "Feed do jogo": "Game feed",
+        "Limpar feed": "Clear feed",
+        "Sem eventos recebidos.": "No events received.",
+        "Sem mensagens recebidas.": "No messages received.",
+        "Mapa ainda fechado": "Map not opened yet",
+        "Liga aos dados ou usa o botão Mapa.": "Connect to data or use the Map button.",
+        "Sem dados": "No data",
+        "Sem histórico": "No history",
+        "verde: velocidade  amarelo: altitude": "green: speed  yellow: altitude",
+        "amostras": "samples",
+        "objetos": "objects",
+        "Sem resultados para o filtro.": "No results for the filter.",
+        "Ainda não há telemetria.": "No telemetry yet.",
+        "Ainda não há objetos do mapa.": "No map objects yet.",
+        "Avião": "Aircraft",
+        "Helicóptero": "Helicopter",
+        "Automático": "Automatic",
+        "Noite": "Night",
+        "Dia": "Day",
+        "Ligação": "Connection",
+        "Servidor": "Server",
+        "Ligar": "Connect",
+        "Atualizar": "Refresh",
+        "Mapa": "Map",
+        "Limpar": "Clear",
+        "Resumo": "Summary",
+        "Comunicações": "Communications",
+        "Tipo de veículo": "Vehicle type",
+        "Velocidade indicada": "Indicated airspeed",
+        "Altitude barométrica": "Barometric altitude",
+        "Velocidade vertical": "Vertical speed",
+        "Rumo": "Heading",
+        "Atitude": "Attitude",
+        "Carga": "Load",
+        "Motor": "Engine",
+        "Temp.": "Temp.",
+        "Combustível": "Fuel",
+        "Contramedidas": "Countermeasures"
+      };
+      function rememberText(node) {
+        if (node.__wtMapOrigText == null) node.__wtMapOrigText = node.nodeValue;
+        return node.__wtMapOrigText;
+      }
+      function tr(value) {
+        if (!en) return value;
+        const trimmed = String(value || "").trim();
+        if (staticText[trimmed]) return String(value).replace(trimmed, staticText[trimmed]);
+        return String(value)
+          .replace(/A aguardar/g, "Waiting")
+          .replace(/mensagens/g, "messages")
+          .replace(/mensagem/g, "message")
+          .replace(/objetos/g, "objects")
+          .replace(/amostras/g, "samples")
+          .replace(/Velocidade/g, "Speed")
+          .replace(/Altitude/g, "Altitude")
+          .replace(/Subida/g, "Climb")
+          .replace(/Rumo/g, "Heading")
+          .replace(/Atitude/g, "Attitude")
+          .replace(/Carga/g, "Load")
+          .replace(/Motor/g, "Engine")
+          .replace(/Sem dados/g, "No data");
+      }
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || parent.closest("script,style,pre,textarea,code")) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach((node) => {
+        const original = rememberText(node);
+        const next = tr(original);
+        if (node.nodeValue !== next) node.nodeValue = next;
+      });
+      document.querySelectorAll("[aria-label],[title],option").forEach((el) => {
+        ["aria-label", "title"].forEach((attr) => {
+          if (!el.hasAttribute(attr)) return;
+          const key = "wtMapOrig" + attr.replace(/[^a-z]/gi, "");
+          if (el.dataset[key] == null) el.dataset[key] = el.getAttribute(attr) || "";
+          const next = tr(el.dataset[key]);
+          if (el.getAttribute(attr) !== next) el.setAttribute(attr, next);
+        });
+        if (el.tagName === "OPTION") {
+          if (el.dataset.wtMapOrigOption == null) el.dataset.wtMapOrigOption = el.textContent;
+          const next = tr(el.dataset.wtMapOrigOption);
+          if (el.textContent !== next) el.textContent = next;
+        }
+      });
     };
 
     window.__WT_PARENT_FOCUS = function() {

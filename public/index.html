@@ -3558,10 +3558,10 @@ function buildAircraftSection(missileId){
   const planes=getAircraftList(missileId);
   const tagsHtml=planes.length
     ?planes.map(p=>`<span class="aircraft-tag">${escHtml(p)}</span>`).join('')
-    :'<span class="aircraft-empty">Nenhum avião portador registado</span>';
+    :`<span class="aircraft-empty">${curLang()==='en'?'No carrier aircraft registered':'Nenhum avião portador registado'}</span>`;
   return`<div class="aircraft-section">
     <div class="aircraft-title" data-mid="${missileId}">
-      <span class="aircraft-title-main">✈️ Aviões portadores</span>
+      <span class="aircraft-title-main">✈️ ${lbl('Aviões portadores')}</span>
       <span class="aircraft-edit-trigger" title=""></span>
     </div>
     <div class="aircraft-tags" id="tags_${missileId}">${tagsHtml}</div>
@@ -3968,6 +3968,27 @@ function skTypeCreate(){
 // Independent from the global-search IIFE's own lang() — reads the same <select>.
 function curLang(){ const sel=document.getElementById('hudLangSel'); return sel&&sel.value==='en'?'en':'pt'; }
 
+// Fixed (non-editable) card labels — PT → EN. Used for stat keys / static
+// section titles that appear on every missile / seeker card, regardless of
+// which specific weapon is being shown. Actual VALUES (Massa: 361 kg, etc.)
+// keep coming straight from the data (mass/speed/etc. are already
+// language-neutral numbers/units, so only the label needs translating).
+const CARD_LABELS_EN={
+  'Massa':'Mass','Velocidade':'Speed','Alcance':'Range','Ogiva':'Warhead',
+  'Overload máx.':'Max overload','Gimbal':'Gimbal','Track rate':'Track rate',
+  'Fuze':'Fuze','IOG':'IOG','Data Link':'Data Link','Tipo seeker':'Seeker type',
+  'Ângulo Loft':'Loft angle','Aspeto / Guidance':'Aspect / Guidance',
+  'Burn time':'Burn time','Guia duration':'Guide duration',
+  'Signal / Seeker':'Signal / Seeker',
+  'Estatísticas (in-game)':'Stats (in-game)','Editar':'Edit',
+  'Como contrariar':'How to counter','Aviões portadores':'Carrier aircraft',
+  'Nação':'Nation'
+};
+function lbl(ptText){
+  if(curLang()!=='en') return ptText;
+  return CARD_LABELS_EN[ptText] || ptText;
+}
+
 function buildMCard(m, defaultBadgeClass){
   const d=m.s;
   const missileId=m.name.replace(/[^a-zA-Z0-9]/g,'_');
@@ -3998,7 +4019,7 @@ function buildMCard(m, defaultBadgeClass){
     ...(d.signal?[['Signal / Seeker',d.signal]]:[]),
   ].filter(([,v])=>v!==undefined && v!==null && v!=='' && v!=='—');
 
-  const statsHtml=`<div class="sgrid">${rows.map(([k,v])=>`<div class="sg"><div class="sg-k">${k}</div><div class="sg-v">${v}</div></div>`).join('')}</div>`;
+  const statsHtml=`<div class="sgrid">${rows.map(([k,v])=>`<div class="sg"><div class="sg-k">${lbl(k)}</div><div class="sg-v">${v}</div></div>`).join('')}</div>`;
   const _irccmVal=d.irccm||'';
   const irccmHtml=(_irccmVal&&_irccmVal!=='Nenhum'&&_irccmVal!=='—')
     ? `<div class="mlabel">IRCCM / Seeker type</div>${irccmPill(_irccmVal)}`
@@ -4007,7 +4028,7 @@ function buildMCard(m, defaultBadgeClass){
   const _noteTxt=(_isEn && d.noteEn && d.noteEn.trim())?d.noteEn:d.note;
   const _counterArr=(_isEn && d.countersEn && d.countersEn.filter(Boolean).length)?d.countersEn:d.counters;
   const noteHtml=(_noteTxt&&_noteTxt.trim())?`<div class="note-box">${_noteTxt}</div>`:'';
-  const counterHtml=_counterArr&&_counterArr.filter(Boolean).length?`<div class="mlabel">${_isEn?'How to counter':'Como contrariar'}</div><ul class="counter-list">${_counterArr.filter(Boolean).map(c=>`<li>${c}</li>`).join('')}</ul>`:'';
+  const counterHtml=_counterArr&&_counterArr.filter(Boolean).length?`<div class="mlabel">${lbl('Como contrariar')}</div><ul class="counter-list">${_counterArr.filter(Boolean).map(c=>`<li>${c}</li>`).join('')}</ul>`:'';
   const aircraftHtml=buildAircraftSection(missileId);
   const imgHtml=m.img?`<div class="card-img-wrap"><img src="${escHtml(m.img)}" alt="${escHtml(m.name)}" loading="lazy"></div>`:'';
 
@@ -4019,13 +4040,13 @@ function buildMCard(m, defaultBadgeClass){
       <span class="badge ${activeBadgeClass}"${badgeStyleAttr}>${badgeText}</span>
     </div>
     <div class="mcard-body">
-      <div class="mlabel">Estatísticas (in-game)</div>
+      <div class="mlabel">${lbl('Estatísticas (in-game)')}</div>
       ${statsHtml}
       ${irccmHtml}
       ${noteHtml}
       ${counterHtml}
       ${aircraftHtml}
-      <div><button class="mcard-edit-btn" data-mname="${m.name.replace(/"/g,'&quot;')}">✏️ Editar</button></div>
+      <div><button class="mcard-edit-btn" data-mname="${m.name.replace(/"/g,'&quot;')}">✏️ ${lbl('Editar')}</button></div>
     </div>`;
   div.querySelector('.mcard-edit-btn').addEventListener('click',function(){
     const name=this.getAttribute('data-mname');
@@ -4947,14 +4968,14 @@ function buildCustomMissileCard(c,tabId,idx){
     ['Burn time',d.burnTime],['Guia duration',d.guideDur],['Signal / Seeker',d.signal],
   ].filter(([,v])=>v&&(typeof v==='string'?v.trim()&&v!=='—':true));
 
-  const statsHtml=`<div class="sgrid">${rows.map(([k,v])=>`<div class="sg"><div class="sg-k">${escHtml(String(k))}</div><div class="sg-v">${typeof v==='string'&&!v.startsWith('<')?escHtml(v):v}</div></div>`).join('')}</div>`;
+  const statsHtml=`<div class="sgrid">${rows.map(([k,v])=>`<div class="sg"><div class="sg-k">${escHtml(lbl(String(k)))}</div><div class="sg-v">${typeof v==='string'&&!v.startsWith('<')?escHtml(v):v}</div></div>`).join('')}</div>`;
   const irccmHtml=d.irccm?`<div class="mlabel">IRCCM</div>${irccmPill(d.irccm)}`:'';
   const _isEn=curLang()==='en';
   const _noteTxt=(_isEn && d.noteEn && d.noteEn.trim())?d.noteEn:d.note;
   const _counterArr=(_isEn && c.countersEn && c.countersEn.filter(Boolean).length)?c.countersEn:c.counters;
   const noteHtml=(_noteTxt&&_noteTxt.trim())?`<div class="note-box">${escHtml(_noteTxt)}</div>`:'';
-  const counterHtml=(_counterArr||[]).filter(Boolean).length?`<div class="mlabel">${_isEn?'How to counter':'Como contrariar'}</div><ul class="counter-list">${(_counterArr||[]).map(ct=>`<li>${escHtml(ct)}</li>`).join('')}</ul>`:'';
-  const planesHtml=(c.planes&&c.planes.length)?`<div class="aircraft-section"><span class="aircraft-title-main">✈️ Aviões portadores</span><div class="aircraft-tags">${c.planes.map(p=>`<span class="aircraft-tag">${escHtml(p)}</span>`).join('')}</div></div>`:'';
+  const counterHtml=(_counterArr||[]).filter(Boolean).length?`<div class="mlabel">${lbl('Como contrariar')}</div><ul class="counter-list">${(_counterArr||[]).map(ct=>`<li>${escHtml(ct)}</li>`).join('')}</ul>`:'';
+  const planesHtml=(c.planes&&c.planes.length)?`<div class="aircraft-section"><span class="aircraft-title-main">✈️ ${lbl('Aviões portadores')}</span><div class="aircraft-tags">${c.planes.map(p=>`<span class="aircraft-tag">${escHtml(p)}</span>`).join('')}</div></div>`:'';
   const imgHtml=c.img?`<div class="card-img-wrap"><img src="${escHtml(c.img)}" alt="${escHtml(c.name)}" loading="lazy"></div>`:'';
   const customBadge='<span class="mcard-custom-badge">CUSTOM</span>';
   const div=document.createElement('div'); div.className='mcard';
@@ -4965,10 +4986,10 @@ function buildCustomMissileCard(c,tabId,idx){
       <span class="badge ${escHtml(c.badgeClass||'badge-ir')}" style="${getBadgeStyle(c.badgeClass||'badge-ir')}">${escHtml(c.badge||'')}</span>
     </div>
     <div class="mcard-body">
-      <div class="mlabel">Estatísticas (in-game)</div>
+      <div class="mlabel">${lbl('Estatísticas (in-game)')}</div>
       ${statsHtml}${irccmHtml}${noteHtml}${counterHtml}${planesHtml}
       <div>
-        <button class="mcard-edit-btn" onclick="openCardEditor('edit','missile','ctab_${tabId}',${idx})">✏️ Editar</button>
+        <button class="mcard-edit-btn" onclick="openCardEditor('edit','missile','ctab_${tabId}',${idx})">✏️ ${lbl('Editar')}</button>
         <button class="mcard-del-btn is-custom" onclick="cieDeleteDirect('${tabId}',${idx})">🗑</button>
       </div>
     </div>`;
