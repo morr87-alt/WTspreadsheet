@@ -152,7 +152,7 @@ body{
   background:linear-gradient(180deg,var(--accent),var(--accent-2));
 }
 .topbar .sub{font-size:10.5px;color:var(--text-faint);margin-bottom:0}
-.sync-indicator{display:none;font-size:10.5px;color:var(--text-faint);font-weight:700;margin-left:18px}
+.sync-indicator{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:var(--text-faint);font-weight:800;margin-left:18px;padding:3px 10px;border-radius:var(--radius-pill);background:var(--surface-soft);border:1px solid var(--border-soft);white-space:nowrap}
 .topbar-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
 
 .hud-select-wrap{
@@ -4351,6 +4351,17 @@ skEdLoad();
 // ============================================================
 const EDITOR_PW = 'wt2025';
 let _editorUnlocked = sessionStorage.getItem('wt_ed_unlocked')==='1';
+
+// If the editor was already unlocked in a previous reload (sessionStorage
+// remembers this across reloads within the same tab), tryOpenEditor() below
+// skips the password modal entirely — which used to also skip serverAuth(),
+// leaving _serverToken null forever and silently disabling all server sync
+// for the rest of the session. Re-authenticate here so saves keep working.
+if(_editorUnlocked){
+  serverAuth(EDITOR_PW).then(ok=>{
+    syncIndicator(ok ? 'synced' : 'offline');
+  });
+}
 
 function tryOpenEditor(btn){
   if(_editorUnlocked){ showTab('tAircraft',btn); return; }
