@@ -4458,17 +4458,7 @@ window.WTEdit={editAircraft:function(id){
 
 // (_customTabs já declarado no bloco de sync)
 try{ _customTabs = JSON.parse(localStorage.getItem(TM_KEY)||'[]'); }catch(e){ _customTabs=[]; }
-function saveTabs(){
-  try{localStorage.setItem(TM_KEY,JSON.stringify(_customTabs));}catch(e){}
-  // Grava no servidor de imediato (em vez de esperar o debounce de 2s do
-  // serverSave()). Criar/apagar/renomear tabs é uma ação pouco frequente e
-  // deliberada — não vale a pena arriscar que um F5 rápido chegue antes do
-  // envio terminar e o serverLoad() reponha a versão antiga por cima
-  // (fazendo tabs apagadas "voltarem" ou pareceres duplicadas).
-  if(typeof _syncTimer!=='undefined') clearTimeout(_syncTimer);
-  if(typeof _doServerSave==='function') _doServerSave();
-  else serverSave?.();
-}
+function saveTabs(){ try{localStorage.setItem(TM_KEY,JSON.stringify(_customTabs));}catch(e){} serverSave?.(); }
 
 function tmRender(){
   const list=document.getElementById('tmList'); if(!list)return;
