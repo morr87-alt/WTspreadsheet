@@ -956,7 +956,7 @@ iframe.wtmap-iframe{width:100%;height:82vh;min-height:560px;border:0;display:blo
   <div class="wtmap-frame-wrap">
     <iframe class="wtmap-iframe" id="wtMapFrame" src="WT_MAP.html" title="War Thunder Air/Heli Tactical Data" loading="lazy"></iframe>
   </div>
-  <div class="rg-note" style="margin-top:10px">🗺️ Este separador carrega o ficheiro <code>WT_MAP.html</code> (deve estar na mesma pasta que este ficheiro). Tem o seu próprio tema e dados independentes.</div>
+  <div class="rg-note" style="margin-top:10px">🗺️ Este separador carrega o ficheiro <code>WT_MAP.html</code> (deve estar na mesma pasta que este ficheiro). O tema e o idioma seguem automaticamente o dashboard; os dados (conexão ao jogo, telemetria) são independentes.</div>
 </div>
 
 
@@ -1285,6 +1285,10 @@ async function serverLoad() {
     applyStoredOverrides();
     // rebuild UI with fresh data
     if(typeof rebuildCustomTabs==='function') rebuildCustomTabs();
+    // also refresh the "Gerir Tabs" management list — otherwise tabs that only
+    // existed on the server (never in this device's localStorage cache) show up
+    // in the tab bar but stay invisible/unmanageable in the tab manager panel.
+    if(typeof tmRender==='function') tmRender();
     if(typeof renderSeekers==='function') renderSeekers();
     if(typeof renderSPAA==='function') renderSPAA();
     // re-render missile grids with updated data
@@ -5239,6 +5243,7 @@ serverLoad();
     try{localStorage.setItem('wt_hud_lang_v1',lang());}catch(e){}
     renderFilters();
     renderSearch();
+    try{ window.syncWtMapFrame && window.syncWtMapFrame(); }catch(e){}
   }
   function applyTheme(theme){
     theme=theme==='night'?'night':'day';
@@ -5250,6 +5255,7 @@ serverLoad();
     }catch(e){}
     var sel=byId('themeSel');
     if(sel)sel.value=theme;
+    try{ window.syncWtMapFrame && window.syncWtMapFrame(); }catch(e){}
   }
   function syncModeSelect(){
     var sel=byId('hudModeSel');
@@ -5757,6 +5763,45 @@ function rgInit(){
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',rgInit);
 else setTimeout(rgInit,50);
 
+})();
+
+// ── Sync WT MAP iframe (theme + language) with the dashboard ──────────────────
+// The WT MAP page (WT_MAP.html) is a separate app loaded in an iframe. It exposes
+// two hooks (__WT_PARENT_APPLY_THEME / __WT_PARENT_APPLY_LANG) that this dashboard
+// calls whenever the theme/language change here, or when the iframe (re)loads —
+// so the map always mirrors the dashboard instead of keeping its own separate state.
+// Same-origin access to contentWindow requires this file and WT_MAP.html to be
+// served from the same origin (works when hosted normally; may be blocked under
+// file:// depending on the browser).
+(function(){
+  function syncWtMapFrame(){
+    const frame=document.getElementById('wtMapFrame');
+    const win=frame&&frame.contentWindow;
+    if(!win) return;
+    try{
+      const theme=document.body.dataset.theme==='night'?'night':'day';
+      if(typeof win.__WT_PARENT_APPLY_THEME==='function') win.__WT_PARENT_APPLY_THEME(theme);
+    }catch(e){}
+    try{
+      const l=document.getElementById('hudLangSel')?.value==='en'?'en':'pt';
+      if(typeof win.__WT_PARENT_APPLY_LANG==='function') win.__WT_PARENT_APPLY_LANG(l);
+    }catch(e){}
+  }
+  window.syncWtMapFrame=syncWtMapFrame;
+
+  const frame=document.getElementById('wtMapFrame');
+  if(frame) frame.addEventListener('load',syncWtMapFrame);
+
+  // also (re)sync whenever the WT MAP tab is opened — covers the lazy-load
+  // timing where the iframe only starts loading once the tab becomes visible
+  const origShowTabWtMap=window.showTab;
+  if(origShowTabWtMap && !origShowTabWtMap.__wtmapWrapped){
+    window.showTab=function(id,btn){
+      origShowTabWtMap(id,btn);
+      if(id==='tWTMAP') syncWtMapFrame();
+    };
+    window.showTab.__wtmapWrapped=true;
+  }
 })();
 </script>
 

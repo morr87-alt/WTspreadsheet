@@ -1348,20 +1348,20 @@
   
 
     /* Parent-integrated mode: remove duplicated controls and tighten header/connection layout */
-    body[] .header-controls {
+    body[data-embedded="true"] .header-controls {
       display: none !important;
     }
 
-    body[] header {
+    body[data-embedded="true"] header {
       padding-bottom: 12px;
     }
 
-    body[] .header-actions {
+    body[data-embedded="true"] .header-actions {
       align-items: center;
       justify-content: flex-start;
     }
 
-    body[] .status {
+    body[data-embedded="true"] .status {
       min-width: min(100%, 280px);
       max-width: 100%;
     }
@@ -4807,6 +4807,21 @@ main{min-height:0!important;padding-bottom:18px!important;}
       }
       document.body.dataset.embedded = "true";
       applyTheme();
+    };
+
+    // Sync language from the parent dashboard (index). Mirrors __WT_PARENT_APPLY_THEME.
+    window.__WT_PARENT_APPLY_LANG = function(lang) {
+      const v = lang === "en" ? "en" : "pt";
+      if (els.languageSelect) {
+        els.languageSelect.value = v;
+      }
+      currentLanguage = v;
+      document.body.dataset.embedded = "true";
+      applyLanguage();
+      setStatus(t("ready"));
+      if (!els.mapContainer.querySelector("iframe")) {
+        showMapMessage(t("mapClosedTitle"), t("mapClosedBody"));
+      }
     };
 
     window.__WT_PARENT_FOCUS = function() {
