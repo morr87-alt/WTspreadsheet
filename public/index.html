@@ -4458,7 +4458,17 @@ window.WTEdit={editAircraft:function(id){
 
 // (_customTabs já declarado no bloco de sync)
 try{ _customTabs = JSON.parse(localStorage.getItem(TM_KEY)||'[]'); }catch(e){ _customTabs=[]; }
-function saveTabs(){ try{localStorage.setItem(TM_KEY,JSON.stringify(_customTabs));}catch(e){} serverSave?.(); }
+function saveTabs(){
+  try{localStorage.setItem(TM_KEY,JSON.stringify(_customTabs));}catch(e){}
+  // Grava no servidor de imediato (em vez de esperar o debounce de 2s do
+  // serverSave()). Criar/apagar/renomear tabs é uma ação pouco frequente e
+  // deliberada — não vale a pena arriscar que um F5 rápido chegue antes do
+  // envio terminar e o serverLoad() reponha a versão antiga por cima
+  // (fazendo tabs apagadas "voltarem" ou pareceres duplicadas).
+  if(typeof _syncTimer!=='undefined') clearTimeout(_syncTimer);
+  if(typeof _doServerSave==='function') _doServerSave();
+  else serverSave?.();
+}
 
 function tmRender(){
   const list=document.getElementById('tmList'); if(!list)return;
@@ -4508,6 +4518,14 @@ function tmCreateTab(){
 function rebuildCustomTabs(){
   // rebuild tab buttons
   const btnContainer=document.getElementById('customTabBtns'); if(!btnContainer)return;
+  // IMPORTANTE: o drag-and-drop de tabs (initTabDrag) e a aplicação da ordem
+  // guardada (restoreTabOrder / tabOrder do servidor) movem os botões das
+  // tabs custom para FORA do #customTabBtns (ficam filhos diretos de
+  // #tabBar). Se só limparmos btnContainer.innerHTML, esses botões
+  // "deslocados" não são apagados e ficam duplicados quando recriamos os
+  // botões abaixo. Por isso removemos primeiro QUALQUER botão/pane de tab
+  // custom existente em todo o documento, esteja ele onde estiver.
+  document.querySelectorAll('.tab-btn[data-tab^="ctab_"]').forEach(b=>b.remove());
   btnContainer.innerHTML='';
   _customTabs.forEach(t=>{
     const btn=document.createElement('button');
@@ -4518,6 +4536,7 @@ function rebuildCustomTabs(){
   });
   // rebuild panes
   const paneContainer=document.getElementById('customTabPanes'); if(!paneContainer)return;
+  document.querySelectorAll('.tab-pane.custom-tab-pane').forEach(p=>p.remove());
   paneContainer.innerHTML='';
   _customTabs.forEach(t=>{
     const pane=document.createElement('div');
@@ -4531,6 +4550,10 @@ function rebuildCustomTabs(){
     paneContainer.appendChild(pane);
     renderCustomTabCards(t);
   });
+  // Depois de recriar os botões (que voltam sempre à ordem "de origem" do
+  // array _customTabs), reaplicamos a ordem que o utilizador guardou ao
+  // arrastar as tabs, para o reordenamento não se perder a cada rebuild.
+  if(typeof window.__restoreTabOrder==='function') window.__restoreTabOrder();
 }
 
 // ============================================================
@@ -5099,6 +5122,10 @@ serverLoad();
       if(btn) bar.appendChild(btn); // move to end in order
     });
   }
+  // Exposta globalmente para que rebuildCustomTabs() possa reaplicar a
+  // ordem guardada depois de recriar os botões das tabs custom (que, ao
+  // serem recriados do zero, voltam sempre à ordem "de origem").
+  window.__restoreTabOrder = restoreTabOrder;
   restoreTabOrder();
 
   bar.addEventListener('dragstart', e => {
