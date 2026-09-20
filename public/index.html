@@ -461,7 +461,7 @@ body.edit-mode .scard-del-btn.is-custom{display:inline-block}
 .scard-custom-badge{background:var(--warning-soft);border:1px solid var(--warning);color:var(--warning);font-size:9px;font-weight:800;padding:1px 5px;border-radius:5px;margin-left:6px;vertical-align:middle}
 
 /* Todas as imagens de cards têm exatamente a mesma proporção (16:9).
-   Para mudar: altera --card-img-ratio aqui E CARD_IMG_W / CARD_IMG_H no JS (cieResizeImageFile). */
+   Para mudar: altera --card-img-ratio aqui E CARD_IMG_W / CARD_IMG_H no JS (módulo "Enquadramento da imagem"). */
 .card-img-wrap{--card-img-ratio:16/9;width:100%;aspect-ratio:var(--card-img-ratio);background:var(--surface-2);overflow:hidden;border-bottom:1px solid var(--border-soft);display:block}
 .card-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 .card-img-wrap.no-img{display:none}
@@ -519,6 +519,39 @@ body.edit-mode .tab-edit-bar{display:flex}
 .cie-actions button.danger{background:var(--danger-soft);border-color:var(--danger);color:var(--danger)}
 .cie-overlay{display:none;position:fixed;inset:0;background:rgba(10,14,20,.35);z-index:499;backdrop-filter:blur(2px)}
 .cie-overlay.open{display:block}
+
+/* ── Editor de enquadramento da imagem (zoom + mover) ── */
+.cie-drop{display:block;border:2px dashed var(--border-strong);border-radius:10px;padding:18px;text-align:center;cursor:pointer;background:var(--surface-soft);transition:border-color .2s,background .2s}
+.cie-drop:hover,.cie-drop.over{border-color:var(--primary);background:var(--primary-soft)}
+.cie-drop-txt{font-size:12px;color:var(--text-soft);pointer-events:none}
+.cie-drop-txt span{font-size:10px;color:var(--text-faint)}
+.cie-stage{position:relative;width:100%;aspect-ratio:16/9;border-radius:8px;overflow:hidden;border:1px solid var(--border);background-color:var(--surface-2);
+  background-image:linear-gradient(45deg,rgba(128,128,128,.22) 25%,transparent 25%,transparent 75%,rgba(128,128,128,.22) 75%),linear-gradient(45deg,rgba(128,128,128,.22) 25%,transparent 25%,transparent 75%,rgba(128,128,128,.22) 75%);
+  background-size:16px 16px;background-position:0 0,8px 8px}
+.cie-stage canvas{width:100%;height:100%;display:block;cursor:grab;touch-action:none;outline:none}
+.cie-stage.dragging canvas{cursor:grabbing}
+.cie-stage::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .15s;
+  background-image:linear-gradient(rgba(255,255,255,.65),rgba(255,255,255,.65)),linear-gradient(rgba(255,255,255,.65),rgba(255,255,255,.65)),linear-gradient(rgba(255,255,255,.65),rgba(255,255,255,.65)),linear-gradient(rgba(255,255,255,.65),rgba(255,255,255,.65));
+  background-size:1px 100%,1px 100%,100% 1px,100% 1px;background-repeat:no-repeat;
+  background-position:33.333% 0,66.666% 0,0 33.333%,0 66.666%}
+.cie-stage.dragging::after{opacity:1}
+.cie-crop-hint{font-size:10.5px;color:var(--text-faint);margin:6px 0 8px;line-height:1.4}
+.cie-zoom-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.cie-zoom-row input[type=range]{flex:1;min-width:0;accent-color:var(--primary);padding:0}
+.cie-zoom-val{font-size:11px;font-weight:800;color:var(--text-soft);min-width:42px;text-align:right;font-variant-numeric:tabular-nums}
+.cie-crop-btns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.cie-mini,.cie-crop-btns button,.cie-crop-btns label{font-size:11px;font-weight:700;padding:5px 10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-family:inherit;line-height:1.2}
+.cie-mini{width:28px;height:28px;padding:0;font-size:15px;display:inline-flex;align-items:center;justify-content:center}
+.cie-mini:hover,.cie-crop-btns button:hover,.cie-crop-btns label:hover{border-color:var(--primary);color:var(--primary)}
+.cie-bg-row{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--text-soft);margin-bottom:8px}
+.cie-bgsw{width:22px;height:22px;border-radius:6px;border:1px solid var(--border-strong);cursor:pointer;padding:0;background-color:var(--surface-2);
+  background-image:linear-gradient(45deg,rgba(128,128,128,.35) 25%,transparent 25%,transparent 75%,rgba(128,128,128,.35) 75%),linear-gradient(45deg,rgba(128,128,128,.35) 25%,transparent 25%,transparent 75%,rgba(128,128,128,.35) 75%);
+  background-size:8px 8px;background-position:0 0,4px 4px}
+.cie-bgsw.white{background:#fff}.cie-bgsw.black{background:#000}
+.cie-bgsw.on,.cie-bgcolor.on{outline:2px solid var(--primary);outline-offset:1px}
+.cie-bgcolor{width:26px;height:22px;padding:0;border:1px solid var(--border-strong);border-radius:6px;background:none;cursor:pointer}
+.cie-url-preview{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;border:1px solid var(--border);margin-top:8px;display:none}
+.cie-url-note{font-size:10.5px;color:var(--text-faint);margin-top:4px;line-height:1.4;display:none}
 .img-upload-area{border:2px dashed var(--border-strong);border-radius:var(--radius-sm);padding:10px;text-align:center;cursor:pointer;background:var(--surface-soft);color:var(--text-soft)}
 .img-upload-area:hover{border-color:var(--primary)}
 .img-upload-area input[type=file]{display:none}
@@ -1149,14 +1182,44 @@ iframe.wtmap-iframe{width:100%;height:82vh;min-height:560px;border:0;display:blo
 
   <div id="cieFields"></div>
 
-  <!-- Permanent image upload zone — never recreated, avoids ID collisions and browser security blocks -->
+  <!-- Permanent image zone — never recreated, avoids ID collisions and browser security blocks -->
   <div class="cie-section" id="cieImgSection" style="display:none">🖼️ Imagem</div>
   <div id="cieImgWrap" style="display:none">
-    <label for="cieImgFile" id="cieImgDropZone" style="display:block;border:2px dashed #cbd5e1;border-radius:10px;padding:18px;text-align:center;cursor:pointer;background:#f8fafc;transition:border-color .2s">
-      <div style="font-size:12px;color:#64748b;pointer-events:none">📎 Clica ou arrasta uma imagem aqui<br><span style="font-size:10px;color:#94a3b8">JPG · PNG · WebP — máx 15 MB · redimensionada automaticamente</span></div>
-      <img id="cieImgPreview" src="" style="display:none;width:100%;max-width:320px;aspect-ratio:16/9;object-fit:cover;margin-top:10px;border-radius:8px;border:1px solid #e2e8f0;pointer-events:none">
+
+    <!-- sem imagem: zona de upload -->
+    <label for="cieImgFile" id="cieImgDropZone" class="cie-drop">
+      <div class="cie-drop-txt">📎 Clica ou arrasta uma imagem aqui<br><span>JPG · PNG · WebP — máx 15 MB · depois escolhes o enquadramento</span></div>
     </label>
-    <div class="cie-field" style="margin-top:6px">
+
+    <!-- com imagem: enquadramento (zoom + mover) -->
+    <div id="cieCropBox" style="display:none">
+      <div class="cie-stage" id="cieStage"><canvas id="cieCropCanvas" width="800" height="450" tabindex="0" aria-label="Enquadramento da imagem"></canvas></div>
+      <div class="cie-crop-hint">✋ Arrasta a imagem para a mover · roda do rato, slider ou pinça para zoom.<br>A área acima é exatamente o que aparece no card.</div>
+      <div class="cie-zoom-row">
+        <button type="button" class="cie-mini" onclick="cieCropStep(-0.1)" title="Afastar">−</button>
+        <input type="range" id="cieZoom" min="20" max="400" step="1" value="100" oninput="cieCropSetZoom(this.value/100)">
+        <button type="button" class="cie-mini" onclick="cieCropStep(0.1)" title="Aproximar">+</button>
+        <span class="cie-zoom-val" id="cieZoomVal">100%</span>
+      </div>
+      <div class="cie-crop-btns">
+        <button type="button" onclick="cieCropFill()" title="Preenche o card todo (pode cortar as margens)">⤢ Preencher</button>
+        <button type="button" onclick="cieCropFit()" title="Mostra a imagem inteira (pode ficar com margens)">⛶ Mostrar tudo</button>
+        <button type="button" onclick="cieCropCenter()" title="Centra a imagem sem mudar o zoom">◎ Centrar</button>
+        <label for="cieImgFile" title="Escolher outra imagem">🔄 Trocar</label>
+      </div>
+      <div class="cie-bg-row">Fundo
+        <button type="button" class="cie-bgsw on" data-bg="transparent" onclick="cieCropSetBg('transparent')" title="Transparente (usa a cor do card)"></button>
+        <button type="button" class="cie-bgsw white" data-bg="#ffffff" onclick="cieCropSetBg('#ffffff')" title="Branco"></button>
+        <button type="button" class="cie-bgsw black" data-bg="#000000" onclick="cieCropSetBg('#000000')" title="Preto"></button>
+        <input type="color" class="cie-bgcolor" id="cieBgColor" value="#334155" oninput="cieCropSetBg(this.value)" title="Outra cor">
+      </div>
+    </div>
+
+    <!-- imagem por URL que não permite edição -->
+    <img id="cieImgPreview" class="cie-url-preview" src="" alt="">
+    <div class="cie-url-note" id="cieUrlNote">🔗 Imagem por URL: o site de origem não permite editar o enquadramento aqui (fica centrada e cortada em 16:9). Para escolher o enquadramento, carrega o ficheiro.</div>
+
+    <div class="cie-field" style="margin-top:8px">
       <label>Ou URL de imagem</label>
       <input id="cieImgUrl" placeholder="https://…" oninput="cieImgUrlChange(this.value)">
     </div>
@@ -4625,13 +4688,6 @@ function openCardEditor(mode, template, tabPaneId, cardIdx=-1){
   document.getElementById('cieTitle').textContent=mode==='new'?'➕ Nova Card':'✏️ Editar Card';
   document.getElementById('cieDeleteBtn').style.display=(mode==='edit'&&tabPaneId!=='base_missile'&&tabPaneId!=='base_seeker')?'inline-block':'none';
   cieRenderFields(existing);
-  // restore image preview if editing card with image
-  if(_cieImgData){
-    setTimeout(()=>{
-      const p=document.getElementById('cieImgPreview');
-      if(p){p.src=_cieImgData;p.style.display='block';}
-    },80);
-  }
   editor.classList.add('open');
   overlay.classList.add('open');
 }
@@ -4641,6 +4697,7 @@ function getBadgeClassFromCat(cat){
 }
 
 function closeCardEditor(){
+  ++_cieLoadTok; cieCropDispose(); // liberta a imagem de trabalho da memória
   document.getElementById('cardInlineEditor').classList.remove('open');
   document.getElementById('cieOverlay').classList.remove('open');
 }
@@ -4718,115 +4775,296 @@ function cieRenderFields(data){
   cieSetupImgSection(d.img);
 }
 
-function cieSetupImgSection(existingImg){
-  document.getElementById('cieImgSection').style.display='block';
-  document.getElementById('cieImgWrap').style.display='block';
-  _cieImgData = existingImg && existingImg.startsWith('data:') ? existingImg : null;
-  const hasImg = !!existingImg;
-  const p=document.getElementById('cieImgPreview');
-  const u=document.getElementById('cieImgUrl');
-  const cb=document.getElementById('cieImgClearBtn');
-  const f=document.getElementById('cieImgFile');
-  if(f) f.value='';
-  if(p){
-    p.src = hasImg ? existingImg : '';
-    p.style.display = hasImg ? 'block' : 'none';
-  }
-  if(u){
-    u.value = (hasImg && !existingImg.startsWith('data:')) ? existingImg : '';
-  }
-  if(cb){
-    cb.style.display = hasImg ? 'inline-block' : 'none';
-  }
-  bindCieImgEvents();
-}
-
-let _cieImgEventsBound = false;
-function bindCieImgEvents(){
-  if(_cieImgEventsBound) return; // permanent elements — bind listeners only once ever
-  _cieImgEventsBound = true;
-
-  const fileInput=document.getElementById('cieImgFile');
-  const zone=document.getElementById('cieImgDropZone');
-  if(!fileInput || !zone) return;
-
-  fileInput.addEventListener('change',function(){
-    cieHandleImageFile(this.files[0]);
-  });
-
-  zone.addEventListener('dragover',function(e){e.preventDefault();this.style.borderColor='#3b82f6';this.style.background='#eff6ff';});
-  zone.addEventListener('dragleave',function(){this.style.borderColor='#cbd5e1';this.style.background='#f8fafc';});
-  zone.addEventListener('drop',function(e){
-    e.preventDefault();this.style.borderColor='#cbd5e1';this.style.background='#f8fafc';
-    cieHandleImageFile(e.dataTransfer.files[0]);
-  });
-}
-
-// ── Dimensão única para TODAS as imagens de cards ──────────────────────────
-// Qualquer imagem carregada é recortada (centrada, modo "cover") e redimensionada
-// para CARD_IMG_W × CARD_IMG_H antes de ser guardada. O resultado segue o mesmo
-// caminho de sempre (_cieImgData → cieSave → sync), por isso fica sincronizado
-// com o resto do site e ocupa muito menos espaço no KV.
-const CARD_IMG_W = 800, CARD_IMG_H = 450;   // 16:9 — manter igual a --card-img-ratio no CSS
+// ============================================================
+// ENQUADRAMENTO DA IMAGEM (zoom + mover) — todas as imagens de cards
+// ============================================================
+// A imagem é sempre exportada em CARD_IMG_W × CARD_IMG_H (16:9), com o enquadramento
+// escolhido pelo utilizador. O resultado segue o caminho de sempre
+// (_cieImgData → cieCollect → cieSave → sync), por isso fica sincronizado com o resto do site.
+const CARD_IMG_W = 800, CARD_IMG_H = 450;    // manter igual a --card-img-ratio (16:9) no CSS
 const CARD_IMG_MAX_BYTES = 15 * 1024 * 1024; // limite do ficheiro original
+const CIE_SRC_MAX = 2400;                    // lado maior da imagem de trabalho (memória/velocidade)
+const CIE_ZOOM_MAX = 4;                      // 400 % (relativo a "Preencher")
 
-function cieResizeImageFile(file){
-  return new Promise((resolve,reject)=>{
-    const url=URL.createObjectURL(file);
-    const im=new Image();
-    im.onload=()=>{
+let _cieCrop = null;        // estado do enquadramento (null = sem imagem editável)
+let _cieUrlPreview = '';    // imagem só para pré-visualizar (URL não editável)
+let _cieLoadTok = 0;        // descarta carregamentos assíncronos ultrapassados
+let _cieUrlTimer = null;
+const _cieEl = id => document.getElementById(id);
+
+// ── carregar uma fonte (ficheiro/blob, data URL ou URL) para um canvas de trabalho ──
+function cieCropLoad(src, opts){
+  opts = opts || {};
+  return new Promise((resolve, reject)=>{
+    const im = new Image();
+    if(opts.cors && !/^(data|blob):/.test(src)) im.crossOrigin = 'anonymous';
+    im.onload = ()=>{
       try{
-        const sw=im.naturalWidth, sh=im.naturalHeight;
-        if(!sw||!sh) throw new Error('Não foi possível ler as dimensões da imagem.');
-        // recorte centrado com a proporção alvo
-        const target=CARD_IMG_W/CARD_IMG_H;
-        let cw=sw, ch=sh;
-        if(sw/sh>target) cw=sh*target; else ch=sw/target;
-        const cx=(sw-cw)/2, cy=(sh-ch)/2;
-        const draw=bg=>{
-          const c=document.createElement('canvas');
-          c.width=CARD_IMG_W; c.height=CARD_IMG_H;
-          const ctx=c.getContext('2d');
-          if(bg){ctx.fillStyle=bg;ctx.fillRect(0,0,c.width,c.height);}
-          ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
-          ctx.drawImage(im,cx,cy,cw,ch,0,0,CARD_IMG_W,CARD_IMG_H);
-          return c;
-        };
-        // WebP (mantém transparência); se o browser não suportar, JPEG com fundo branco
-        let out=draw(null).toDataURL('image/webp',0.85);
-        if(!out.startsWith('data:image/webp')) out=draw('#ffffff').toDataURL('image/jpeg',0.88);
-        resolve(out);
+        const w = im.naturalWidth, h = im.naturalHeight;
+        if(!w || !h) throw new Error('Não foi possível ler as dimensões da imagem.');
+        const k = Math.min(1, CIE_SRC_MAX / Math.max(w, h));
+        const cw = Math.max(1, Math.round(w*k)), ch = Math.max(1, Math.round(h*k));
+        const cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
+        const ctx = cv.getContext('2d');
+        ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(im, 0, 0, cw, ch);
+        ctx.getImageData(0, 0, 1, 1); // lança erro se o canvas ficou "tainted" (CORS)
+        resolve({src: cv, sw: cw, sh: ch});
       }catch(e){ reject(e); }
-      finally{ URL.revokeObjectURL(url); }
     };
-    im.onerror=()=>{ URL.revokeObjectURL(url); reject(new Error('Não foi possível abrir a imagem.')); };
-    im.src=url;
+    im.onerror = ()=> reject(new Error('Não foi possível abrir a imagem.'));
+    im.src = src;
   });
 }
 
+function cieCropStart(info, o){
+  o = o || {};
+  const sw = info.sw, sh = info.sh;
+  const sc = Math.max(CARD_IMG_W/sw, CARD_IMG_H/sh);  // escala "Preencher"
+  const sf = Math.min(CARD_IMG_W/sw, CARD_IMG_H/sh);  // escala "Mostrar tudo"
+  _cieCrop = {src: info.src, sw, sh, sc, sf,
+              zmin: Math.min(1, sf/sc) * 0.5,
+              z: 1, cx: CARD_IMG_W/2, cy: CARD_IMG_H/2,
+              bg: 'transparent', dirty: !!o.dirty};
+  const zr = _cieEl('cieZoom');
+  zr.min = Math.floor(_cieCrop.zmin*100); zr.max = CIE_ZOOM_MAX*100;
+  cieImgUI();
+  cieCropSync();
+}
+function cieCropDispose(){ _cieCrop = null; }
+
+// ── desenho (usado no preview e na exportação) ──
+function cieCropRender(ctx, bg){
+  const c = _cieCrop;
+  ctx.clearRect(0, 0, CARD_IMG_W, CARD_IMG_H);
+  if(bg){ ctx.fillStyle = bg; ctx.fillRect(0, 0, CARD_IMG_W, CARD_IMG_H); }
+  const s = c.sc * c.z, dw = c.sw*s, dh = c.sh*s;
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(c.src, c.cx - dw/2, c.cy - dh/2, dw, dh);
+}
+function cieCropSync(){
+  const c = _cieCrop; if(!c) return;
+  const cv = _cieEl('cieCropCanvas');
+  cieCropRender(cv.getContext('2d'), c.bg === 'transparent' ? null : c.bg);
+  _cieEl('cieZoom').value = Math.round(c.z*100);
+  _cieEl('cieZoomVal').textContent = Math.round(c.z*100) + '%';
+  document.querySelectorAll('.cie-bgsw').forEach(b=> b.classList.toggle('on', b.dataset.bg === c.bg));
+  const pick = _cieEl('cieBgColor');
+  if(pick){ pick.classList.toggle('on', !/^(transparent|#ffffff|#000000)$/i.test(c.bg)); }
+}
+function cieCropExport(){
+  const c = _cieCrop; if(!c) return null;
+  const off = document.createElement('canvas'); off.width = CARD_IMG_W; off.height = CARD_IMG_H;
+  const ctx = off.getContext('2d');
+  cieCropRender(ctx, c.bg === 'transparent' ? null : c.bg);
+  let out = off.toDataURL('image/webp', 0.88);            // WebP mantém a transparência
+  if(!out.startsWith('data:image/webp')){                  // browser sem WebP → JPEG
+    cieCropRender(ctx, c.bg === 'transparent' ? '#ffffff' : c.bg);
+    out = off.toDataURL('image/jpeg', 0.9);
+  }
+  return out;
+}
+// chamado por cieCollect() mesmo antes de guardar: só regenera se o utilizador mexeu
+function cieCropCommit(){
+  if(_cieCrop && _cieCrop.dirty) _cieImgData = cieCropExport();
+}
+
+// ── operações de enquadramento ──
+function cieCropTouch(){ if(_cieCrop) _cieCrop.dirty = true; }
+function cieCropClamp(){
+  const c = _cieCrop;
+  c.cx = Math.min(CARD_IMG_W, Math.max(0, c.cx));  // o centro fica sempre dentro do card
+  c.cy = Math.min(CARD_IMG_H, Math.max(0, c.cy));
+}
+function cieCropZoomAt(pt, z){
+  const c = _cieCrop; if(!c) return;
+  z = Math.min(CIE_ZOOM_MAX, Math.max(c.zmin, z));
+  const r = z / c.z;
+  c.cx = pt.x + (c.cx - pt.x) * r;   // o ponto sob o cursor mantém-se no mesmo sítio
+  c.cy = pt.y + (c.cy - pt.y) * r;
+  c.z = z;
+  cieCropClamp(); cieCropTouch(); cieCropSync();
+}
+function cieCropSetZoom(z){ cieCropZoomAt({x: CARD_IMG_W/2, y: CARD_IMG_H/2}, z); }
+function cieCropStep(d){ if(_cieCrop) cieCropSetZoom(_cieCrop.z + d); }
+function cieCropFill(){ const c=_cieCrop; if(!c) return; c.z=1; c.cx=CARD_IMG_W/2; c.cy=CARD_IMG_H/2; cieCropTouch(); cieCropSync(); }
+function cieCropFit(){ const c=_cieCrop; if(!c) return; c.z=Math.max(c.zmin, c.sf/c.sc); c.cx=CARD_IMG_W/2; c.cy=CARD_IMG_H/2; cieCropTouch(); cieCropSync(); }
+function cieCropCenter(){ const c=_cieCrop; if(!c) return; c.cx=CARD_IMG_W/2; c.cy=CARD_IMG_H/2; cieCropTouch(); cieCropSync(); }
+function cieCropSetBg(v){ const c=_cieCrop; if(!c) return; c.bg=v; cieCropTouch(); cieCropSync(); }
+
+// ── mostrar/esconder as várias zonas conforme o estado ──
+function cieImgUI(){
+  const hasCrop = !!_cieCrop;
+  const plain = !hasCrop && !!_cieUrlPreview;
+  _cieEl('cieCropBox').style.display = hasCrop ? 'block' : 'none';
+  _cieEl('cieImgDropZone').style.display = hasCrop ? 'none' : 'block';
+  const p = _cieEl('cieImgPreview'), note = _cieEl('cieUrlNote');
+  p.style.display = plain ? 'block' : 'none';
+  note.style.display = (plain && !_cieUrlPreview.startsWith('data:')) ? 'block' : 'none';
+  if(plain){ if(p.getAttribute('src') !== _cieUrlPreview) p.src = _cieUrlPreview; }
+  else if(p.getAttribute('src')){ p.removeAttribute('src'); }
+  _cieEl('cieImgClearBtn').style.display = (hasCrop || plain) ? 'inline-block' : 'none';
+}
+
+// ── entrada de imagem: ficheiro / arrastar ──
 function cieHandleImageFile(f){
   if(!f) return;
   if(!f.type.startsWith('image/')){ alert('Ficheiro não é imagem.'); return; }
-  if(f.size>CARD_IMG_MAX_BYTES){ alert('Imagem muito grande (máx 15 MB).'); return; }
-  cieResizeImageFile(f).then(data=>{
-    _cieImgData=data;
-    const p=document.getElementById('cieImgPreview'); if(p){p.src=data;p.style.display='block';}
-    const u=document.getElementById('cieImgUrl'); if(u) u.value='';
-    const cb=document.getElementById('cieImgClearBtn'); if(cb) cb.style.display='inline-block';
-  }).catch(err=>alert(err&&err.message?err.message:'Erro ao processar a imagem.'));
+  if(f.size > CARD_IMG_MAX_BYTES){ alert('Imagem muito grande (máx 15 MB).'); return; }
+  const tok = ++_cieLoadTok;
+  clearTimeout(_cieUrlTimer);
+  const url = URL.createObjectURL(f);
+  cieCropLoad(url).then(info=>{
+    URL.revokeObjectURL(url);
+    if(tok !== _cieLoadTok) return;
+    _cieImgData = null; _cieUrlPreview = '';
+    _cieEl('cieImgUrl').value = '';
+    cieCropStart(info, {dirty: true});
+    cieCropCommit();
+  }).catch(err=>{
+    URL.revokeObjectURL(url);
+    alert(err && err.message ? err.message : 'Erro ao processar a imagem.');
+  });
+}
+
+// ── entrada de imagem: URL ──
+// Tenta abrir com CORS; se o site permitir, dá para enquadrar. Se não, fica só pré-visualização.
+function cieUrlTry(val){
+  const tok = ++_cieLoadTok;
+  cieCropLoad(val, {cors: true}).then(info=>{
+    if(tok !== _cieLoadTok) return;
+    cieCropStart(info, {dirty: false}); // enquanto não mexer, mantém o URL original
+  }).catch(()=>{ /* mantém a pré-visualização simples */ });
 }
 function cieImgUrlChange(val){
-  _cieImgData=val||null;
-  const preview=document.getElementById('cieImgPreview');
-  if(preview&&val){preview.src=val;preview.style.display='block';}
-  else if(preview){preview.style.display='none';}
+  val = (val || '').trim();
+  clearTimeout(_cieUrlTimer);
+  ++_cieLoadTok;
+  _cieImgData = null; cieCropDispose(); _cieUrlPreview = '';
+  cieImgUI();
+  if(!val) return;
+  _cieUrlTimer = setTimeout(()=>{
+    _cieUrlPreview = val; cieImgUI(); cieUrlTry(val);
+  }, 450);
 }
 function clearCieImg(){
-  _cieImgData=null;
-  const p=document.getElementById('cieImgPreview'); if(p){p.src='';p.style.display='none';}
-  const u=document.getElementById('cieImgUrl'); if(u) u.value='';
-  const f=document.getElementById('cieImgFile'); if(f) f.value='';
-  const cb=document.getElementById('cieImgClearBtn'); if(cb) cb.style.display='none';
+  ++_cieLoadTok; clearTimeout(_cieUrlTimer);
+  _cieImgData = null; cieCropDispose(); _cieUrlPreview = '';
+  _cieEl('cieImgUrl').value = '';
+  const f = _cieEl('cieImgFile'); if(f) f.value = '';
+  cieImgUI();
+}
+
+// ── abrir o editor com uma imagem já existente (data: ou URL) ──
+function cieSetupImgSection(existingImg){
+  _cieEl('cieImgSection').style.display = 'block';
+  _cieEl('cieImgWrap').style.display = 'block';
+  ++_cieLoadTok; clearTimeout(_cieUrlTimer);
+  cieCropDispose();
+  const u = _cieEl('cieImgUrl'), f = _cieEl('cieImgFile');
+  if(f) f.value = '';
+  _cieImgData = null; _cieUrlPreview = '';
+  u.value = '';
+  if(existingImg){
+    _cieUrlPreview = existingImg;                       // pré-visualização imediata
+    if(existingImg.startsWith('data:')){
+      _cieImgData = existingImg;                        // mantém a imagem guardada se nada mudar
+      const tok = _cieLoadTok;
+      cieCropLoad(existingImg).then(info=>{
+        if(tok !== _cieLoadTok) return;
+        cieCropStart(info, {dirty: false});
+      }).catch(()=>{});
+    } else {
+      u.value = existingImg;
+      cieUrlTry(existingImg);
+    }
+  }
+  cieImgUI();
+  bindCieImgEvents();
+}
+
+// ── listeners (uma só vez — os elementos são permanentes) ──
+let _cieImgEventsBound = false;
+function bindCieImgEvents(){
+  if(_cieImgEventsBound) return;
+  _cieImgEventsBound = true;
+
+  const fileInput = _cieEl('cieImgFile');
+  fileInput.addEventListener('change', function(){
+    const f = this.files[0]; this.value = '';   // permite escolher o mesmo ficheiro outra vez
+    cieHandleImageFile(f);
+  });
+
+  // largar um ficheiro na zona de upload OU em cima do enquadramento (substitui a imagem)
+  [_cieEl('cieImgDropZone'), _cieEl('cieStage')].forEach(el=>{
+    el.addEventListener('dragover', e=>{ e.preventDefault(); el.classList.add('over'); });
+    el.addEventListener('dragleave', ()=> el.classList.remove('over'));
+    el.addEventListener('drop', e=>{
+      e.preventDefault(); el.classList.remove('over');
+      cieHandleImageFile(e.dataTransfer.files[0]);
+    });
+  });
+
+  // ── mover (1 dedo/rato) e pinça (2 dedos) ──
+  const cv = _cieEl('cieCropCanvas'), stage = _cieEl('cieStage');
+  const pts = new Map(); let pinch = null;
+  const toCv = e=>{
+    const r = cv.getBoundingClientRect();
+    return {x: (e.clientX - r.left) * CARD_IMG_W / r.width, y: (e.clientY - r.top) * CARD_IMG_H / r.height};
+  };
+  cv.addEventListener('pointerdown', e=>{
+    if(!_cieCrop) return;
+    e.preventDefault();
+    try{ cv.setPointerCapture(e.pointerId); }catch(_){}
+    pts.set(e.pointerId, toCv(e));
+    stage.classList.add('dragging');
+    if(pts.size === 2){
+      const [a, b] = [...pts.values()];
+      pinch = {d: Math.hypot(a.x-b.x, a.y-b.y) || 1, z: _cieCrop.z};
+    }
+    cv.focus({preventScroll: true});
+  });
+  cv.addEventListener('pointermove', e=>{
+    if(!_cieCrop || !pts.has(e.pointerId)) return;
+    const p = toCv(e), prev = pts.get(e.pointerId);
+    pts.set(e.pointerId, p);
+    if(pts.size === 1){
+      _cieCrop.cx += p.x - prev.x; _cieCrop.cy += p.y - prev.y;
+      cieCropClamp(); cieCropTouch(); cieCropSync();
+    } else if(pts.size === 2 && pinch){
+      const [a, b] = [...pts.values()];
+      const d = Math.hypot(a.x-b.x, a.y-b.y) || 1;
+      cieCropZoomAt({x:(a.x+b.x)/2, y:(a.y+b.y)/2}, pinch.z * d / pinch.d);
+    }
+  });
+  const end = e=>{
+    pts.delete(e.pointerId); pinch = null;
+    if(!pts.size) stage.classList.remove('dragging');
+  };
+  cv.addEventListener('pointerup', end);
+  cv.addEventListener('pointercancel', end);
+
+  // roda do rato = zoom à volta do cursor
+  cv.addEventListener('wheel', e=>{
+    if(!_cieCrop) return;
+    e.preventDefault();
+    const dy = e.deltaMode === 1 ? e.deltaY*16 : e.deltaY;
+    cieCropZoomAt(toCv(e), _cieCrop.z * Math.exp(-dy * 0.0015));
+  }, {passive: false});
+
+  // teclado (com o enquadramento focado): setas movem, + / − fazem zoom
+  cv.addEventListener('keydown', e=>{
+    if(!_cieCrop) return;
+    const m = e.shiftKey ? 40 : 10; let used = true;
+    if(e.key === 'ArrowLeft') _cieCrop.cx -= m;
+    else if(e.key === 'ArrowRight') _cieCrop.cx += m;
+    else if(e.key === 'ArrowUp') _cieCrop.cy -= m;
+    else if(e.key === 'ArrowDown') _cieCrop.cy += m;
+    else if(e.key === '+' || e.key === '=') { e.preventDefault(); cieCropStep(0.1); return; }
+    else if(e.key === '-' || e.key === '_') { e.preventDefault(); cieCropStep(-0.1); return; }
+    else used = false;
+    if(used){ e.preventDefault(); cieCropClamp(); cieCropTouch(); cieCropSync(); }
+  });
 }
 
 function cieAddIrccmRow(){
@@ -4857,6 +5095,7 @@ function cieCollectIrccmTypes(){
 
 function cieCollect(){
   const template=document.getElementById('cieTemplate').value;
+  cieCropCommit(); // se o enquadramento foi alterado, gera a imagem final 800×450
   const imgUrl=document.getElementById('cieImgUrl')?.value.trim()||null;
   const img=_cieImgData||(imgUrl||null);
   if(template==='missile'){
